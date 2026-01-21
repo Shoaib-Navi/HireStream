@@ -30,8 +30,8 @@ const FilterCard = () => {
                         {
                             data.array.map((item,index)=>{
                                 return (
-                                    <div className='flex items-center space-x-2 my-2'>
-                                        <RadioGroupItem value={item}/>
+                                    <div className='flex items-center space-x-2 my-2 '>
+                                        <RadioGroupItem value={item} />
                                         <Label>{item}</Label>
                                     </div>
                                 )
