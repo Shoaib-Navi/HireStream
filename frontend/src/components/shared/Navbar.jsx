@@ -16,17 +16,17 @@ const Navbar = () => {
               Hire<span>Stream</span>
             </h1>
           </div>
-          <div className="flex items-center gap-12">
-            <ul className="flex font-medium items-center gap-5">
-              <li>Home</li>
-              <li>Jobs</li>
-              <li>Browse</li>
+          <div className="flex items-center gap-12 cursor-pointer">
+            <ul className="flex font-medium items-center gap-5 ">
+              <li><Link to="/">Home</Link></li>
+              <li><Link to="/jobs">Jobs</Link></li>
+              <li><Link to="/browse">Browse</Link></li>
             </ul>
             {
               !user ? (
-                <div className="flex items-center gap-2">
-                 <Link to='/login'><Button variant="outline">Login</Button></Link>
-                  <Link to='/signup'><Button className="bg-[#6A38c2] hover:bg-[#5b30a6]">SignUp</Button></Link>
+                <div className="flex items-center gap-2 ">
+                 <Link to='/login'><Button variant="outline" className="cursor-pointer">Login</Button></Link>
+                  <Link to='/signup'><Button className="bg-[#6A38c2] hover:bg-[#5b30a6] cursor-pointer">SignUp</Button></Link>
                 </div>
               ):(
                  <Popover>
