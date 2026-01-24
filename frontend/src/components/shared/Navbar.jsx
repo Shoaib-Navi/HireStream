@@ -4,9 +4,11 @@ import { Avatar, AvatarImage  } from "../ui/avatar";
 import { Button } from "../ui/button";
 import { User,LogOut } from "lucide-react";
 import { Link } from "react-router-dom";
+import { useSelector } from "react-redux";
+
 
 const Navbar = () => {
-  const user = false;
+  const {user} = useSelector(store=>store.auth)
   return (
     <>
       <div className="bg-amber-200">
@@ -42,7 +44,7 @@ const Navbar = () => {
                   <AvatarImage src="https://github.com/shadcn.png" />
                 </Avatar>
                 <div>
-                  <h4 className="font-medium">H&C company</h4>
+                  <h4 className="font-medium">{user.fullname}</h4>
                   <p className="text-sm text-muted-foreground">Lorem ipsum dolor sit amet.</p>
                 </div>
 
@@ -50,11 +52,11 @@ const Navbar = () => {
              <div className="flex flex-col text-gray-600 m-2">
               <div className="flex w-fit items-center gap-2 cursor-pointer">
                 <User/>
-                <Button variant='link'>View Profile</Button>
+                <Button variant='link'><Link to="/profile">View Profile</Link></Button>
               </div>
               <div className="flex w-fit items-center gap-2 cursor-pointer">
                 <LogOut/>
-                <Button variant='link'>Logout</Button>
+                <Button variant='link'><Link to="/logout">Logout</Link></Button>
               </div>
 
              </div>
