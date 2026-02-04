@@ -12,7 +12,7 @@ import { toast } from 'sonner';
 
 const UpdateProfileDialog = ({open, setOpen}) => {
     const [loading, setLoading] = useState(false);
-    const {user} = useSelector(store =>store.auth);
+    const {user} = useSelector(store => store.auth);
     
     const [input, setInput] = useState({
         fullname:user?.fullname,
@@ -22,7 +22,8 @@ const UpdateProfileDialog = ({open, setOpen}) => {
         skills:user?.profile?.skills?.map(skill=>skill),
         file:user?.profile?.resume
     });
-    const dispatch = useDispatch();
+    //dispatch is used to send an action to redux so that state can be updated.
+    const dispatch = useDispatch(); 
 
     const changeEventHandler = (e) =>{
         setInput({...input, [e.target.name] : e.target.value});
@@ -39,7 +40,9 @@ const UpdateProfileDialog = ({open, setOpen}) => {
         if(input.file){
             formData.append("file",input.file)
         }
+        
         try {
+            setLoading(true);
             const res = await axios.post(`${USER_API_END_POINT}/profile/update`, formData, {
                 header:{
                     'Content-Type':'multipart/form-data'
@@ -54,8 +57,9 @@ const UpdateProfileDialog = ({open, setOpen}) => {
             
         } catch (error) {
             console.log(error);
-            toast.error(error.response.data.message)
-            
+            toast.error(error.response.data.message) 
+        }finally{
+            setLoading(false);
         }
         setOpen(false);
         console.log(input)

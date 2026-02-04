@@ -63,3 +63,9 @@ HireStream/
 
 
 ⭐ If you like this project, feel free to star the repository.
+
+
+
+NEED to remember topics:
+1. DataURi
+2. How to upload data on cloudinary
