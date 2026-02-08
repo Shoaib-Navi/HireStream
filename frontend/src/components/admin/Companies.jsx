@@ -6,7 +6,7 @@ const Companies = () => {
     <div>
         <Navbar/>
         <div>
-            
+           <h1>Admin Page</h1> 
         </div>
       Companies
     </div>
