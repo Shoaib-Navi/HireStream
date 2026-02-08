@@ -2,7 +2,7 @@ import React from "react";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { Avatar, AvatarImage } from "../ui/avatar";
 import { Button } from "../ui/button";
-import { User, LogOut } from "lucide-react";
+import { LogOut, User2 } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { USER_API_END_POINT } from "@/utils/constant";
@@ -48,10 +48,10 @@ const Navbar = () => {
               {user && user.role == "recruiter" ? (
                 <>
                   <li>
-                    <Link to="/">Companies</Link>
+                    <Link to="/admin/companies">Companies</Link>
                   </li>
                   <li>
-                    <Link to="/jobs">Jobs</Link>
+                    <Link to="/admin/jobs">Jobs</Link>
                   </li>
                 </>
               ) : (
@@ -103,10 +103,16 @@ const Navbar = () => {
                     </div>
                     <div className="flex flex-col text-gray-600 m-2">
                       <div className="flex w-fit items-center gap-2 cursor-pointer">
-                        <User />
-                        <Button variant="link">
+                       {
+                         user && user.role === 'student' && (
+                          <>
+                          <User2 />
+                           <Button variant="link">
                           <Link to="/profile">View Profile</Link>
                         </Button>
+                        </>
+                        )
+                       }
                       </div>
                       <div className="flex w-fit items-center gap-2 cursor-pointer">
                         <LogOut />
