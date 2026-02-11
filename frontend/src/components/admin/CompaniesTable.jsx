@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import store from '@/redux/store'
 import {
   Table,
   TableBody,
@@ -15,17 +16,19 @@ import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { Edit2, MoreHorizontal } from "lucide-react";
 
 const CompaniesTable = () => {
-  //   const {companies, searchCompanyByText} = useSelector(store => store.company);
-  //   const [filterCompany, setFilterCompany] = useState(companies);
-  //   const navigate = useNavigate();
+    const {companies, searchCompanyByText } = useSelector(store => store.company);
+    const [filterCompany, setFilterCompany] = useState(companies);
+    const navigate = useNavigate();
 
-  //   useEffect(()=>{
-  //     const filteredCompany = companies.length >= 0 && companies.filter((company)=>{
-  //       if(!searchCompanyByText){
-  //         return true;
-  //       }
-  //     })
-  //   })
+    useEffect(()=>{
+      const filteredCompany = companies.length >= 0 && companies.filter((company)=>{
+        if(!searchCompanyByText){
+          return true;
+        }
+        return company?.name?.toLowerCase().includes(searchCompanyByText.toLowerCase())
+      })
+      setFilterCompany(filteredCompany);
+    },[companies,searchCompanyByText])
   return (
     <div>
       <Table>
@@ -39,24 +42,30 @@ const CompaniesTable = () => {
           </TableRow>
         </TableHeader>
         <TableBody>
-          <TableCell>
-            <Avatar>
-              <AvatarImage src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAOEAAADhCAMAAAAJbSJIAAAAclBMVEXz8/PzUyWBvAYFpvD/ugjz9fb19Pbz+fr39fr69vPy9frzRAB5uAAAofD/tgDz2tXh6tLzTBbzmoix0oCAxfH70IHS5vL16dLz5ODo7d/zPQDzlIGs0Hje6/N4wvH7znn07d8AnvDzvrPL3q+v1/L43q8L8zFJAAABeUlEQVR4nO3cR24CURREURy6ScbknB32v0VPTAuJL3lU4MG5G3g6evNqtSRJ0lVVvOZUHa8oHKZbXYj1epSu9MHhpp9ts23/3urs3tKNbr9YDftP2caTRjh9DkdISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEh4X+FmnK1/vV/6COFqO8m2/Wg2aD9302y7dWFnt2qnu9oR7qQrDwlLkvRn3XjNqbqXrioA94dZtsPXhVh/H+fZjqcCcXEehDtchL3je7plSTh4yTaYNcL5+2s2QkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCwvsK0/ul50fvl1aLdPvm1GmZrnsLvGtVvAcDJUn6Z/0AqSRGNlRkRI0AAAAASUVORK5CYII=" />
-            </Avatar>
-          </TableCell>
-          <TableCell>Google</TableCell>
-          <TableCell>09-02-2026</TableCell>
-          <TableCell className="text-right cursor-pointer " >
-            <Popover>
-                <PopoverTrigger className="cursor-pointer" ><MoreHorizontal/></PopoverTrigger>
-                <PopoverContent className="w-32" >
-                    <div className="flex items-center gap-2 w-fit cursor-pointer" >
-                        <Edit2 className="w-4" />
-                        <span>Edit</span>
+          {filterCompany?.map((company) => (
+            <tr>
+              <TableCell>
+                <Avatar>
+                  <AvatarImage src={company.logo} />
+                </Avatar>
+              </TableCell>
+              <TableCell>{company.name}</TableCell>
+              <TableCell>{company.createdAt.split("T")[0]}</TableCell>
+              <TableCell className="text-right cursor-pointer ">
+                <Popover>
+                  <PopoverTrigger className="cursor-pointer">
+                    <MoreHorizontal />
+                  </PopoverTrigger>
+                  <PopoverContent className="w-32">
+                    <div onClick={()=> navigate(`/admin/companies/${company._id}`)} className="flex items-center gap-2 w-fit cursor-pointer">
+                      <Edit2 className="w-4" />
+                      <span>Edit</span>
                     </div>
-                </PopoverContent>
-            </Popover>
-          </TableCell>
+                  </PopoverContent>
+                </Popover>
+              </TableCell>
+            </tr>
+          ))}
         </TableBody>
       </Table>
     </div>

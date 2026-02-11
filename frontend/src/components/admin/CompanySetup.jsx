@@ -37,7 +37,7 @@ const CompanySetup = () => {
   };
   const submitHandler = async (e) => {
     e.preventDefault();
-    // console.log(input);
+   
     const formData = new FormData();
     formData.append("name", input.name);
     formData.append("description", input.description);
@@ -68,17 +68,17 @@ const CompanySetup = () => {
     } finally {
       setLoading(false);
     }
-
-    useEffect(() => {
+  };
+  useEffect(() => {
       setInput({
-        name: singleCompany.name || "",
+        name:singleCompany.name || "",
         description: singleCompany.description || "",
         website: singleCompany.website || "",
         location: singleCompany.location || "",
         file: singleCompany.file || null,
       });
     }, [singleCompany]);
-  };
+
   return (
     <div>
       <Navbar />
