@@ -62,6 +62,10 @@ const appRouter = createBrowserRouter([
     path: "/admin/jobs",
     element: <AdminJobs />,
   },
+  {
+    path: "/admin/jobs/create",
+    element: <PostJob />,
+  },
 ]);
 
 function App() {
