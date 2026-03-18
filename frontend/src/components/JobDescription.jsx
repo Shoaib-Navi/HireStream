@@ -7,6 +7,10 @@ import { setSingleJob } from "@/redux/jobSlice";
 import { APPLICATION_API_END_POINT, JOB_API_END_POINT } from "@/utils/constant";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "sonner";
+import Navbar from "./shared/Navbar";
+import Footer from "./shared/Footer";
+import PageHero from "./shared/PageHero";
+import GridBackground from "./design/GridBackground";
 
 const JobDescription = () => {
   const { singleJob } = useSelector((store) => store.job);
@@ -65,7 +69,10 @@ const JobDescription = () => {
   }, [jobId, dispatch, user?._id]);
 
   return (
-    <div className="max-w-7xl mx-auto my-10">
+    <>
+    <Navbar/>
+  
+    <div className="max-w-6xl mx-auto  bg-[#fafafa] rounded-3xl border border-gray-100 p-10">
       <div className="flex items-center justify-between">
         <div>
           <h1 className="font-bold text-xl">{singleJob?.title}</h1>
@@ -137,6 +144,24 @@ const JobDescription = () => {
         </h1>
       </div>
     </div>
+    <div className="my-10">
+
+
+       <GridBackground variant="lines" fade="radial" color="slate">
+         <PageHero
+      image="https://images.unsplash.com/photo-1521737711867-e3b97375f902?w=1400"
+      title="Job Details"
+      subtitle="Everything you need to know about this role — requirements, salary, and how to apply."
+      btnText="Browse more jobs"
+      btnLink="/browse"
+      align="left"
+    />
+      </GridBackground>
+     
+        
+    </div>
+    <Footer/>
+    </>
   );
 };
 
