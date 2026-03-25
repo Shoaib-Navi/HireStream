@@ -37,16 +37,18 @@ const Home = () => {
       </GridBackground>
       <TrustedBySection />
       <GridBackground variant="lines" fade="radial" color="slate">
-      <PageHero
-        image="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=1400"
-        title="Top Hiring Companies"
-        subtitle="Explore companies actively hiring and find where you belong."
-        btnText="View companies"
-        btnLink="/companies"
-        align="left"
-      />
+        <div className="px-4 sm:px-6 py-4 sm:py-6 max-w-6xl mx-auto">
+          <PageHero
+            image="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=1400"
+            title="Top Hiring Companies"
+            subtitle="Explore companies actively hiring and find where you belong."
+            btnText="View companies"
+            btnLink="/companies"
+            align="left"
+          />
+        </div>
       </GridBackground>
-      
+
       {/* <CategorySection /> */}
       <FeaturedJobs />
       <HowItWorks />
