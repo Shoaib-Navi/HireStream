@@ -17,6 +17,15 @@ const statusSummary = (application) => ({
   statusHistory: application.statusHistory,
 });
 
+// Loads an application of one of the recruiter's jobs; others get 404 so ids can't be probed
+const findRecruiterApplication = async (recruiterId, applicationId, select = "") => {
+  const application = await Application.findById(applicationId).select(select).populate({ path: "job", select: "postedBy" });
+  if (!application || !application.job?.postedBy.equals(recruiterId)) {
+    throw ApiError.notFound("Application not found");
+  }
+  return application;
+};
+
 export const applyToJob = async (candidateId, jobId, { coverLetter }) => {
   const job = await Job.findById(jobId).select("status deadline company").populate({ path: "company", select: "status" });
   if (!job || job.company?.status === COMPANY_STATUS.SUSPENDED) {
@@ -108,12 +117,15 @@ export const listJobApplications = async (recruiterId, jobId, query) => {
   };
 };
 
-// Visible to the candidate who applied, the recruiter who posted the job, and admins
+// Visible to the candidate who applied, the recruiter who posted the job, and admins.
+// Private notes are only included for the recruiter and admins.
 export const getApplication = async (applicationId, viewer) => {
   const application = await Application.findById(applicationId)
+    .select("+notes")
     .populate({ path: "job", select: "title location employmentType workMode status salary experience postedBy" })
     .populate({ path: "company", select: "name slug logo" })
     .populate({ path: "candidate", select: CANDIDATE_CARD_FIELDS })
+    .populate({ path: "notes.author", select: "fullName avatar" })
     .lean();
 
   const isCandidate = application?.candidate?._id.toString() === viewer.id;
@@ -123,17 +135,16 @@ export const getApplication = async (applicationId, viewer) => {
   }
 
   if (isCandidate) {
-    return application;
+    const { notes: _privateNotes, ...candidateView } = application;
+    return candidateView;
   }
   const candidateProfile = await CandidateProfile.findOne({ user: application.candidate?._id }).lean();
   return { ...application, candidateProfile };
 };
 
+// The optional note is shown to the candidate in their application timeline
 export const updateApplicationStatus = async (recruiterId, applicationId, { status, note }) => {
-  const application = await Application.findById(applicationId).populate({ path: "job", select: "postedBy" });
-  if (!application || !application.job?.postedBy.equals(recruiterId)) {
-    throw ApiError.notFound("Application not found");
-  }
+  const application = await findRecruiterApplication(recruiterId, applicationId);
   if (application.status === APPLICATION_STATUS.WITHDRAWN) {
     throw ApiError.badRequest("This application was withdrawn by the candidate");
   }
@@ -145,6 +156,18 @@ export const updateApplicationStatus = async (recruiterId, applicationId, { stat
   }
 
   return statusSummary(application);
+};
+
+export const addApplicationNote = async (recruiterId, applicationId, { body }) => {
+  const application = await findRecruiterApplication(recruiterId, applicationId, "+notes");
+  application.notes.push({ author: recruiterId, body });
+  await application.save();
+
+  const { notes } = await Application.findById(application._id)
+    .select("+notes")
+    .populate({ path: "notes.author", select: "fullName avatar" })
+    .lean();
+  return notes;
 };
 
 // Candidates can withdraw while the application is still in progress
