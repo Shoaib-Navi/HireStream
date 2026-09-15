@@ -36,6 +36,7 @@ export const applicationsRouter = express.Router();
 
 applicationsRouter.get("/mine", candidateOnly, validate({ query: applicationListQuerySchema }), applicationsController.listMine);
 applicationsRouter.get("/:id", authenticate, validate({ params: idParams }), applicationsController.getOne);
+applicationsRouter.patch("/:id/withdraw", candidateOnly, validate({ params: idParams }), applicationsController.withdraw);
 applicationsRouter.patch(
   "/:id/status",
   recruiterOnly,

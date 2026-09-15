@@ -2,7 +2,7 @@ import { sendSuccess } from "../../utils/response.js";
 import * as jobsService from "./jobs.service.js";
 
 export const listPublic = async (req, res) => {
-  const { jobs, meta } = await jobsService.listPublicJobs(req.query);
+  const { jobs, meta } = await jobsService.listPublicJobs(req.query, req.user);
   sendSuccess(res, { data: { jobs }, meta });
 };
 

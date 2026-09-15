@@ -66,7 +66,7 @@ const MyApplicationsPage = () => {
             <CompanyLogo company={application.company} size="sm" />
             <div className="min-w-0 flex-1">
               {application.job ? (
-                <Link to={`/jobs/${application.job._id}`} className="type-h4 block truncate text-foreground hover:text-primary">
+                <Link to={`/dashboard/applications/${application._id}`} className="type-h4 block truncate text-foreground hover:underline">
                   {application.job.title}
                 </Link>
               ) : (

@@ -1,8 +1,11 @@
-import { ArrowUpRight, BadgeCheck } from "lucide-react";
+import { BadgeCheck } from "lucide-react";
 import { Link } from "react-router-dom";
 import CompanyLogo from "@/components/common/CompanyLogo";
+import StatusBadge from "@/components/common/StatusBadge";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
+import SaveJobButton from "@/features/savedJobs/components/SaveJobButton";
+import { JOB_STATUS_META } from "@/lib/constants";
 import { formatRelativeTime } from "@/lib/format";
 import { cn } from "@/lib/utils";
 import JobMeta from "./JobMeta";
@@ -25,10 +28,8 @@ const JobCard = ({ job, className }) => (
         </p>
         <p className="type-caption text-muted-foreground">{formatRelativeTime(job.createdAt)}</p>
       </div>
-      <ArrowUpRight
-        className="size-5 shrink-0 text-muted-foreground transition-all group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-foreground"
-        aria-hidden="true"
-      />
+      {job.status && job.status !== "open" && JOB_STATUS_META[job.status] && <StatusBadge type="job" status={job.status} />}
+      <SaveJobButton job={job} className="-mt-1 -mr-2" />
     </div>
 
     <div className="space-y-2">

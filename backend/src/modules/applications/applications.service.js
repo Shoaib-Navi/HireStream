@@ -1,4 +1,4 @@
-import { APPLICATION_STATUS, COMPANY_STATUS, ROLES } from "../../constants/index.js";
+import { APPLICATION_STATUS, COMPANY_STATUS, ROLES, WITHDRAWABLE_STATUSES } from "../../constants/index.js";
 import { ApiError } from "../../utils/ApiError.js";
 import { paginationMeta, toPagination } from "../../utils/pagination.js";
 import { Job } from "../jobs/job.model.js";
@@ -10,6 +10,12 @@ const DUPLICATE_KEY_ERROR = 11000;
 
 const CANDIDATE_CARD_FIELDS = "fullName email phone avatar";
 const PROFILE_SUMMARY_FIELDS = "user headline location skills experienceYears links";
+
+const statusSummary = (application) => ({
+  _id: application._id,
+  status: application.status,
+  statusHistory: application.statusHistory,
+});
 
 export const applyToJob = async (candidateId, jobId, { coverLetter }) => {
   const job = await Job.findById(jobId).select("status deadline company").populate({ path: "company", select: "status" });
@@ -105,7 +111,7 @@ export const listJobApplications = async (recruiterId, jobId, query) => {
 // Visible to the candidate who applied, the recruiter who posted the job, and admins
 export const getApplication = async (applicationId, viewer) => {
   const application = await Application.findById(applicationId)
-    .populate({ path: "job", select: "title location employmentType workMode status postedBy" })
+    .populate({ path: "job", select: "title location employmentType workMode status salary experience postedBy" })
     .populate({ path: "company", select: "name slug logo" })
     .populate({ path: "candidate", select: CANDIDATE_CARD_FIELDS })
     .lean();
@@ -138,9 +144,22 @@ export const updateApplicationStatus = async (recruiterId, applicationId, { stat
     await application.save();
   }
 
-  return {
-    _id: application._id,
-    status: application.status,
-    statusHistory: application.statusHistory,
-  };
+  return statusSummary(application);
+};
+
+// Candidates can withdraw while the application is still in progress
+export const withdrawApplication = async (candidateId, applicationId) => {
+  const application = await Application.findById(applicationId);
+  if (!application || !application.candidate.equals(candidateId)) {
+    throw ApiError.notFound("Application not found");
+  }
+  if (!WITHDRAWABLE_STATUSES.includes(application.status)) {
+    throw ApiError.badRequest("This application can no longer be withdrawn");
+  }
+
+  application.status = APPLICATION_STATUS.WITHDRAWN;
+  application.statusHistory.push({ status: APPLICATION_STATUS.WITHDRAWN, changedBy: candidateId });
+  await application.save();
+
+  return statusSummary(application);
 };
