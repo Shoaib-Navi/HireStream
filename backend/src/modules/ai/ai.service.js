@@ -13,7 +13,7 @@ const formatSalary = (salary) => {
 };
 
 const buildSystemPrompt = ({ user, profile, jobs }) => `
-You are HireStream AI, a friendly career assistant for a job portal called HireStream.
+You are the HireStream assistant, a friendly career assistant for a job portal called HireStream.
 You help job seekers find jobs, improve their profiles and prepare for interviews,
 and help recruiters write better job posts and evaluate candidates.
 

@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { Bot, Minus, Send, X } from "lucide-react";
+import { MessageCircle, Minus, Send, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/features/auth/hooks/useAuth";
 import { getErrorMessage } from "@/lib/errors";
@@ -16,7 +16,7 @@ const greeting = (user) => ({
   content: `Hi ${user?.fullName?.split(" ")[0] || "there"}! 👋 I'm the HireStream assistant. I can help you find jobs, improve your profile or prepare for interviews. What can I help with?`,
 });
 
-// Floating AI career assistant. The backend adds job and profile context and keeps the API key private.
+// Floating career assistant. The backend adds job and profile context and keeps the API key private.
 const ChatWidget = () => {
   const { user } = useAuth();
   const [isOpen, setIsOpen] = useState(false);
@@ -64,9 +64,9 @@ const ChatWidget = () => {
         size="icon-lg"
         onClick={() => setIsOpen(true)}
         aria-label="Open HireStream assistant"
-        className="fixed right-4 bottom-4 z-40 size-13 rounded-full shadow-glow sm:right-6 sm:bottom-6"
+        className="fixed right-4 bottom-4 z-40 size-13 rounded-full shadow-elevated sm:right-6 sm:bottom-6"
       >
-        <Bot className="size-6" />
+        <MessageCircle className="size-6" />
       </Button>
     );
   }
@@ -80,11 +80,11 @@ const ChatWidget = () => {
       <div className="flex items-center justify-between gap-3 bg-primary px-4 py-3 text-primary-foreground">
         <div className="flex items-center gap-2.5">
           <div className="flex size-8 items-center justify-center rounded-full bg-primary-foreground/15">
-            <Bot className="size-4" />
+            <MessageCircle className="size-4" />
           </div>
           <div>
             <p className="text-sm font-semibold">HireStream assistant</p>
-            <p className="text-xs opacity-80">AI answers can be inaccurate</p>
+            <p className="text-xs opacity-80">Replies may not always be accurate</p>
           </div>
         </div>
         <div className="flex items-center gap-1">
@@ -134,7 +134,7 @@ const ChatWidget = () => {
               {[0, 1, 2].map((dot) => (
                 <span
                   key={dot}
-                  className="size-1.5 animate-bounce rounded-full bg-primary/60"
+                  className="size-1.5 animate-bounce rounded-full bg-foreground/50"
                   style={{ animationDelay: `${dot * 0.15}s` }}
                 />
               ))}
@@ -151,7 +151,7 @@ const ChatWidget = () => {
               key={suggestion}
               type="button"
               onClick={() => send(suggestion)}
-              className="type-caption rounded-full border bg-card px-2.5 py-1 text-primary transition-colors hover:bg-primary-soft"
+              className="type-caption rounded-full border bg-card px-2.5 py-1 text-foreground transition-colors hover:bg-accent"
             >
               {suggestion}
             </button>
@@ -171,7 +171,7 @@ const ChatWidget = () => {
           maxLength={MAX_INPUT_LENGTH}
           placeholder="Ask me anything…"
           autoComplete="off"
-          className="h-10 min-w-0 flex-1 rounded-lg border bg-background px-3 text-sm outline-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50"
+          className="h-10 min-w-0 flex-1 rounded-md border bg-background px-3 text-sm outline-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50"
         />
         <Button type="submit" size="icon" disabled={!input.trim() || isLoading} aria-label="Send message">
           <Send />
