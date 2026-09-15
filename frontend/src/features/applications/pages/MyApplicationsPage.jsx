@@ -60,9 +60,9 @@ const MyApplicationsPage = () => {
     }
 
     return (
-      <ul className={cn("space-y-3 transition-opacity", isFetching && "opacity-60")}>
+      <ul className={cn("divide-y overflow-hidden rounded-xl border bg-card transition-opacity", isFetching && "opacity-60")}>
         {applications.map((application) => (
-          <li key={application._id} className="flex items-center gap-4 rounded-xl border bg-card p-5 shadow-card">
+          <li key={application._id} className="flex items-center gap-4 px-5 py-4 transition-colors hover:bg-accent/50">
             <CompanyLogo company={application.company} size="sm" />
             <div className="min-w-0 flex-1">
               {application.job ? (

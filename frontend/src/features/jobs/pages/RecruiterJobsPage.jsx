@@ -74,11 +74,11 @@ const RecruiterJobsPage = () => {
     }
 
     return (
-      <ul className={cn("space-y-3 transition-opacity", isFetching && "opacity-60")}>
+      <ul className={cn("divide-y overflow-hidden rounded-xl border bg-card transition-opacity", isFetching && "opacity-60")}>
         {jobs.map((job) => (
           <li
             key={job._id}
-            className="flex flex-col gap-4 rounded-xl border bg-card p-5 shadow-card sm:flex-row sm:items-center"
+            className="flex flex-col gap-4 px-5 py-4 transition-colors hover:bg-accent/50 sm:flex-row sm:items-center"
           >
             <CompanyLogo company={job.company} size="sm" />
             <div className="min-w-0 flex-1 space-y-1">

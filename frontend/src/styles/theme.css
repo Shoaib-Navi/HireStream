@@ -50,7 +50,8 @@
   --radius-section: 2.25rem;
 
   /* Elevation */
-  --shadow-card: 0 1px 2px oklch(0.15 0.01 250 / 0.04);
+  /* cards are flat and rely on hairline borders */
+  --shadow-card: 0 0 #0000;
   --shadow-elevated: 0 18px 44px -18px oklch(0.15 0.01 250 / 0.28);
   --shadow-glow: 0 16px 40px -18px oklch(0.72 0.16 50 / 0.55);
 

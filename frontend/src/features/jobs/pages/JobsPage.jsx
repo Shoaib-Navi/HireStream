@@ -2,8 +2,8 @@ import { useState } from "react";
 import { SearchX, SlidersHorizontal } from "lucide-react";
 import EmptyState from "@/components/common/EmptyState";
 import ErrorState from "@/components/common/ErrorState";
-import PageHeader from "@/components/common/PageHeader";
 import Pagination from "@/components/common/Pagination";
+import ScrambleText from "@/components/common/ScrambleText";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -63,17 +63,18 @@ const JobsPage = () => {
 
   return (
     <>
-      <section className="border-b bg-surface">
-        <div className="page-container py-10 sm:py-12">
-          <PageHeader
-            eyebrow="Jobs"
-            title="Find your next role"
-            description="Search open positions from companies hiring on HireStream."
-          />
+      <section className="dark rounded-b-section bg-background text-foreground">
+        <div className="page-container pt-14 pb-14 sm:pt-20 sm:pb-20">
+          <ScrambleText text="Open positions" className="type-label block text-muted-foreground" />
+          <h1 className="type-h1 mt-5 max-w-3xl">Find your next role.</h1>
+          <p className="type-body-lg mt-3 max-w-xl text-muted-foreground">
+            Search open positions from companies hiring on HireStream.
+          </p>
           {/* re-created when the URL changes so the inputs show the current search */}
           <JobSearchBar
             key={`${filters.q}|${filters.location}`}
-            className="mt-6"
+            size="lg"
+            className="mt-10 max-w-4xl"
             defaultQuery={filters.q}
             defaultLocation={filters.location}
             onSearch={updateFilters}
@@ -81,16 +82,16 @@ const JobsPage = () => {
         </div>
       </section>
 
-      <div className="page-container grid gap-8 py-8 lg:grid-cols-[16rem_1fr]">
+      <div className="page-container grid gap-10 py-12 lg:grid-cols-[15rem_1fr] lg:gap-14">
         <aside className="hidden lg:block" aria-label="Filters">
-          <div className="sticky top-24 rounded-xl border bg-card p-5 shadow-card">
+          <div className="sticky top-24 border-t pt-6">
             <JobFilters filters={filters} onChange={updateFilters} onClear={clearFilters} idPrefix="desktop" />
           </div>
         </aside>
 
         <section aria-label="Results" className="min-w-0">
-          <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
-            <p className="type-body text-muted-foreground" aria-live="polite">
+          <div className="mb-6 flex flex-wrap items-center justify-between gap-3 border-t pt-6">
+            <p className="type-label text-muted-foreground" aria-live="polite">
               {isLoading ? "Searching…" : `${pluralize(meta?.total ?? 0, "job")} found`}
             </p>
             <div className="flex items-center gap-2">
@@ -129,7 +130,7 @@ const JobsPage = () => {
 
           {renderResults()}
 
-          <Pagination className="mt-8" page={filters.page} totalPages={meta?.totalPages} onPageChange={changePage} />
+          <Pagination className="mt-10" page={filters.page} totalPages={meta?.totalPages} onPageChange={changePage} />
         </section>
       </div>
     </>

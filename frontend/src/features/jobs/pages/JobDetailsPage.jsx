@@ -14,17 +14,21 @@ import { formatRelativeTime } from "@/lib/format";
 import { useGetJobQuery } from "../api";
 import JobMeta from "../components/JobMeta";
 
+// Label on the left, content on the right, separated by a hairline
 const JobSection = ({ title, children }) => (
-  <section className="rounded-2xl border bg-card p-6 shadow-card sm:p-8">
-    <h2 className="type-h3 text-foreground">{title}</h2>
-    <div className="type-body mt-4 text-muted-foreground">{children}</div>
+  <section className="grid gap-4 border-t py-8 sm:grid-cols-[11rem_1fr] sm:gap-8">
+    <h2 className="type-label pt-1 text-muted-foreground">{title}</h2>
+    <div className="type-body-lg min-w-0 text-foreground">{children}</div>
   </section>
 );
 
 const BulletList = ({ items }) => (
-  <ul className="list-disc space-y-2 pl-5 marker:text-primary">
-    {items.map((item) => (
-      <li key={item}>{item}</li>
+  <ul className="space-y-3">
+    {items.map((item, index) => (
+      <li key={item} className="flex gap-4">
+        <span className="type-caption pt-1 text-muted-foreground">{String(index + 1).padStart(2, "0")}</span>
+        <span>{item}</span>
+      </li>
     ))}
   </ul>
 );
@@ -58,31 +62,31 @@ const JobDetailsPage = () => {
   }
 
   return (
-    <div className="page-container py-8 lg:py-12">
-      <Link to="/jobs" className="type-caption inline-flex items-center gap-1 text-muted-foreground hover:text-foreground">
-        <ArrowLeft className="size-4" /> All jobs
-      </Link>
+    <>
+      <section className="dark rounded-b-section bg-background text-foreground">
+        <div className="page-container pt-8 pb-14 sm:pb-20">
+          <Link to="/jobs" className="type-label inline-flex items-center gap-1.5 text-muted-foreground transition-colors hover:text-foreground">
+            <ArrowLeft className="size-3.5" /> All jobs
+          </Link>
 
-      <div className="mt-4 grid gap-6 lg:grid-cols-[1fr_20rem] lg:gap-8">
-        <article className="min-w-0 space-y-6">
-          <header className="rounded-2xl border bg-card p-6 shadow-card sm:p-8">
-            <div className="flex flex-col gap-5 sm:flex-row sm:items-start">
-              <CompanyLogo company={job.company} size="lg" />
-              <div className="min-w-0 flex-1 space-y-2">
-                <div className="flex flex-wrap items-center gap-2">
-                  {job.status !== "open" && <StatusBadge type="job" status={job.status} />}
-                  <span className="type-caption text-muted-foreground">Posted {formatRelativeTime(job.createdAt)}</span>
-                </div>
-                <h1 className="type-h1 text-foreground">{job.title}</h1>
-                <p className="type-body-lg flex items-center gap-1.5 text-muted-foreground">
-                  {job.company?.name}
-                  {job.company?.isVerified && <BadgeCheck className="size-4 text-primary" aria-label="Verified company" />}
-                </p>
-                <JobMeta job={job} className="pt-1" />
-              </div>
+          <div className="mt-12 space-y-6">
+            <div className="flex flex-wrap items-center gap-3">
+              <CompanyLogo company={job.company} size="sm" />
+              <p className="type-body-lg flex items-center gap-1.5">
+                {job.company?.name}
+                {job.company?.isVerified && <BadgeCheck className="size-4" aria-label="Verified company" />}
+              </p>
+              <span className="type-caption text-muted-foreground">· Posted {formatRelativeTime(job.createdAt)}</span>
+              {job.status !== "open" && <StatusBadge type="job" status={job.status} />}
             </div>
-          </header>
+            <h1 className="type-h1 max-w-4xl">{job.title}</h1>
+            <JobMeta job={job} />
+          </div>
+        </div>
+      </section>
 
+      <div className="page-container grid gap-10 py-12 lg:grid-cols-[1fr_22rem] lg:gap-16">
+        <article className="min-w-0">
           <JobSection title="About the role">
             <p className="whitespace-pre-line">{job.description}</p>
           </JobSection>
@@ -103,7 +107,7 @@ const JobDetailsPage = () => {
             <JobSection title="Skills">
               <div className="flex flex-wrap gap-2">
                 {job.skills.map((skill) => (
-                  <Badge key={skill} variant="brand">
+                  <Badge key={skill} variant="neutral">
                     {skill}
                   </Badge>
                 ))}
@@ -117,7 +121,7 @@ const JobDetailsPage = () => {
           <CompanyAboutCard company={job.company} />
         </aside>
       </div>
-    </div>
+    </>
   );
 };
 

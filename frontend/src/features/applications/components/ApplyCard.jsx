@@ -63,11 +63,11 @@ const ApplyCard = ({ job }) => {
   };
 
   return (
-    <div className="rounded-2xl border bg-card p-6 shadow-card">
-      <dl className="space-y-3">
+    <div className="rounded-xl border bg-card p-6">
+      <dl className="divide-y">
         {facts.map((fact) => (
-          <div key={fact.label} className="flex items-center justify-between gap-4">
-            <dt className="type-caption text-muted-foreground">{fact.label}</dt>
+          <div key={fact.label} className="flex items-center justify-between gap-4 py-3 first:pt-0">
+            <dt className="type-label text-muted-foreground">{fact.label}</dt>
             <dd className="type-body text-right font-medium text-foreground">{fact.value}</dd>
           </div>
         ))}

@@ -12,7 +12,7 @@ const CompanyAboutCard = ({ company }) => {
   ].filter((fact) => fact.value);
 
   return (
-    <div className="rounded-2xl border bg-card p-6 shadow-card">
+    <div className="rounded-xl border bg-card p-6">
       <p className="type-overline text-muted-foreground">About the company</p>
       <div className="mt-4 flex items-center gap-3">
         <CompanyLogo company={company} />
