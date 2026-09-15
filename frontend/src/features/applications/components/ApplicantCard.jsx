@@ -1,4 +1,5 @@
 import { FileText, Mail, Phone } from "lucide-react";
+import { Link } from "react-router-dom";
 import { toast } from "sonner";
 import StatusBadge from "@/components/common/StatusBadge";
 import UserAvatar from "@/components/common/UserAvatar";
@@ -85,6 +86,9 @@ const ApplicantCard = ({ application, jobId }) => {
       )}
 
       <div className="mt-4 flex flex-wrap items-center gap-2 border-t pt-4">
+        <Button asChild size="sm">
+          <Link to={`/recruiter/applications/${application._id}`}>View application</Link>
+        </Button>
         {application.resume?.url && (
           <Button asChild variant="soft" size="sm">
             <a href={application.resume.url} target="_blank" rel="noopener noreferrer">
