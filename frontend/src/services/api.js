@@ -54,6 +54,7 @@ export const baseApi = createApi({
     "JobApplications",
     "Application",
     "SavedJobs",
+    "RecruiterOverview",
   ],
   endpoints: () => ({}),
 });
