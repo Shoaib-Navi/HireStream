@@ -1,4 +1,5 @@
 import express from "express";
+import adminRoutes from "./modules/admin/admin.routes.js";
 import aiRoutes from "./modules/ai/ai.routes.js";
 import { applicationsRouter, jobApplicationsRouter } from "./modules/applications/applications.routes.js";
 import authRoutes from "./modules/auth/auth.routes.js";
@@ -24,6 +25,7 @@ router.use("/applications", applicationsRouter);
 router.use("/saved-jobs", savedJobsRoutes);
 router.use("/dashboard", dashboardRoutes);
 router.use("/notifications", notificationsRoutes);
+router.use("/admin", adminRoutes);
 router.use("/ai", aiRoutes);
 
 export default router;

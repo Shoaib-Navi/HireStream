@@ -1,4 +1,4 @@
-import { Bell, Bookmark, Briefcase, Building2, FileText, LayoutDashboard, Settings2, UserRound } from "lucide-react";
+import { Bell, Bookmark, Briefcase, Building2, FileText, LayoutDashboard, Settings2, UserRound, Users } from "lucide-react";
 import { ROLES } from "@/lib/constants";
 
 export const PUBLIC_NAV_LINKS = [
@@ -10,6 +10,7 @@ export const PUBLIC_NAV_LINKS = [
 const DASHBOARD_BASE = {
   [ROLES.CANDIDATE]: "/dashboard",
   [ROLES.RECRUITER]: "/recruiter",
+  [ROLES.ADMIN]: "/admin",
 };
 
 // Sidebar items of each role's dashboard
@@ -28,11 +29,20 @@ export const DASHBOARD_NAV = {
     { label: "Notifications", to: "/recruiter/notifications", icon: Bell },
     { label: "Account", to: "/recruiter/account", icon: Settings2 },
   ],
+  [ROLES.ADMIN]: [
+    { label: "Overview", to: "/admin/overview", icon: LayoutDashboard },
+    { label: "Users", to: "/admin/users", icon: Users },
+    { label: "Companies", to: "/admin/companies", icon: Building2 },
+    { label: "Jobs", to: "/admin/jobs", icon: Briefcase },
+    { label: "Notifications", to: "/admin/notifications", icon: Bell },
+    { label: "Account", to: "/admin/account", icon: Settings2 },
+  ],
 };
 
 const DASHBOARD_HOME = {
   [ROLES.CANDIDATE]: "/dashboard/applications",
   [ROLES.RECRUITER]: "/recruiter/overview",
+  [ROLES.ADMIN]: "/admin/overview",
 };
 
 export const getDashboardHome = (role) => DASHBOARD_HOME[role] ?? "/";

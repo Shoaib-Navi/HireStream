@@ -41,7 +41,7 @@ backend/
 │   ├── modules/<domain>/     # model, validation, service, controller, routes per domain
 │   ├── services/             # Cloudinary storage, email delivery, Gemini client
 │   ├── migrations/           # versioned data migrations + runner
-│   └── scripts/              # migrate, seed
+│   └── scripts/              # migrate, seed, create-admin
 └── tests/                    # API integration tests
 
 frontend/src/
@@ -66,6 +66,7 @@ cp .env.example .env       # set MONGO_URI and JWT_SECRET; Cloudinary, SMTP and 
 npm install
 npm run migrate            # creates indexes (and converts data from the first version of HireStream)
 npm run seed               # optional sample data for development
+npm run create-admin -- "Admin Name" admin@example.com "Password123"   # optional admin account
 npm run dev                # http://localhost:8000
 
 # frontend
