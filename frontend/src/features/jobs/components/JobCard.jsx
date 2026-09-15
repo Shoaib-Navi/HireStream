@@ -1,6 +1,7 @@
 import { BadgeCheck } from "lucide-react";
 import { Link } from "react-router-dom";
 import CompanyLogo from "@/components/common/CompanyLogo";
+import MatchScore from "@/components/common/MatchScore";
 import StatusBadge from "@/components/common/StatusBadge";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -29,6 +30,7 @@ const JobCard = ({ job, className }) => (
         <p className="type-caption text-muted-foreground">{formatRelativeTime(job.createdAt)}</p>
       </div>
       {job.status && job.status !== "open" && JOB_STATUS_META[job.status] && <StatusBadge type="job" status={job.status} />}
+      <MatchScore match={job.match} />
       <SaveJobButton job={job} className="-mt-1 -mr-2" />
     </div>
 
