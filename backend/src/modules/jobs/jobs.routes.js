@@ -10,7 +10,7 @@ const router = express.Router();
 const recruiterOnly = [authenticate, requireRole(ROLES.RECRUITER)];
 
 // Public: visitors can browse jobs without an account
-router.get("/", validate({ query: listJobsQuerySchema }), jobsController.listPublic);
+router.get("/", validate({ query: listJobsQuerySchema }), optionalAuth, jobsController.listPublic);
 
 // Recruiter (registered before /:id so "mine" isn't treated as an id)
 router.get("/mine", recruiterOnly, validate({ query: myJobsQuerySchema }), jobsController.listMine);

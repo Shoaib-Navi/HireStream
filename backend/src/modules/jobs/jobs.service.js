@@ -4,22 +4,23 @@ import { escapeRegex } from "../../utils/escapeRegex.js";
 import { paginationMeta, toPagination } from "../../utils/pagination.js";
 import { Application } from "../applications/application.model.js";
 import { Company } from "../companies/company.model.js";
+import { SavedJob } from "../savedJobs/savedJob.model.js";
+import { CARD_COMPANY_FIELDS, toJobCard } from "./job.presenter.js";
 import { Job } from "./job.model.js";
 
-const CARD_COMPANY_FIELDS = "name slug logo location isVerified";
 const DETAIL_COMPANY_FIELDS = "name slug logo location industry size website description isVerified status";
-const SUMMARY_LENGTH = 220;
-
-// Job cards only need a short summary instead of the full description
-const toJobCard = ({ description, ...job }) => ({
-  ...job,
-  summary: description.length > SUMMARY_LENGTH ? `${description.slice(0, SUMMARY_LENGTH).trimEnd()}…` : description,
-});
 
 export const isAcceptingApplications = (job) =>
   job.status === JOB_STATUS.OPEN && (!job.deadline || new Date(job.deadline) >= new Date());
 
-export const listPublicJobs = async (query) => {
+// Which of these jobs the viewer has saved (always empty for guests and recruiters)
+const savedJobIdsFor = async (viewer, jobIds) => {
+  if (viewer?.role !== ROLES.CANDIDATE || jobIds.length === 0) return new Set();
+  const saved = await SavedJob.find({ user: viewer.id, job: { $in: jobIds } }).select("job").lean();
+  return new Set(saved.map((item) => item.job.toString()));
+};
+
+export const listPublicJobs = async (query, viewer) => {
   const { q, location, employmentType, workMode, experience, salaryMin, company, sort } = query;
   const { page, limit, skip } = toPagination(query);
 
@@ -55,7 +56,12 @@ export const listPublicJobs = async (query) => {
     Job.countDocuments(filter),
   ]);
 
-  return { jobs: jobs.map(toJobCard), meta: paginationMeta({ page, limit }, total) };
+  const savedIds = await savedJobIdsFor(viewer, jobs.map((job) => job._id));
+
+  return {
+    jobs: jobs.map((job) => ({ ...toJobCard(job), isSaved: savedIds.has(job._id.toString()) })),
+    meta: paginationMeta({ page, limit }, total),
+  };
 };
 
 export const getJobDetails = async (jobId, viewer) => {
@@ -71,14 +77,18 @@ export const getJobDetails = async (jobId, viewer) => {
     throw ApiError.notFound("Job not found");
   }
 
-  const hasApplied =
+  const [hasApplied, isSaved] =
     viewer?.role === ROLES.CANDIDATE
-      ? Boolean(await Application.exists({ job: job._id, candidate: viewer.id }))
-      : false;
+      ? await Promise.all([
+          Application.exists({ job: job._id, candidate: viewer.id }),
+          SavedJob.exists({ job: job._id, user: viewer.id }),
+        ])
+      : [false, false];
 
   return {
     ...job,
-    hasApplied,
+    hasApplied: Boolean(hasApplied),
+    isSaved: Boolean(isSaved),
     isOwner,
     isAcceptingApplications: isAcceptingApplications(job),
   };
