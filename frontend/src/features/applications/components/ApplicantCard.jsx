@@ -1,6 +1,7 @@
 import { FileText, Mail, Phone } from "lucide-react";
 import { Link } from "react-router-dom";
 import { toast } from "sonner";
+import MatchScore from "@/components/common/MatchScore";
 import StatusBadge from "@/components/common/StatusBadge";
 import UserAvatar from "@/components/common/UserAvatar";
 import { Badge } from "@/components/ui/badge";
@@ -40,6 +41,7 @@ const ApplicantCard = ({ application, jobId }) => {
           <div className="flex flex-wrap items-center gap-2">
             <h3 className="type-h4 text-foreground">{candidate?.fullName ?? "Deleted user"}</h3>
             <StatusBadge status={application.status} />
+            <MatchScore match={application.match} />
           </div>
           {profile?.headline && <p className="type-body text-muted-foreground">{profile.headline}</p>}
           <p className="type-caption text-muted-foreground">

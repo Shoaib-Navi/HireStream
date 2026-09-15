@@ -3,6 +3,7 @@ import { ApiError } from "../../utils/ApiError.js";
 import { paginationMeta, toPagination } from "../../utils/pagination.js";
 import { Job } from "../jobs/job.model.js";
 import { isAcceptingApplications } from "../jobs/jobs.service.js";
+import { calculateMatch } from "../jobs/matchScore.js";
 import { CandidateProfile } from "../users/candidateProfile.model.js";
 import { User } from "../users/user.model.js";
 import { Application } from "./application.model.js";
@@ -98,7 +99,9 @@ export const listCandidateApplications = async (candidateId, query) => {
 };
 
 export const listJobApplications = async (recruiterId, jobId, query) => {
-  const job = await Job.findOne({ _id: jobId, postedBy: recruiterId }).select("title status applicationCount").lean();
+  const job = await Job.findOne({ _id: jobId, postedBy: recruiterId })
+    .select("title status applicationCount skills experience location workMode")
+    .lean();
   if (!job) {
     throw ApiError.notFound("Job not found");
   }
@@ -124,10 +127,10 @@ export const listJobApplications = async (recruiterId, jobId, query) => {
 
   return {
     job,
-    applications: applications.map((application) => ({
-      ...application,
-      candidateProfile: profileByUser.get(application.candidate?._id.toString()) ?? null,
-    })),
+    applications: applications.map((application) => {
+      const candidateProfile = profileByUser.get(application.candidate?._id.toString()) ?? null;
+      return { ...application, candidateProfile, match: calculateMatch(job, candidateProfile) };
+    }),
     statusCounts: Object.fromEntries(statusCounts.map((item) => [item._id, item.count])),
     meta: paginationMeta({ page, limit }, total),
   };
@@ -138,7 +141,7 @@ export const listJobApplications = async (recruiterId, jobId, query) => {
 export const getApplication = async (applicationId, viewer) => {
   const application = await Application.findById(applicationId)
     .select("+notes")
-    .populate({ path: "job", select: "title location employmentType workMode status salary experience postedBy" })
+    .populate({ path: "job", select: "title location employmentType workMode status salary experience skills postedBy" })
     .populate({ path: "company", select: "name slug logo" })
     .populate({ path: "candidate", select: CANDIDATE_CARD_FIELDS })
     .populate({ path: "notes.author", select: "fullName avatar" })
@@ -155,7 +158,7 @@ export const getApplication = async (applicationId, viewer) => {
     return candidateView;
   }
   const candidateProfile = await CandidateProfile.findOne({ user: application.candidate?._id }).lean();
-  return { ...application, candidateProfile };
+  return { ...application, candidateProfile, match: calculateMatch(application.job ?? {}, candidateProfile) };
 };
 
 // The optional note is shown to the candidate in their application timeline
