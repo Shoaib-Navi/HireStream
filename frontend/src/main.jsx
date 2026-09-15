@@ -1,27 +1,23 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
-import "./index.css";
-import App from "./App.jsx";
-import { Toaster } from "./components/ui/sonner.jsx";
+import { ThemeProvider } from "next-themes";
 import { Provider } from "react-redux";
-import store from "./redux/store.js";
-import { persistStore } from "redux-persist";
+import { RouterProvider } from "react-router-dom";
 import { PersistGate } from "redux-persist/integration/react";
-import { setUnauthorizedHandler } from "./lib/api.js";
-import { setUser } from "./redux/authSlice.js";
-
-const persistor = persistStore(store);
-
-// Any 401 from the API means the session is gone, so drop the stored user
-setUnauthorizedHandler(() => store.dispatch(setUser(null)));
+import { router } from "@/app/router";
+import { persistor, store } from "@/app/store";
+import { Toaster } from "@/components/ui/sonner";
+import "./index.css";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
-    <Provider store={store}>
-      <PersistGate loading={null} persistor={persistor}>
-        <App />
-      </PersistGate>
-    </Provider>
-    <Toaster />
+    <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
+      <Provider store={store}>
+        <PersistGate loading={null} persistor={persistor}>
+          <RouterProvider router={router} />
+        </PersistGate>
+      </Provider>
+      <Toaster richColors closeButton position="top-right" />
+    </ThemeProvider>
   </StrictMode>,
 );
