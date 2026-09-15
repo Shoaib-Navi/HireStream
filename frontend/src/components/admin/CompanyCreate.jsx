@@ -1,63 +1,62 @@
 import React, { useState } from "react";
-import Navbar from "../shared/Navbar";
 import { Label } from "../ui/label";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { useNavigate } from "react-router-dom";
-import { COMPANY_API_END_POINT } from "@/utils/constant";
 import { toast } from "sonner";
 import { useDispatch } from "react-redux";
 import { setSingleCompany } from "@/redux/companySlice";
-import axios from "axios";
+import api, { getErrorMessage } from "@/lib/api";
 
 const CompanyCreate = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const [companyName, setCompanyName] = useState()
-  const registerNewCompany = async ()=>{
+  const [companyName, setCompanyName] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const registerNewCompany = async (e) => {
+    e.preventDefault();
     try {
-      const res = await axios.post(`${COMPANY_API_END_POINT}/register`,{companyName},{
-        headers:{
-          'Content-Type':'application/json'
-        },
-        withCredentials:true
-      })
-
-      if(res?.data?.success){
-        dispatch(setSingleCompany(res.data.company))
-        toast.success(res.data.message);
-        const companyId = res?.data?.company?._id;
-        navigate(`/admin/companies/${companyId}`)
-      }
+      setLoading(true);
+      const res = await api.post("/company/register", { companyName });
+      dispatch(setSingleCompany(res.data.company));
+      toast.success(res.data.message);
+      navigate(`/admin/companies/${res.data.company._id}`);
     } catch (error) {
-      console.log(error);      
+      toast.error(getErrorMessage(error));
+    } finally {
+      setLoading(false);
     }
-  }
-  return (
-    <div>
-      <Navbar />
-      <div className="max-w-4xl mx-auto">
-        <div className="my-10">
-          <h1 className="font-bold text-2xl">Your Company Name</h1>
-          <p className="text-gray-500">
-            What would you like to give your company name? You can change this
-            later.
-          </p>
-        </div>
+  };
 
-        <Label>Company Name</Label>
-        <Input
-          type="text"
-          className="my-2"
-          placeholder="HireStream ,Microsoft etc"
-          onChange={(e)=>setCompanyName(e.target.value)}
-        />
-        <div className="flex items-center gap-2 my-10">
-          <Button variant="outline" onClick={()=>navigate("/admin/companies")} >Cancel</Button>
-          <Button onClick={registerNewCompany}>Continue</Button>
-        </div>
+  return (
+    <form onSubmit={registerNewCompany} className="max-w-4xl mx-auto px-4">
+      <div className="my-10">
+        <h1 className="font-bold text-2xl">Your Company Name</h1>
+        <p className="text-gray-500">
+          What would you like to give your company name? You can change this
+          later.
+        </p>
       </div>
-    </div>
+
+      <Label htmlFor="companyName">Company Name</Label>
+      <Input
+        id="companyName"
+        type="text"
+        className="my-2"
+        placeholder="HireStream ,Microsoft etc"
+        value={companyName}
+        onChange={(e) => setCompanyName(e.target.value)}
+      />
+      <div className="flex items-center gap-2 my-10">
+        <Button type="button" variant="outline" onClick={() => navigate("/admin/companies")}>
+          Cancel
+        </Button>
+        <Button type="submit" disabled={loading}>
+          {loading ? "Please wait..." : "Continue"}
+        </Button>
+      </div>
+    </form>
   );
 };
 

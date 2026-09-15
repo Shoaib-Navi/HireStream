@@ -5,7 +5,7 @@ import { Mail, MapPin, Phone, ArrowRight } from "lucide-react";
 const footerLinks = {
   "For Job Seekers": [
     { label: "Browse Jobs",      path: "/browse"  },
-    { label: "My Applications",  path: "/jobs"    },
+    { label: "My Applications",  path: "/profile" },
     { label: "Saved Jobs",       path: "/profile" },
     { label: "Career Resources", path: "#"        },
     { label: "Resume Tips",      path: "#"        },

@@ -1,131 +1,101 @@
-import {Application} from "../models/application.js";
-import {Job} from "../models/job.js"
+import { Application } from "../models/application.js";
+import { Job } from "../models/job.js";
+import { ApiError } from "../utils/ApiError.js";
 
-export const applyJob = async (req,res)=>{
-    try {
-       const userId = req.id;
-       const jobId = req.params.id;
-       if(!jobId){
-        return res.status(400).json({
-            message:"Job id required",
-            success:false
-        })
-       }
-       //check if the user has already applied for the job or not 
-       const existingApplication = await Application.findOne({job:jobId,applicant:userId});
+const DUPLICATE_KEY_ERROR = 11000;
 
-       if(existingApplication){
-        return res.status(400).json({
-            message:"You have already applied for this job",
-            success:false
-        })
-       }
-       const job = await Job.findById(jobId);
-       if(!job){
-        return res.status(404).json({
-            message:"Job not found",
-            success:false
-        })
-       }
-       //create a new application
-       const newApplication = await Application.create({
-        job:jobId,
-        applicant:userId
-       })
-       job.applications.push(newApplication._id);   
-       await job.save();
-       return res.status(201).json({
-        message:"Job applied successfully",
-        success:true
-       })
+export const applyJob = async (req, res) => {
+  const jobId = req.params.id;
 
+  const jobExists = await Job.exists({ _id: jobId });
+  if (!jobExists) {
+    throw new ApiError(404, "Job not found");
+  }
 
-    } catch (error) {
-        console.log(error);
+  const alreadyApplied = await Application.exists({ job: jobId, applicant: req.id });
+  if (alreadyApplied) {
+    throw new ApiError(409, "You have already applied for this job");
+  }
+
+  let application;
+  try {
+    application = await Application.create({ job: jobId, applicant: req.id });
+  } catch (error) {
+    // two simultaneous requests: the unique index rejects the second one
+    if (error.code === DUPLICATE_KEY_ERROR) {
+      throw new ApiError(409, "You have already applied for this job");
     }
-}
+    throw error;
+  }
 
-export const getAppliedJobs = async (req,res)=>{
-    try {
-        const userId = req.id;
-        const application = await Application.find({applicant:userId}).sort({createdAt:-1}).populate({
-            path:'job',
-            options:{sort:{createdAt:-1}},
-            populate:{
-                path:'company',
-                options:{sort:{createdAt:-1}}
-            }
-        })
-        if(!application){
-            return res.status(404).json({
-                message:"No Application",
-                success:false
-            })
-        }
-        return res.status(200).json({
-            application,
-            success:true
-        })
-    } catch (error) {
-        console.log(error);
-    }
-}
+  await Job.updateOne({ _id: jobId }, { $push: { applications: application._id } });
 
-export const getApplicants = async(req,res)=>{
-    try {
-      const jobId = req.params.id;
-      const job =await Job.findById(jobId).populate({
-        path:'applications',
-        options:{sort:{createdAt:-1}},
-        populate:{
-            path:'applicant'
-        }
-      })
-      if(!job){
-        return res.status(404).json({
-            message:"Job not found",
-            success:false
-        })
-      }
-      return res.status(200).json({
-        job,
-        success:true
-      })
+  return res.status(201).json({
+    message: "Job applied successfully",
+    success: true,
+  });
+};
 
-    } catch (error) {
-        console.log(error);
-    }
-}
+// Applications of the logged-in student
+export const getAppliedJobs = async (req, res) => {
+  const applications = await Application.find({ applicant: req.id })
+    .sort({ createdAt: -1 })
+    .populate({
+      path: "job",
+      select: "-applications",
+      populate: { path: "company", select: "name logo" },
+    });
 
+  return res.status(200).json({
+    applications,
+    success: true,
+  });
+};
 
-export const updateStatus = async (req,res)=>{
-    try {
-       const {status} = req.body;
-       const applicationId = req.params.id;
-       if(!status){
-        return res.status(400).json({
-            message:"status is required",
-            success:false
-        })
-       }
-       //find the application by applicationId
-       const application = await Application.findOne({_id:applicationId});
-       if(!application){
-        return res.status(400).json({
-            message:"Application not found",
-            success:false
-        })
-       }
+// Applicants for one of the logged-in recruiter's jobs
+export const getApplicants = async (req, res) => {
+  const job = await Job.findOne({ _id: req.params.id, created_by: req.id }).select("title");
+  if (!job) {
+    throw new ApiError(404, "Job not found");
+  }
 
-       //update the status
-       application.status = status.toLowerCase();
-       await application.save();
+  const applications = await Application.find({ job: job._id })
+    .sort({ createdAt: -1 })
+    .populate({
+      path: "applicant",
+      select: "fullname email phoneNumber profile.resume profile.resumeOriginalName",
+    });
 
-       return res.status(200).json({
-        message:"Status updated successfully",
-        success:true
-       })
-    } catch (error) {
-        console.log(error);
-    }
-}
+  return res.status(200).json({
+    job: {
+      _id: job._id,
+      title: job.title,
+      applications,
+    },
+    success: true,
+  });
+};
+
+export const updateStatus = async (req, res) => {
+  const application = await Application.findById(req.params.id).populate({
+    path: "job",
+    select: "created_by",
+  });
+
+  // Only the recruiter who posted the job may change the status
+  if (!application || !application.job?.created_by.equals(req.id)) {
+    throw new ApiError(404, "Application not found");
+  }
+
+  application.status = req.body.status;
+  await application.save();
+
+  return res.status(200).json({
+    message: "Status updated successfully",
+    application: {
+      _id: application._id,
+      status: application.status,
+    },
+    success: true,
+  });
+};

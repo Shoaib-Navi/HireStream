@@ -1,159 +1,124 @@
-import React, { useState } from 'react'
-import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from './ui/dialog'
-import { Label } from './ui/label'
-import { Button } from './ui/button';
-import { Loader2 } from 'lucide-react';
-import { Input } from './ui/input';
-import { useDispatch, useSelector } from 'react-redux';
-import axios from 'axios';
-import { USER_API_END_POINT } from '@/utils/constant';
-import { setUser } from '@/redux/authSlice';
-import { toast } from 'sonner';
+import React, { useState } from "react";
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "./ui/dialog";
+import { Label } from "./ui/label";
+import { Button } from "./ui/button";
+import { Loader2 } from "lucide-react";
+import { Input } from "./ui/input";
+import { useDispatch, useSelector } from "react-redux";
+import api, { getErrorMessage } from "@/lib/api";
+import { setUser } from "@/redux/authSlice";
+import { toast } from "sonner";
 
-const UpdateProfileDialog = ({open, setOpen}) => {
-    const [loading, setLoading] = useState(false);
-    const {user} = useSelector(store => store.auth);
-    
-    const [input, setInput] = useState({
-        fullname:user?.fullname,
-        email:user?.email,
-        phoneNumber:user?.phoneNumber,
-        bio:user?.profile?.bio,
-        skills:user?.profile?.skills?.map(skill=>skill),
-        file:user?.profile?.resume
-    });
-    //dispatch is used to send an action to redux so that state can be updated.
-    const dispatch = useDispatch(); 
+const FIELDS = [
+  { name: "fullname", label: "Name", type: "text" },
+  { name: "email", label: "Email", type: "email" },
+  { name: "phoneNumber", label: "Number", type: "tel" },
+  { name: "bio", label: "Bio", type: "text" },
+  { name: "skills", label: "Skills", type: "text", placeholder: "React, Node.js" },
+];
 
-    const changeEventHandler = (e) =>{
-        setInput({...input, [e.target.name] : e.target.value});
-    }
-    const submitHandler = async (e)=>{
-        e.preventDefault();
+// Mounted only while the dialog is open, so it always starts from the saved profile
+const UpdateProfileForm = ({ onDone }) => {
+  const { user } = useSelector((store) => store.auth);
+  const dispatch = useDispatch();
+  const [loading, setLoading] = useState(false);
+  const [input, setInput] = useState({
+    fullname: user?.fullname ?? "",
+    email: user?.email ?? "",
+    phoneNumber: user?.phoneNumber ?? "",
+    bio: user?.profile?.bio ?? "",
+    skills: user?.profile?.skills?.join(", ") ?? "",
+    file: null,
+  });
 
-        const formData = new FormData();
-        formData.append("fullname", input.fullname);
-        formData.append("email",input.email);
-        formData.append("phoneNumber",input.phoneNumber);
-        formData.append("bio",input.bio);
-        formData.append("skills",input.skills);
-        if(input.file){
-            formData.append("file",input.file)
-        }
-        
-        try {
-            setLoading(true);
-            const res = await axios.post(`${USER_API_END_POINT}/profile/update`, formData, {
-                header:{
-                    'Content-Type':'multipart/form-data'
-                },
-                withCredentials:true
-            });
+  const changeEventHandler = (e) => {
+    setInput({ ...input, [e.target.name]: e.target.value });
+  };
 
-            if(res.data.success){
-                dispatch(setUser(res.data.user));
-                toast.success(res.data.message);
-            }
-            
-        } catch (error) {
-            console.log(error);
-            toast.error(error.response.data.message) 
-        }finally{
-            setLoading(false);
-        }
-        setOpen(false);
-        console.log(input)
+  const fileChangeHandler = (e) => {
+    setInput({ ...input, file: e.target.files?.[0] ?? null });
+  };
+
+  const submitHandler = async (e) => {
+    e.preventDefault();
+
+    const formData = new FormData();
+    formData.append("fullname", input.fullname);
+    formData.append("email", input.email);
+    formData.append("phoneNumber", input.phoneNumber);
+    formData.append("bio", input.bio);
+    formData.append("skills", input.skills);
+    // only send a resume when a new one was picked
+    if (input.file) {
+      formData.append("file", input.file);
     }
 
-    const fileChangeHandler = (e) =>{
-        const file = e.target.files?.[0];
-        setInput({...input, file});
+    try {
+      setLoading(true);
+      const res = await api.post("/user/profile/update", formData);
+      dispatch(setUser(res.data.user));
+      toast.success(res.data.message);
+      onDone();
+    } catch (error) {
+      toast.error(getErrorMessage(error));
+    } finally {
+      setLoading(false);
     }
+  };
+
   return (
-    <div>
-      <Dialog open={open}>
-        <DialogContent className="sm:max-w-[425px]" onInteractOutside={()=>setOpen(false)}>
-            <DialogHeader>
-                <DialogTitle>Update Profile</DialogTitle>
-            </DialogHeader>
-            <form onSubmit={submitHandler}>
-                <div className="grid gap-4 py-4">
-                    <div className="grid grid-cols-4 items-center gap-4">
-                        <Label htmlFor="name" className="text-right">Name</Label>
-                        <Input
-                            id="name"
-                            name="name"
-                            value={input.fullname}
-                            onChange={changeEventHandler}
-                            type="text"
-                            className="col-span-3"
-                        />
-                    </div>
-                    <div className="grid grid-cols-4 items-center gap-4">
-                        <Label htmlFor="email" className="text-right">Email</Label>
-                        <Input
-                            id="email"
-                            name="email"
-                            value={input.email}
-                            onChange={changeEventHandler}
-                            type="email"
-                            className="col-span-3"
-                        />
-                    </div>
-                    <div className="grid grid-cols-4 items-center gap-4">
-                        <Label htmlFor="number" className="text-right">Number</Label>
-                        <Input
-                            id="number"
-                            name="number"
-                            value={input.phoneNumber}
-                            onChange={changeEventHandler}
-                            type="number"
-                            className="col-span-3"
-                        />
-                    </div>
-                    <div className="grid grid-cols-4 items-center gap-4">
-                        <Label htmlFor="bio" className="text-right">Bio</Label>
-                        <Input
-                            id="bio"
-                            name="bio"
-                            value={input.bio}
-                            onChange={changeEventHandler}
-                            className="col-span-3"
-                        />
-                    </div>
-                    <div className="grid grid-cols-4 items-center gap-4">
-                        <Label htmlFor="skills" className="text-right">Skills</Label>
-                        <Input
-                            id="skills"
-                            name="skills"
-                            value={input.skills}
-                            onChange={changeEventHandler}
-                            className="col-span-3"
-                        />
-                    </div>
-                    <div className="grid grid-cols-4 items-center gap-4">
-                        <Label htmlFor="file" className="text-right">Resume</Label>
-                        <Input
-                            id="file"
-                            name="file"
-                            type="file"
-                            accept="application/pdf"
-                            onChange={fileChangeHandler}
-                            className="col-span-3"
-                        />
-                    </div>
-                </div>
-             <DialogFooter>
-                {
-                    loading ? <Button className="w-full my-4"><Loader2 className='mr-2 h-4 w-4 animate-spin'/> Please wait</Button>:
-                    <Button type="submit" className="w-full my-4">Update</Button>
-                }
-             </DialogFooter>
-            </form>
-        </DialogContent>
-      </Dialog>
-    </div>
-  )
-}
+    <form onSubmit={submitHandler}>
+      <div className="grid gap-4 py-4">
+        {FIELDS.map(({ name, label, type, placeholder }) => (
+          <div key={name} className="grid grid-cols-4 items-center gap-4">
+            <Label htmlFor={name} className="text-right">{label}</Label>
+            <Input
+              id={name}
+              name={name}
+              type={type}
+              value={input[name]}
+              placeholder={placeholder}
+              onChange={changeEventHandler}
+              className="col-span-3"
+            />
+          </div>
+        ))}
+        <div className="grid grid-cols-4 items-center gap-4">
+          <Label htmlFor="file" className="text-right">Resume</Label>
+          <Input
+            id="file"
+            name="file"
+            type="file"
+            accept="application/pdf"
+            onChange={fileChangeHandler}
+            className="col-span-3"
+          />
+        </div>
+      </div>
+      <DialogFooter>
+        {loading ? (
+          <Button disabled className="w-full my-4">
+            <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Please wait
+          </Button>
+        ) : (
+          <Button type="submit" className="w-full my-4">Update</Button>
+        )}
+      </DialogFooter>
+    </form>
+  );
+};
+
+const UpdateProfileDialog = ({ open, setOpen }) => {
+  return (
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DialogContent className="sm:max-w-[425px]">
+        <DialogHeader>
+          <DialogTitle>Update Profile</DialogTitle>
+        </DialogHeader>
+        <UpdateProfileForm onDone={() => setOpen(false)} />
+      </DialogContent>
+    </Dialog>
+  );
+};
 
 export default UpdateProfileDialog;

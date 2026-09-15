@@ -1,4 +1,4 @@
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { createBrowserRouter, Navigate, RouterProvider } from "react-router-dom";
 import Login from "./components/auth/Login";
 import Signup from "./components/auth/Signup";
 import Home from "./components/Home page/Home";
@@ -12,84 +12,55 @@ import CompanySetup from "./components/admin/CompanySetup";
 import PostJob from "./components/admin/PostJob";
 import AdminJobs from "./components/admin/AdminJobs";
 import Applicants from "./components/admin/Applicants";
-import ProtectedRoute from "./components/admin/ProtectedRoute";
 import Layout from "./components/shared/Layout";
+import SiteLayout from "./components/shared/SiteLayout";
+import ProtectedRoute from "./components/shared/ProtectedRoute";
+import NotFound from "./components/shared/NotFound";
+import RouteError from "./components/shared/RouteError";
 
 const appRouter = createBrowserRouter([
   {
-    element: <Layout />,   // to view top when we navigate from one page to another
+    // Navbar, chatbot, scroll reset and session check for every page
+    element: <Layout />,
+    errorElement: <RouteError />,
     children: [
       {
-        path: "/",
-        element: <Home />,
+        // Public site pages with the footer
+        element: <SiteLayout />,
+        children: [
+          { path: "/", element: <Home /> },
+          { path: "/jobs", element: <Jobs /> },
+          { path: "/browse", element: <Browse /> },
+          { path: "/description/:id", element: <JobDescription /> },
+          {
+            element: <ProtectedRoute roles={["student"]} />,
+            children: [{ path: "/profile", element: <Profile /> }],
+          },
+        ],
       },
+      { path: "/login", element: <Login /> },
+      { path: "/signup", element: <Signup /> },
       {
-        path: "/login",
-        element: <Login />,
+        // Recruiter area
+        path: "/admin",
+        element: <ProtectedRoute roles={["recruiter"]} />,
+        children: [
+          { index: true, element: <Navigate to="/admin/companies" replace /> },
+          { path: "companies", element: <Companies /> },
+          { path: "companies/create", element: <CompanyCreate /> },
+          { path: "companies/:id", element: <CompanySetup /> },
+          { path: "jobs", element: <AdminJobs /> },
+          { path: "jobs/create", element: <PostJob /> },
+          { path: "jobs/:id/applicants", element: <Applicants /> },
+        ],
       },
-      {
-        path: "/signup",
-        element: <Signup />,
-      },
-      {
-        path: "/jobs",
-        element: <Jobs />,
-      },
-      {
-        path: "/description/:id",
-        element: <JobDescription />,
-      },
-      {
-        path: "/browse",
-        element: <Browse />,
-      },
-      {
-        path: "/profile",
-        element: <Profile />,
-      },
-      {
-        path: "/logout",
-        element: <Home />,
-      },
-      //admin routes start from here
-      {
-        path: "/admin/companies",
-        element: (
-          <ProtectedRoute>
-            <Companies />
-          </ProtectedRoute>
-        ),
-      },
-      {
-        path: "/admin/companies/create",
-        element: <CompanyCreate />,
-      },
-      {
-        path: "/admin/companies/:id",
-        element: <CompanySetup />,
-      },
-      {
-        path: "/admin/jobs",
-        element: <AdminJobs />,
-      },
-      {
-        path: "/admin/jobs/create",
-        element: <PostJob />,
-      },
-      {
-        path: "/admin/jobs/:id/applicants",
-        element: <Applicants />,
-      },
+      { path: "*", element: <NotFound /> },
     ],
   },
 ]);
 
 function App() {
-  return (
-    <>
-      <RouterProvider router={appRouter} />
-    </>
-  );
+  return <RouterProvider router={appRouter} />;
 }
 
 export default App;

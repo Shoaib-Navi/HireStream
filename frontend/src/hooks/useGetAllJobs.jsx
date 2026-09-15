@@ -1,27 +1,29 @@
-import { setAllJobs } from '@/redux/jobSlice';
-import { JOB_API_END_POINT } from '@/utils/constant'
-import axios from 'axios';
-import { useEffect } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import api from "@/lib/api";
+import { setAllJobs } from "@/redux/jobSlice";
+import { useEffect } from "react";
+import { useDispatch } from "react-redux";
 
-//custom hook
-const useGetAllJobs = () => {
-    const dispatch = useDispatch();
-    const {searchedQuery} = useSelector(store => store.job);
+// Fetches public jobs, optionally filtered on the server by keyword
+const useGetAllJobs = (keyword = "") => {
+  const dispatch = useDispatch();
 
-    useEffect(()=>{
-        const fetchAllJobs = async ()=>{
-            try {
-                const res = await axios.get(`${JOB_API_END_POINT}/get?keyword=${searchedQuery}`, {withCredentials:true});
-                if(res.data.success){
-                    dispatch(setAllJobs(res.data.jobs))
-                }         
-            } catch (error) {
-                console.log(error);                
-            }
-        }
-        fetchAllJobs();
-    },[])
-}
+  useEffect(() => {
+    const controller = new AbortController();
+    const fetchAllJobs = async () => {
+      try {
+        const res = await api.get("/job/get", {
+          params: { keyword },
+          signal: controller.signal,
+        });
+        dispatch(setAllJobs(res.data.jobs));
+      } catch (error) {
+        if (!controller.signal.aborted) console.error(error);
+      }
+    };
+    fetchAllJobs();
+    // a newer keyword cancels the older request, so results can't arrive out of order
+    return () => controller.abort();
+  }, [keyword, dispatch]);
+};
 
-export default useGetAllJobs
+export default useGetAllJobs;
