@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { useFormState } from "@/hooks/useFormState";
-import { formatMonthYear } from "@/lib/format";
+import { ExperienceEntry } from "./ProfileEntries";
 import { useUpdateMyProfileMutation } from "../api";
 import EditableListSection from "./EditableListSection";
 
@@ -82,18 +82,7 @@ const ExperienceSection = ({ profile }) => {
       items={profile.experience ?? []}
       saving={isLoading}
       onSave={(experience) => updateProfile({ experience }).unwrap()}
-      renderItem={(item) => (
-        <>
-          <p className="type-h4 text-foreground">{item.title}</p>
-          <p className="type-body text-muted-foreground">
-            {item.company}
-            {item.location && ` · ${item.location}`}
-          </p>
-          <p className="type-caption text-muted-foreground">
-            {formatMonthYear(item.startDate)} – {item.isCurrent ? "Present" : formatMonthYear(item.endDate) || "—"}
-          </p>
-        </>
-      )}
+      renderItem={(item) => <ExperienceEntry item={item} />}
       renderForm={({ key, ...formProps }) => <ExperienceForm key={key} {...formProps} />}
     />
   );

@@ -39,7 +39,7 @@ backend/
 │   ├── constants/            # roles, statuses, enums shared by the modules
 │   ├── middleware/           # auth + roles, validation, uploads, rate limits, errors
 │   ├── modules/<domain>/     # model, validation, service, controller, routes per domain
-│   ├── services/             # Cloudinary storage, Gemini client
+│   ├── services/             # Cloudinary storage, email delivery, Gemini client
 │   ├── migrations/           # versioned data migrations + runner
 │   └── scripts/              # migrate, seed
 └── tests/                    # API integration tests
@@ -62,7 +62,7 @@ Requires Node.js 22.12+ (or 20.19+) and a MongoDB database.
 ```bash
 # backend
 cd backend
-cp .env.example .env       # set MONGO_URI and JWT_SECRET; Cloudinary and Gemini are optional
+cp .env.example .env       # set MONGO_URI and JWT_SECRET; Cloudinary, SMTP and Gemini are optional
 npm install
 npm run migrate            # creates indexes (and converts data from the first version of HireStream)
 npm run seed               # optional sample data for development

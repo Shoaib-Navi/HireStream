@@ -19,6 +19,10 @@ const CompaniesDirectoryPage = lazyPage(() => import("@/features/companies/pages
 const CompanyProfilePage = lazyPage(() => import("@/features/companies/pages/CompanyProfilePage"));
 const LoginPage = lazyPage(() => import("@/features/auth/pages/LoginPage"));
 const RegisterPage = lazyPage(() => import("@/features/auth/pages/RegisterPage"));
+const ForgotPasswordPage = lazyPage(() => import("@/features/auth/pages/ForgotPasswordPage"));
+const ResetPasswordPage = lazyPage(() => import("@/features/auth/pages/ResetPasswordPage"));
+const VerifyEmailPage = lazyPage(() => import("@/features/auth/pages/VerifyEmailPage"));
+const NotificationsPage = lazyPage(() => import("@/features/notifications/pages/NotificationsPage"));
 const MyApplicationsPage = lazyPage(() => import("@/features/applications/pages/MyApplicationsPage"));
 const ApplicationDetailPage = lazyPage(() => import("@/features/applications/pages/ApplicationDetailPage"));
 const SavedJobsPage = lazyPage(() => import("@/features/savedJobs/pages/SavedJobsPage"));
@@ -27,6 +31,9 @@ const AccountPage = lazyPage(() => import("@/features/profile/pages/AccountPage"
 const RecruiterJobsPage = lazyPage(() => import("@/features/jobs/pages/RecruiterJobsPage"));
 const PostJobPage = lazyPage(() => import("@/features/jobs/pages/PostJobPage"));
 const JobApplicantsPage = lazyPage(() => import("@/features/applications/pages/JobApplicantsPage"));
+const RecruiterOverviewPage = lazyPage(() => import("@/features/dashboard/pages/RecruiterOverviewPage"));
+const EditJobPage = lazyPage(() => import("@/features/jobs/pages/EditJobPage"));
+const RecruiterApplicationPage = lazyPage(() => import("@/features/applications/pages/RecruiterApplicationPage"));
 const CompaniesPage = lazyPage(() => import("@/features/companies/pages/CompaniesPage"));
 const CompanyFormPage = lazyPage(() => import("@/features/companies/pages/CompanyFormPage"));
 
@@ -43,6 +50,7 @@ export const router = createBrowserRouter([
           { path: "/jobs/:id", lazy: JobDetailsPage },
           { path: "/companies", lazy: CompaniesDirectoryPage },
           { path: "/companies/:slug", lazy: CompanyProfilePage },
+          { path: "/verify-email", lazy: VerifyEmailPage },
         ],
       },
       {
@@ -50,6 +58,8 @@ export const router = createBrowserRouter([
         children: [
           { path: "/login", lazy: LoginPage },
           { path: "/register", lazy: RegisterPage },
+          { path: "/forgot-password", lazy: ForgotPasswordPage },
+          { path: "/reset-password", lazy: ResetPasswordPage },
         ],
       },
       {
@@ -64,6 +74,7 @@ export const router = createBrowserRouter([
               { path: "applications/:id", lazy: ApplicationDetailPage },
               { path: "saved", lazy: SavedJobsPage },
               { path: "profile", lazy: ProfilePage },
+              { path: "notifications", lazy: NotificationsPage },
               { path: "account", lazy: AccountPage },
             ],
           },
@@ -76,13 +87,17 @@ export const router = createBrowserRouter([
             path: "/recruiter",
             element: <DashboardLayout />,
             children: [
-              { index: true, element: <Navigate to="jobs" replace /> },
+              { index: true, element: <Navigate to="overview" replace /> },
+              { path: "overview", lazy: RecruiterOverviewPage },
               { path: "jobs", lazy: RecruiterJobsPage },
               { path: "jobs/new", lazy: PostJobPage },
+              { path: "jobs/:id/edit", lazy: EditJobPage },
               { path: "jobs/:jobId/applicants", lazy: JobApplicantsPage },
+              { path: "applications/:id", lazy: RecruiterApplicationPage },
               { path: "companies", lazy: CompaniesPage },
               { path: "companies/new", lazy: CompanyFormPage },
               { path: "companies/:id/edit", lazy: CompanyFormPage },
+              { path: "notifications", lazy: NotificationsPage },
               { path: "account", lazy: AccountPage },
             ],
           },

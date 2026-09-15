@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { useFormState } from "@/hooks/useFormState";
 import { useUpdateMyProfileMutation } from "../api";
 import EditableListSection from "./EditableListSection";
+import { EducationEntry } from "./ProfileEntries";
 
 const toYearOrNull = (value) => (value === "" ? null : Number(value));
 
@@ -71,21 +72,7 @@ const EducationSection = ({ profile }) => {
       items={profile.education ?? []}
       saving={isLoading}
       onSave={(education) => updateProfile({ education }).unwrap()}
-      renderItem={(item) => (
-        <>
-          <p className="type-h4 text-foreground">{item.institution}</p>
-          <p className="type-body text-muted-foreground">
-            {item.degree}
-            {item.fieldOfStudy && `, ${item.fieldOfStudy}`}
-          </p>
-          {(item.startYear || item.endYear) && (
-            <p className="type-caption text-muted-foreground">
-              {item.startYear ?? "—"} – {item.endYear ?? "Present"}
-              {item.grade && ` · ${item.grade}`}
-            </p>
-          )}
-        </>
-      )}
+      renderItem={(item) => <EducationEntry item={item} />}
       renderForm={({ key, ...formProps }) => <EducationForm key={key} {...formProps} />}
     />
   );

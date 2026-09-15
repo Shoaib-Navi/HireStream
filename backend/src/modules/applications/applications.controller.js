@@ -21,6 +21,11 @@ export const getOne = async (req, res) => {
   sendSuccess(res, { data: { application } });
 };
 
+export const addNote = async (req, res) => {
+  const notes = await applicationsService.addApplicationNote(req.user.id, req.params.id, req.body);
+  sendSuccess(res, { status: 201, message: "Note added", data: { notes } });
+};
+
 export const withdraw = async (req, res) => {
   const application = await applicationsService.withdrawApplication(req.user.id, req.params.id);
   sendSuccess(res, { message: "Application withdrawn", data: { application } });

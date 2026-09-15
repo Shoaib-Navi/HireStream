@@ -4,7 +4,9 @@ import { paginationMeta, toPagination } from "../../utils/pagination.js";
 import { Job } from "../jobs/job.model.js";
 import { isAcceptingApplications } from "../jobs/jobs.service.js";
 import { CandidateProfile } from "../users/candidateProfile.model.js";
+import { User } from "../users/user.model.js";
 import { Application } from "./application.model.js";
+import { notifyApplicationReceived, notifyApplicationWithdrawn, notifyStatusChanged } from "./applications.notifications.js";
 
 const DUPLICATE_KEY_ERROR = 11000;
 
@@ -17,8 +19,22 @@ const statusSummary = (application) => ({
   statusHistory: application.statusHistory,
 });
 
+// Loads an application of one of the recruiter's jobs; others get 404 so ids can't be probed
+const findRecruiterApplication = async (recruiterId, applicationId, select = "") => {
+  const application = await Application.findById(applicationId)
+    .select(select)
+    .populate({ path: "job", select: "postedBy title" })
+    .populate({ path: "company", select: "name" });
+  if (!application || !application.job?.postedBy.equals(recruiterId)) {
+    throw ApiError.notFound("Application not found");
+  }
+  return application;
+};
+
 export const applyToJob = async (candidateId, jobId, { coverLetter }) => {
-  const job = await Job.findById(jobId).select("status deadline company").populate({ path: "company", select: "status" });
+  const job = await Job.findById(jobId)
+    .select("title status deadline company postedBy")
+    .populate({ path: "company", select: "status" });
   if (!job || job.company?.status === COMPANY_STATUS.SUSPENDED) {
     throw ApiError.notFound("Job not found");
   }
@@ -49,7 +65,16 @@ export const applyToJob = async (candidateId, jobId, { coverLetter }) => {
     throw error;
   }
 
-  await Job.updateOne({ _id: job._id }, { $inc: { applicationCount: 1 } });
+  const [, candidate] = await Promise.all([
+    Job.updateOne({ _id: job._id }, { $inc: { applicationCount: 1 } }),
+    User.findById(candidateId).select("fullName").lean(),
+  ]);
+  await notifyApplicationReceived({
+    applicationId: application._id,
+    recruiterId: job.postedBy,
+    candidateName: candidate?.fullName ?? "A candidate",
+    jobTitle: job.title,
+  });
   return application;
 };
 
@@ -108,12 +133,15 @@ export const listJobApplications = async (recruiterId, jobId, query) => {
   };
 };
 
-// Visible to the candidate who applied, the recruiter who posted the job, and admins
+// Visible to the candidate who applied, the recruiter who posted the job, and admins.
+// Private notes are only included for the recruiter and admins.
 export const getApplication = async (applicationId, viewer) => {
   const application = await Application.findById(applicationId)
+    .select("+notes")
     .populate({ path: "job", select: "title location employmentType workMode status salary experience postedBy" })
     .populate({ path: "company", select: "name slug logo" })
     .populate({ path: "candidate", select: CANDIDATE_CARD_FIELDS })
+    .populate({ path: "notes.author", select: "fullName avatar" })
     .lean();
 
   const isCandidate = application?.candidate?._id.toString() === viewer.id;
@@ -123,17 +151,16 @@ export const getApplication = async (applicationId, viewer) => {
   }
 
   if (isCandidate) {
-    return application;
+    const { notes: _privateNotes, ...candidateView } = application;
+    return candidateView;
   }
   const candidateProfile = await CandidateProfile.findOne({ user: application.candidate?._id }).lean();
   return { ...application, candidateProfile };
 };
 
+// The optional note is shown to the candidate in their application timeline
 export const updateApplicationStatus = async (recruiterId, applicationId, { status, note }) => {
-  const application = await Application.findById(applicationId).populate({ path: "job", select: "postedBy" });
-  if (!application || !application.job?.postedBy.equals(recruiterId)) {
-    throw ApiError.notFound("Application not found");
-  }
+  const application = await findRecruiterApplication(recruiterId, applicationId);
   if (application.status === APPLICATION_STATUS.WITHDRAWN) {
     throw ApiError.badRequest("This application was withdrawn by the candidate");
   }
@@ -142,14 +169,38 @@ export const updateApplicationStatus = async (recruiterId, applicationId, { stat
     application.status = status;
     application.statusHistory.push({ status, note, changedBy: recruiterId });
     await application.save();
+
+    const candidate = await User.findById(application.candidate).select("fullName email").lean();
+    if (candidate) {
+      await notifyStatusChanged({
+        applicationId: application._id,
+        candidate,
+        status,
+        note,
+        jobTitle: application.job.title,
+        companyName: application.company?.name ?? "the company",
+      });
+    }
   }
 
   return statusSummary(application);
 };
 
+export const addApplicationNote = async (recruiterId, applicationId, { body }) => {
+  const application = await findRecruiterApplication(recruiterId, applicationId, "+notes");
+  application.notes.push({ author: recruiterId, body });
+  await application.save();
+
+  const { notes } = await Application.findById(application._id)
+    .select("+notes")
+    .populate({ path: "notes.author", select: "fullName avatar" })
+    .lean();
+  return notes;
+};
+
 // Candidates can withdraw while the application is still in progress
 export const withdrawApplication = async (candidateId, applicationId) => {
-  const application = await Application.findById(applicationId);
+  const application = await Application.findById(applicationId).populate({ path: "job", select: "title postedBy" });
   if (!application || !application.candidate.equals(candidateId)) {
     throw ApiError.notFound("Application not found");
   }
@@ -160,6 +211,16 @@ export const withdrawApplication = async (candidateId, applicationId) => {
   application.status = APPLICATION_STATUS.WITHDRAWN;
   application.statusHistory.push({ status: APPLICATION_STATUS.WITHDRAWN, changedBy: candidateId });
   await application.save();
+
+  if (application.job) {
+    const candidate = await User.findById(candidateId).select("fullName").lean();
+    await notifyApplicationWithdrawn({
+      applicationId: application._id,
+      recruiterId: application.job.postedBy,
+      candidateName: candidate?.fullName ?? "A candidate",
+      jobTitle: application.job.title,
+    });
+  }
 
   return statusSummary(application);
 };

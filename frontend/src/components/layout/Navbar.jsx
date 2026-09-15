@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { PUBLIC_NAV_LINKS } from "@/config/navigation";
 import { useAuth } from "@/features/auth/hooks/useAuth";
 import { cn } from "@/lib/utils";
+import NotificationBell from "@/features/notifications/components/NotificationBell";
 import MobileNav from "./MobileNav";
 import UserMenu from "./UserMenu";
 
@@ -47,7 +48,10 @@ const Navbar = () => {
             </Button>
           )}
           {user ? (
-            <UserMenu />
+            <>
+              <NotificationBell />
+              <UserMenu />
+            </>
           ) : (
             <div className="hidden items-center gap-2 sm:flex">
               <Button asChild variant="ghost">

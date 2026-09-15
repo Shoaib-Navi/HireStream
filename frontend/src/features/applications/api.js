@@ -33,7 +33,13 @@ export const applicationsApi = baseApi.injectEndpoints({
       invalidatesTags: (result, error, { id, jobId }) => [
         { type: "JobApplications", id: jobId },
         { type: "Application", id },
+        "RecruiterOverview",
       ],
+    }),
+    addApplicationNote: build.mutation({
+      query: ({ id, body }) => ({ url: `/applications/${id}/notes`, method: "POST", body: { body } }),
+      transformResponse: (response) => response.data.notes,
+      invalidatesTags: (result, error, { id }) => [{ type: "Application", id }],
     }),
   }),
 });
@@ -45,4 +51,5 @@ export const {
   useWithdrawApplicationMutation,
   useGetJobApplicationsQuery,
   useUpdateApplicationStatusMutation,
+  useAddApplicationNoteMutation,
 } = applicationsApi;
