@@ -1,0 +1,23 @@
+import express from "express";
+import aiRoutes from "./modules/ai/ai.routes.js";
+import { applicationsRouter, jobApplicationsRouter } from "./modules/applications/applications.routes.js";
+import authRoutes from "./modules/auth/auth.routes.js";
+import companiesRoutes from "./modules/companies/companies.routes.js";
+import jobsRoutes from "./modules/jobs/jobs.routes.js";
+import usersRoutes from "./modules/users/users.routes.js";
+import { sendSuccess } from "./utils/response.js";
+
+// Every API module is mounted here, under /api/v1
+const router = express.Router();
+
+router.get("/health", (req, res) => sendSuccess(res, { data: { status: "ok" } }));
+
+router.use("/auth", authRoutes);
+router.use("/users", usersRoutes);
+router.use("/companies", companiesRoutes);
+router.use("/jobs/:jobId/applications", jobApplicationsRouter);
+router.use("/jobs", jobsRoutes);
+router.use("/applications", applicationsRouter);
+router.use("/ai", aiRoutes);
+
+export default router;
