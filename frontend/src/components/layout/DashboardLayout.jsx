@@ -1,5 +1,6 @@
 import { NavLink, Outlet } from "react-router-dom";
 import { DASHBOARD_NAV } from "@/config/navigation";
+import EmailVerificationNotice from "@/features/auth/components/EmailVerificationNotice";
 import { useAuth } from "@/features/auth/hooks/useAuth";
 import { cn } from "@/lib/utils";
 import Navbar from "./Navbar";
@@ -50,6 +51,7 @@ const DashboardLayout = () => {
               </NavLink>
             ))}
           </nav>
+          <EmailVerificationNotice className="mb-6" />
           <Outlet />
         </main>
       </div>
