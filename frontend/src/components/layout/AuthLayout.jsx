@@ -1,15 +1,14 @@
-import { ListChecks, Search, Send } from "lucide-react";
 import { Navigate, Outlet, useLocation } from "react-router-dom";
-import GridBackground from "@/components/common/GridBackground";
 import Logo from "@/components/common/Logo";
+import ScrambleText from "@/components/common/ScrambleText";
 import ThemeToggle from "@/components/common/ThemeToggle";
 import { getDashboardHome } from "@/config/navigation";
 import { useAuth } from "@/features/auth/hooks/useAuth";
 
 const HIGHLIGHTS = [
-  { icon: Search, title: "Find the right role", text: "Search by skills, location, work mode and salary." },
-  { icon: Send, title: "Apply in minutes", text: "Your profile and resume are reused for every application." },
-  { icon: ListChecks, title: "Track every step", text: "See when you're shortlisted, invited to interview or hired." },
+  { title: "Find the right role", text: "Search by skills, location, work mode and salary." },
+  { title: "Apply in minutes", text: "Your profile and resume go with every application." },
+  { title: "Track every step", text: "See when you're shortlisted, invited to interview or hired." },
 ];
 
 const AuthLayout = () => {
@@ -22,37 +21,28 @@ const AuthLayout = () => {
   }
 
   return (
-    <div className="grid min-h-screen lg:grid-cols-[1fr_1.1fr]">
-      <GridBackground
-        className="hidden bg-brand-950 text-white lg:block"
-        lineColor="color-mix(in oklab, white 6%, transparent)"
-      >
-        <div className="flex h-full flex-col justify-between p-12">
-          <Logo className="text-white [&_span_span]:text-brand-300" />
-          <div className="max-w-md space-y-10">
-            <div className="space-y-3">
-              <h2 className="type-h1">Your next role is one search away.</h2>
-              <p className="type-body-lg text-brand-100/80">
-                One profile for every application, and a clear view of where each one stands.
-              </p>
-            </div>
-            <ul className="space-y-6">
-              {HIGHLIGHTS.map(({ icon: Icon, title, text }) => (
-                <li key={title} className="flex gap-4">
-                  <div className="flex size-10 shrink-0 items-center justify-center rounded-lg bg-white/10 text-brand-200">
-                    <Icon className="size-5" aria-hidden="true" />
-                  </div>
-                  <div>
-                    <p className="font-semibold">{title}</p>
-                    <p className="type-body text-brand-100/70">{text}</p>
-                  </div>
-                </li>
-              ))}
-            </ul>
+    <div className="grid min-h-screen lg:grid-cols-[1fr_1.05fr]">
+      <aside className="dark hidden flex-col justify-between bg-background p-12 text-foreground lg:flex">
+        <Logo />
+        <div className="space-y-12">
+          <div className="space-y-5">
+            <ScrambleText text="One profile. Every application." className="type-label block text-muted-foreground" />
+            <h2 className="type-h1 max-w-md">Your next role is one search away.</h2>
           </div>
-          <p className="type-caption text-brand-100/50">© {new Date().getFullYear()} HireStream</p>
+          <ol className="border-t">
+            {HIGHLIGHTS.map(({ title, text }, index) => (
+              <li key={title} className="flex gap-6 border-b py-5">
+                <span className="type-h4 text-muted-foreground">{String(index + 1).padStart(2, "0")}</span>
+                <div>
+                  <p className="type-h4">{title}</p>
+                  <p className="type-body text-muted-foreground">{text}</p>
+                </div>
+              </li>
+            ))}
+          </ol>
         </div>
-      </GridBackground>
+        <p className="type-caption text-muted-foreground">© {new Date().getFullYear()} HireStream</p>
+      </aside>
 
       <main id="main" className="flex flex-col">
         <div className="flex items-center justify-between p-4 sm:p-6 lg:justify-end">

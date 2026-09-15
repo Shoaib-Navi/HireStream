@@ -1,9 +1,10 @@
 import { Link } from "react-router-dom";
 import { cn } from "@/lib/utils";
 
+// Colors come from the theme, so the mark adapts to light and dark sections
 export const LogoMark = ({ className }) => (
-  <svg viewBox="0 0 32 32" aria-hidden="true" className={cn("size-8 shrink-0", className)}>
-    <rect width="32" height="32" rx="9" className="fill-primary" />
+  <svg viewBox="0 0 32 32" aria-hidden="true" className={cn("size-7 shrink-0", className)}>
+    <rect width="32" height="32" rx="7" className="fill-primary" />
     <path
       d="M10.5 8.5v13M21.5 8.5v13M10.5 15h11"
       stroke="currentColor"
@@ -27,14 +28,10 @@ const Logo = ({ to = "/", className, showText = true }) => (
   <Link
     to={to}
     aria-label="HireStream home"
-    className={cn("inline-flex items-center gap-2.5 font-display text-lg font-bold tracking-tight text-foreground", className)}
+    className={cn("inline-flex items-center gap-2 font-display text-xl font-medium tracking-[-0.04em] text-foreground", className)}
   >
     <LogoMark />
-    {showText && (
-      <span>
-        Hire<span className="text-primary">Stream</span>
-      </span>
-    )}
+    {showText && <span>hirestream</span>}
   </Link>
 );
 

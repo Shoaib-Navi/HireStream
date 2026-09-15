@@ -28,16 +28,16 @@ const LatestJobsSection = () => {
   };
 
   return (
-    <section className="page-container py-16 sm:py-20">
-      <div className="flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
-        <SectionHeading align="left" eyebrow="Latest openings" title="Recently posted jobs" description="New roles from companies hiring on HireStream." />
-        <Button asChild variant="outline" className="shrink-0">
+    <section className="page-container py-20 sm:py-28">
+      <div className="flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
+        <SectionHeading eyebrow="Latest openings" title="Recently posted jobs" />
+        <Button asChild className="shrink-0">
           <Link to="/jobs">
             View all jobs <ArrowRight />
           </Link>
         </Button>
       </div>
-      <div className="mt-10">{renderJobs()}</div>
+      <div className="mt-12">{renderJobs()}</div>
     </section>
   );
 };

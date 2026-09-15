@@ -12,17 +12,18 @@ const DashboardLayout = () => {
   return (
     <div className="flex min-h-screen flex-col bg-surface">
       <Navbar />
-      <div className="page-container flex flex-1 gap-8 py-6 lg:py-10">
+      <div className="page-container flex flex-1 gap-10 py-6 lg:py-10">
         <aside className="hidden w-56 shrink-0 lg:block">
-          <nav aria-label="Dashboard" className="sticky top-24 space-y-1">
+          <p className="type-label px-3 text-muted-foreground">Dashboard</p>
+          <nav aria-label="Dashboard" className="sticky top-24 mt-4 space-y-1">
             {items.map(({ label, to, icon: Icon }) => (
               <NavLink
                 key={to}
                 to={to}
                 className={({ isActive }) =>
                   cn(
-                    "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-muted-foreground transition-colors hover:bg-card hover:text-foreground",
-                    isActive && "bg-card text-primary shadow-card",
+                    "flex items-center gap-3 rounded-md px-3 py-2.5 text-sm font-medium text-muted-foreground transition-colors hover:bg-card hover:text-foreground",
+                    isActive && "bg-primary text-primary-foreground hover:bg-primary hover:text-primary-foreground",
                   )
                 }
               >
@@ -33,15 +34,15 @@ const DashboardLayout = () => {
         </aside>
 
         <main id="main" className="min-w-0 flex-1">
-          <nav aria-label="Dashboard" className="-mx-1 mb-6 flex gap-1 overflow-x-auto px-1 pb-1 lg:hidden">
+          <nav aria-label="Dashboard" className="-mx-1 mb-6 flex gap-1.5 overflow-x-auto px-1 pb-1 lg:hidden">
             {items.map(({ label, to, icon: Icon }) => (
               <NavLink
                 key={to}
                 to={to}
                 className={({ isActive }) =>
                   cn(
-                    "flex shrink-0 items-center gap-2 rounded-full border bg-card px-3.5 py-1.5 text-sm font-medium text-muted-foreground",
-                    isActive && "border-primary bg-primary-soft text-primary",
+                    "flex shrink-0 items-center gap-2 rounded-md border bg-card px-3.5 py-2 text-sm font-medium text-muted-foreground",
+                    isActive && "border-primary bg-primary text-primary-foreground",
                   )
                 }
               >

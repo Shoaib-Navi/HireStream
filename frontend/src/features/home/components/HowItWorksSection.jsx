@@ -1,30 +1,39 @@
-import { ListChecks, Search, Send, UserRoundPlus } from "lucide-react";
-import SectionHeading from "@/components/common/SectionHeading";
+import { ArrowRight } from "lucide-react";
+import { Link } from "react-router-dom";
+import FeatureGrid from "@/components/common/FeatureGrid";
+import ScrambleText from "@/components/common/ScrambleText";
+import { Button } from "@/components/ui/button";
 
 const STEPS = [
-  { icon: UserRoundPlus, title: "Create your profile", text: "Add your skills, experience and resume once." },
-  { icon: Search, title: "Find the right job", text: "Filter by work mode, job type, experience and salary." },
-  { icon: Send, title: "Apply in one click", text: "Your profile and resume go with every application." },
-  { icon: ListChecks, title: "Track your progress", text: "See every status change, from applied to hired." },
+  { title: "Create your profile", description: "Add your skills, experience and resume once. It goes with every application." },
+  { title: "Find the right job", description: "Filter open roles by work mode, job type, experience and salary." },
+  { title: "Apply in one click", description: "Send your profile, resume and an optional cover letter in seconds." },
+  { title: "Track your progress", description: "Follow every status change, from applied to shortlisted, interview and hired." },
 ];
 
 const HowItWorksSection = () => (
-  <section className="page-container py-16 sm:py-20">
-    <SectionHeading eyebrow="How it works" title="From search to offer, in one place" />
-    <ol className="mt-12 grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
-      {STEPS.map(({ icon: Icon, title, text }, index) => (
-        <li key={title} className="relative">
-          <div className="flex items-center gap-3">
-            <div className="flex size-11 items-center justify-center rounded-xl bg-primary text-primary-foreground shadow-glow">
-              <Icon className="size-5" aria-hidden="true" />
-            </div>
-            <span className="type-overline text-muted-foreground">Step {index + 1}</span>
-          </div>
-          <h3 className="type-h4 mt-5 text-foreground">{title}</h3>
-          <p className="type-body mt-1.5 text-muted-foreground">{text}</p>
-        </li>
-      ))}
-    </ol>
+  <section className="dark rounded-section bg-background text-foreground">
+    <div className="page-container grid gap-12 py-20 sm:py-28 lg:grid-cols-[20rem_1fr] lg:gap-16">
+      <div className="flex flex-col justify-between gap-10">
+        <div className="space-y-5">
+          <ScrambleText text="How it works" className="type-label block text-muted-foreground" />
+          <h2 className="type-h1">From search to offer, in one place.</h2>
+          <ul className="type-h3 space-y-1 pt-4 text-muted-foreground">
+            {STEPS.map((step, index) => (
+              <li key={step.title} className={index === 0 ? "text-foreground" : undefined}>
+                {step.title.split(" ").slice(0, 2).join(" ")}
+              </li>
+            ))}
+          </ul>
+        </div>
+        <Button asChild size="lg" variant="highlight" className="self-start">
+          <Link to="/register">
+            Create your profile <ArrowRight />
+          </Link>
+        </Button>
+      </div>
+      <FeatureGrid items={STEPS} columns={2} />
+    </div>
   </section>
 );
 

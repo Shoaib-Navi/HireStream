@@ -15,8 +15,8 @@ const JobSearchBar = ({ defaultQuery = "", defaultLocation = "", onSearch, size 
   };
 
   const inputClassName = cn(
-    "w-full bg-transparent text-sm text-foreground outline-none placeholder:text-muted-foreground",
-    large ? "h-12 text-base" : "h-10",
+    "w-full bg-transparent text-foreground outline-none placeholder:text-muted-foreground",
+    large ? "h-12 text-base" : "h-10 text-sm",
   );
 
   return (
@@ -24,7 +24,7 @@ const JobSearchBar = ({ defaultQuery = "", defaultLocation = "", onSearch, size 
       role="search"
       onSubmit={handleSubmit}
       className={cn(
-        "flex flex-col gap-1 rounded-2xl border bg-card p-2 shadow-elevated focus-within:border-primary/40 sm:flex-row sm:items-center",
+        "flex flex-col gap-1 rounded-lg border bg-card p-1.5 transition-colors focus-within:border-foreground/30 sm:flex-row sm:items-center",
         className,
       )}
     >
@@ -51,8 +51,8 @@ const JobSearchBar = ({ defaultQuery = "", defaultLocation = "", onSearch, size 
           className={inputClassName}
         />
       </label>
-      <Button type="submit" size={large ? "xl" : "lg"} className="rounded-xl">
-        Search jobs
+      <Button type="submit" size={large ? "lg" : "default"}>
+        Search
       </Button>
     </form>
   );

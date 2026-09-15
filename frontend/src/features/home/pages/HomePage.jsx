@@ -1,7 +1,7 @@
 import { useDocumentTitle } from "@/hooks/useDocumentTitle";
 import BrowseShortcuts from "../components/BrowseShortcuts";
-import EmployerCta from "../components/EmployerCta";
 import HeroSection from "../components/HeroSection";
+import HiringSection from "../components/HiringSection";
 import HowItWorksSection from "../components/HowItWorksSection";
 import LatestJobsSection from "../components/LatestJobsSection";
 
@@ -14,7 +14,7 @@ const HomePage = () => {
       <LatestJobsSection />
       <BrowseShortcuts />
       <HowItWorksSection />
-      <EmployerCta />
+      <HiringSection />
     </>
   );
 };
