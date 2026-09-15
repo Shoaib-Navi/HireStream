@@ -36,6 +36,21 @@ export const registerLimiter = createLimiter({
   message: "Too many accounts created from this network. Please try again later.",
 });
 
+// Emails sent on request (verification links, password resets)
+export const emailLimiter = createLimiter({
+  windowMs: ONE_HOUR,
+  limit: 5,
+  message: "Too many emails requested. Please try again later.",
+});
+
+// Token and password checks; only failed attempts count
+export const accountSecurityLimiter = createLimiter({
+  windowMs: FIFTEEN_MINUTES,
+  limit: 10,
+  skipSuccessfulRequests: true,
+  message: "Too many attempts. Please try again in 15 minutes.",
+});
+
 export const aiLimiter = createLimiter({
   windowMs: 60 * 1000,
   limit: 10,

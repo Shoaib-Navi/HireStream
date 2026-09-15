@@ -59,3 +59,20 @@ export const WITHDRAWABLE_STATUSES = [
 export const SESSION_DAYS = 7;
 
 export const MAX_UPLOAD_BYTES = 5 * 1024 * 1024;
+
+// Single-use links sent by email
+export const TOKEN_PURPOSE = Object.freeze({
+  EMAIL_VERIFICATION: "email_verification",
+  PASSWORD_RESET: "password_reset",
+});
+
+export const EMAIL_VERIFICATION_HOURS = 24;
+export const PASSWORD_RESET_MINUTES = 30;
+
+export const NOTIFICATION_TYPES = Object.freeze({
+  APPLICATION_RECEIVED: "application_received",
+  APPLICATION_STATUS: "application_status",
+  APPLICATION_WITHDRAWN: "application_withdrawn",
+});
+
+export const NOTIFICATION_RETENTION_DAYS = 90;
