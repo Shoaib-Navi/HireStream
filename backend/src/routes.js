@@ -1,4 +1,5 @@
 import express from "express";
+import { env } from "./config/env.js";
 import adminRoutes from "./modules/admin/admin.routes.js";
 import aiRoutes from "./modules/ai/ai.routes.js";
 import { applicationsRouter, jobApplicationsRouter } from "./modules/applications/applications.routes.js";
@@ -14,7 +15,15 @@ import { sendSuccess } from "./utils/response.js";
 // Every API module is mounted here, under /api/v1
 const router = express.Router();
 
-router.get("/health", (req, res) => sendSuccess(res, { data: { status: "ok" } }));
+router.get("/health", (req, res) =>
+  sendSuccess(res, {
+    data: {
+      status: "ok",
+      environment: env.isProduction ? "production" : "development",
+      uptimeSeconds: Math.round(process.uptime()),
+    },
+  }),
+);
 
 router.use("/auth", authRoutes);
 router.use("/users", usersRoutes);
