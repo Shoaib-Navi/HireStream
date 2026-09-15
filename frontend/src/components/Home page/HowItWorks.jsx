@@ -1,6 +1,6 @@
 // HowItWorks.jsx
 
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import { UserCircle2, Search, Trophy, Zap } from "lucide-react";
 
@@ -220,7 +220,7 @@ const HowItWorks = () => {
           {/* Vertical connector line */}
           <div className="absolute left-[22px] top-8 bottom-8 w-[2px] bg-gradient-to-b from-[#6a38c2] via-[#f83002] to-green-400 opacity-20" />
 
-          {steps.map(({ step, icon: Icon, title, sub, desc, color, dot }, i) => (
+          {steps.map(({ step, icon: Icon, title, sub, desc, dot }) => (
             <div key={step} className="flex items-start gap-4 relative pb-6 last:pb-0">
 
               {/* Step dot */}

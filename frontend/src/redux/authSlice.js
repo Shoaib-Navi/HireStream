@@ -4,7 +4,9 @@ const authSlice = createSlice({
     name:"auth",
     initialState:{
         loading:false,
-        user:null
+        user:null,
+        // becomes true once /user/me has answered on app load (not persisted)
+        sessionChecked:false
     },
     reducers:{
         //actions
@@ -13,8 +15,11 @@ const authSlice = createSlice({
         },
         setUser:(state,action)=>{
             state.user = action.payload;
+        },
+        setSessionChecked:(state,action)=>{
+            state.sessionChecked = action.payload;
         }
     }
 })
-export const {setLoading, setUser} = authSlice.actions;
+export const {setLoading, setUser, setSessionChecked} = authSlice.actions;
 export default authSlice.reducer;

@@ -1,12 +1,25 @@
 import express from "express";
-import isAuthenticated from "../middleware/isAuthenticated.js";
 import { getCompany, getCompanyById, registerCompany, updateCompany } from "../controller/company.js";
-import { singleUpload } from "../middleware/multer.js";
+import { isAuthenticated, requireRole } from "../middleware/auth.js";
+import { uploadImage } from "../middleware/upload.js";
+import { validate } from "../middleware/validate.js";
+import { idParams } from "../validators/common.js";
+import { registerCompanySchema, updateCompanySchema } from "../validators/company.js";
+
 const router = express.Router();
 
-router.route("/register").post(isAuthenticated,registerCompany);
-router.route("/get").get(isAuthenticated,getCompany);
-router.route("/get/:id").get(isAuthenticated,getCompanyById);
-router.route("/update/:id").put(isAuthenticated,singleUpload,updateCompany);
+// Every company endpoint is for recruiters only
+router.use(isAuthenticated, requireRole("recruiter"));
+
+router.post("/register", validate({ body: registerCompanySchema }), registerCompany);
+router.get("/get", getCompany);
+router.get("/get/:id", validate({ params: idParams }), getCompanyById);
+router.put(
+  "/update/:id",
+  validate({ params: idParams }),
+  uploadImage,
+  validate({ body: updateCompanySchema }),
+  updateCompany,
+);
 
 export default router;

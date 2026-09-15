@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import Navbar from "./shared/Navbar";
 import { Avatar, AvatarImage } from "./ui/avatar";
 import { Button } from "./ui/button";
 import { Contact, Mail, Pen } from "lucide-react";
@@ -10,19 +9,17 @@ import UpdateProfileDialog from "./UpdateProfileDialog";
 import { useSelector } from "react-redux";
 import useGetAppliedJobs from "@/hooks/useGetAppliedJob";
 import PageHero from "./shared/PageHero";
-import Footer from "./shared/Footer";
-
-const isResume = true;
 
 const Profile = () => {
   useGetAppliedJobs();
   const [open, setOpen] = useState(false);
   const { user } = useSelector((store) => store.auth);
+  const skills = user?.profile?.skills ?? [];
+  const resume = user?.profile?.resume;
 
   return (
     <div>
-      <Navbar />
-         <PageHero
+      <PageHero
         image="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=1400"
         title="Your Career Profile"
         subtitle="Keep your profile updated to get matched with the best opportunities."
@@ -31,9 +28,7 @@ const Profile = () => {
         align="right"
       />
 
- 
-      
-       <div className="max-w-6xl mx-auto  bg-[#fafafa] rounded-3xl border border-gray-100 p-10">
+      <div className="max-w-6xl mx-auto  bg-[#fafafa] rounded-3xl border border-gray-100 p-10">
         <div className="flex justify-between">
           <div className="flex items-center gap-4">
             <Avatar className="h-24 w-24">
@@ -49,6 +44,7 @@ const Profile = () => {
             className="text-right"
             variant="outline"
             onClick={() => setOpen(true)}
+            aria-label="Edit profile"
           >
             <Pen />
           </Button>
@@ -66,11 +62,9 @@ const Profile = () => {
         </div>
         <div className="my-5">
           <h1>Skills</h1>
-          <div className="flex items-center gap-1 mt-2">
-            {user?.profile?.skills.length != 0 ? (
-              user?.profile?.skills.map((item, index) => (
-                <Badge key={index}>{item}</Badge>
-              ))
+          <div className="flex flex-wrap items-center gap-1 mt-2">
+            {skills.length > 0 ? (
+              skills.map((item) => <Badge key={item}>{item}</Badge>)
             ) : (
               <span>NA</span>
             )}
@@ -78,13 +72,14 @@ const Profile = () => {
         </div>
         <div className="grid w-full max-w-sm items-center gap-1.5">
           <Label className="text-md font-bold">Resume</Label>
-          {isResume ? (
+          {resume ? (
             <a
-              target="blank"
-              href={user?.profile?.resume}
+              target="_blank"
+              rel="noopener noreferrer"
+              href={resume}
               className="text-blue-500 w-full hover:underline cursor-pointer"
             >
-              {user?.profile?.resumeOriginalName}
+              {user?.profile?.resumeOriginalName || "View resume"}
             </a>
           ) : (
             <span>NA</span>
@@ -96,13 +91,7 @@ const Profile = () => {
         <AppliedJobTable />
       </div>
       <UpdateProfileDialog open={open} setOpen={setOpen} />
-    
-
-    
-    
-  
-      <Footer/>
-      </div>
+    </div>
   );
 };
 
