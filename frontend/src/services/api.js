@@ -55,6 +55,7 @@ export const baseApi = createApi({
     "Application",
     "SavedJobs",
     "RecruiterOverview",
+    "Notifications",
   ],
   endpoints: () => ({}),
 });
@@ -64,4 +65,4 @@ export const unwrapData = (response) => response.data;
 export const unwrapWithMeta = (response) => ({ ...response.data, meta: response.meta });
 
 // Tags that depend on who is logged in
-export const USER_SCOPED_TAGS = ["Me", "Profile", "Job", "RecruiterJobs", "RecruiterCompanies", "MyApplications", "JobApplications", "Application"];
+export const USER_SCOPED_TAGS = ["Me", "Profile", "Job", "RecruiterJobs", "RecruiterCompanies", "MyApplications", "JobApplications", "Application", "Notifications"];

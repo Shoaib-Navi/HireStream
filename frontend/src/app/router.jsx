@@ -19,6 +19,10 @@ const CompaniesDirectoryPage = lazyPage(() => import("@/features/companies/pages
 const CompanyProfilePage = lazyPage(() => import("@/features/companies/pages/CompanyProfilePage"));
 const LoginPage = lazyPage(() => import("@/features/auth/pages/LoginPage"));
 const RegisterPage = lazyPage(() => import("@/features/auth/pages/RegisterPage"));
+const ForgotPasswordPage = lazyPage(() => import("@/features/auth/pages/ForgotPasswordPage"));
+const ResetPasswordPage = lazyPage(() => import("@/features/auth/pages/ResetPasswordPage"));
+const VerifyEmailPage = lazyPage(() => import("@/features/auth/pages/VerifyEmailPage"));
+const NotificationsPage = lazyPage(() => import("@/features/notifications/pages/NotificationsPage"));
 const MyApplicationsPage = lazyPage(() => import("@/features/applications/pages/MyApplicationsPage"));
 const ApplicationDetailPage = lazyPage(() => import("@/features/applications/pages/ApplicationDetailPage"));
 const SavedJobsPage = lazyPage(() => import("@/features/savedJobs/pages/SavedJobsPage"));
@@ -46,6 +50,7 @@ export const router = createBrowserRouter([
           { path: "/jobs/:id", lazy: JobDetailsPage },
           { path: "/companies", lazy: CompaniesDirectoryPage },
           { path: "/companies/:slug", lazy: CompanyProfilePage },
+          { path: "/verify-email", lazy: VerifyEmailPage },
         ],
       },
       {
@@ -53,6 +58,8 @@ export const router = createBrowserRouter([
         children: [
           { path: "/login", lazy: LoginPage },
           { path: "/register", lazy: RegisterPage },
+          { path: "/forgot-password", lazy: ForgotPasswordPage },
+          { path: "/reset-password", lazy: ResetPasswordPage },
         ],
       },
       {
@@ -67,6 +74,7 @@ export const router = createBrowserRouter([
               { path: "applications/:id", lazy: ApplicationDetailPage },
               { path: "saved", lazy: SavedJobsPage },
               { path: "profile", lazy: ProfilePage },
+              { path: "notifications", lazy: NotificationsPage },
               { path: "account", lazy: AccountPage },
             ],
           },
@@ -89,6 +97,7 @@ export const router = createBrowserRouter([
               { path: "companies", lazy: CompaniesPage },
               { path: "companies/new", lazy: CompanyFormPage },
               { path: "companies/:id/edit", lazy: CompanyFormPage },
+              { path: "notifications", lazy: NotificationsPage },
               { path: "account", lazy: AccountPage },
             ],
           },
