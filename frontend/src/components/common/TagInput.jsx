@@ -3,8 +3,14 @@ import { X } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 
+const CONTAINER_VARIANTS = {
+  default:
+    "min-h-9 rounded-md border border-input px-2 py-1.5 shadow-xs focus-within:border-ring focus-within:ring-[3px] focus-within:ring-ring/50 dark:bg-input/30",
+  underline: "min-h-12 border-b px-0 py-2 hover:border-foreground/40 focus-within:border-primary",
+};
+
 // Type a value and press Enter or comma to add it; Backspace on an empty field removes the last one
-const TagInput = ({ id, value = [], onChange, placeholder, maxItems = 30, invalid, className }) => {
+const TagInput = ({ id, value = [], onChange, placeholder, maxItems = 30, invalid, variant = "default", className }) => {
   const [draft, setDraft] = useState("");
 
   const addTags = (text) => {
@@ -31,7 +37,8 @@ const TagInput = ({ id, value = [], onChange, placeholder, maxItems = 30, invali
   return (
     <div
       className={cn(
-        "flex min-h-9 w-full flex-wrap items-center gap-1.5 rounded-md border border-input bg-transparent px-2 py-1.5 shadow-xs transition-[color,box-shadow] focus-within:border-ring focus-within:ring-[3px] focus-within:ring-ring/50 dark:bg-input/30",
+        "flex w-full flex-wrap items-center gap-1.5 bg-transparent transition-[color,box-shadow]",
+        CONTAINER_VARIANTS[variant],
         invalid && "border-destructive",
         className,
       )}
