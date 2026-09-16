@@ -19,7 +19,7 @@ const ImageWithFallback = ({ src, name, size = "md", shape = "rounded", classNam
   return (
     <div
       className={cn(
-        "flex shrink-0 items-center justify-center overflow-hidden font-display font-bold",
+        "flex shrink-0 items-center justify-center overflow-hidden font-display font-semibold",
         shape === "circle" ? "rounded-full" : "rounded-xl",
         SIZES[size],
         className,
