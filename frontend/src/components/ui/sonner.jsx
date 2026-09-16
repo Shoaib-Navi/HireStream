@@ -1,13 +1,9 @@
-import {
-  CircleCheckIcon,
-  InfoIcon,
-  Loader2Icon,
-  OctagonXIcon,
-  TriangleAlertIcon,
-} from "lucide-react"
+import { AlertTriangle, CheckCircle2, Info, Loader2, OctagonAlert } from "lucide-react"
 import { useTheme } from "next-themes"
 import { Toaster as Sonner } from "sonner";
 
+// Top right, so toasts never sit under the assistant button in the bottom corner.
+// Icons and tones match StatusIcon, so a toast reads like the rest of the app's states.
 const Toaster = ({
   ...props
 }) => {
@@ -16,13 +12,24 @@ const Toaster = ({
   return (
     <Sonner
       theme={theme}
+      position="top-right"
       className="toaster group"
       icons={{
-        success: <CircleCheckIcon className="size-4" />,
-        info: <InfoIcon className="size-4" />,
-        warning: <TriangleAlertIcon className="size-4" />,
-        error: <OctagonXIcon className="size-4" />,
-        loading: <Loader2Icon className="size-4 animate-spin" />,
+        success: <CheckCircle2 className="size-4 text-success" />,
+        info: <Info className="size-4 text-info" />,
+        warning: <AlertTriangle className="size-4 text-warning" />,
+        error: <OctagonAlert className="size-4 text-destructive" />,
+        loading: <Loader2 className="size-4 animate-spin text-primary" />,
+      }}
+      toastOptions={{
+        classNames: {
+          toast: "group items-start gap-3 rounded-md border bg-popover p-4 text-popover-foreground shadow-elevated",
+          title: "type-body font-medium text-foreground",
+          description: "type-caption text-muted-foreground",
+          actionButton: "type-label rounded-md bg-primary px-3 py-1.5 text-primary-foreground",
+          cancelButton: "type-label rounded-md border px-3 py-1.5 text-muted-foreground",
+          closeButton: "border bg-popover text-muted-foreground hover:text-foreground",
+        },
       }}
       style={
         {
