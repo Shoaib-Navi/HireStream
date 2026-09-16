@@ -1,0 +1,1128 @@
+{
+  "provider": "greenhouse",
+  "providerApi": "https://boards-api.greenhouse.io/v1/boards",
+  "fetchedAt": "2026-09-16T18:06:56.192Z",
+  "note": "Fetched from public company job boards. Work mode, employment type, experience and skills are derived from the title and location, not published by the employer. Salary is not exposed by this API.",
+  "companies": [
+    {
+      "boardToken": "gitlab",
+      "name": "GitLab",
+      "sourceUrl": "https://job-boards.greenhouse.io/gitlab"
+    },
+    {
+      "boardToken": "figma",
+      "name": "Figma",
+      "sourceUrl": "https://job-boards.greenhouse.io/figma"
+    },
+    {
+      "boardToken": "databricks",
+      "name": "Databricks",
+      "sourceUrl": "https://job-boards.greenhouse.io/databricks"
+    },
+    {
+      "boardToken": "cloudflare",
+      "name": "Cloudflare",
+      "sourceUrl": "https://job-boards.greenhouse.io/cloudflare"
+    },
+    {
+      "boardToken": "robinhood",
+      "name": "Robinhood",
+      "sourceUrl": "https://job-boards.greenhouse.io/robinhood"
+    },
+    {
+      "boardToken": "discord",
+      "name": "Discord",
+      "sourceUrl": "https://job-boards.greenhouse.io/discord"
+    },
+    {
+      "boardToken": "reddit",
+      "name": "Reddit",
+      "sourceUrl": "https://job-boards.greenhouse.io/reddit"
+    },
+    {
+      "boardToken": "twilio",
+      "name": "Twilio",
+      "sourceUrl": "https://job-boards.greenhouse.io/twilio"
+    },
+    {
+      "boardToken": "mongodb",
+      "name": "MongoDB",
+      "sourceUrl": "https://job-boards.greenhouse.io/mongodb"
+    },
+    {
+      "boardToken": "elastic",
+      "name": "Elastic",
+      "sourceUrl": "https://job-boards.greenhouse.io/elastic"
+    },
+    {
+      "boardToken": "gusto",
+      "name": "Gusto, Inc.",
+      "sourceUrl": "https://job-boards.greenhouse.io/gusto"
+    },
+    {
+      "boardToken": "airtable",
+      "name": "Airtable",
+      "sourceUrl": "https://job-boards.greenhouse.io/airtable"
+    },
+    {
+      "boardToken": "samsara",
+      "name": "Samsara",
+      "sourceUrl": "https://job-boards.greenhouse.io/samsara"
+    },
+    {
+      "boardToken": "instacart",
+      "name": "Instacart",
+      "sourceUrl": "https://job-boards.greenhouse.io/instacart"
+    },
+    {
+      "boardToken": "dropbox",
+      "name": "Dropbox",
+      "sourceUrl": "https://job-boards.greenhouse.io/dropbox"
+    }
+  ],
+  "jobs": [
+    {
+      "boardToken": "gitlab",
+      "externalId": "8556658002",
+      "title": "AI Engineer",
+      "location": "Remote, Bangalore",
+      "workMode": "remote",
+      "employmentType": "full-time",
+      "experience": {
+        "min": 0,
+        "max": null
+      },
+      "skills": [
+        "Rust",
+        "Security"
+      ],
+      "description": "GitLab is the intelligent orchestration platform for DevSecOps. GitLab enables organizations to increase developer productivity, improve operational efficiency, reduce security and compliance risk, and accelerate digital transformation. More than 50 million registered users and more than 50% of the Fortune 100* trust GitLab to ship better, more secure software faster. The same principles built into our products are reflected in how our team works: we embrace AI as a core productivity multiplier, with all team members expected to incorporate AI into their daily workflows to drive efficiency, innovation, and impact. GitLab is where careers accelerate, innovation flourishes, and every voice is valued. Our high-performance culture is driven by our values&nbsp;and continuous knowledge exchange, enabling our team members to reach their full potential while collaborating with industry leaders t…",
+      "sourceUrl": "https://job-boards.greenhouse.io/gitlab/jobs/8556658002",
+      "postedAt": "2026-05-22T09:16:29-04:00"
+    },
+    {
+      "boardToken": "gitlab",
+      "externalId": "8736877002",
+      "title": "Intermediate Backend Engineer",
+      "location": "Bangalore, India",
+      "workMode": "onsite",
+      "employmentType": "full-time",
+      "experience": {
+        "min": 0,
+        "max": null
+      },
+      "skills": [
+        "Rust",
+        "Security"
+      ],
+      "description": "GitLab is the intelligent orchestration platform for DevSecOps. GitLab enables organizations to increase developer productivity, improve operational efficiency, reduce security and compliance risk, and accelerate digital transformation. More than 50 million registered users and more than 50% of the Fortune 100* trust GitLab to ship better, more secure software faster. The same principles built into our products are reflected in how our team works: we embrace AI as a core productivity multiplier, with all team members expected to incorporate AI into their daily workflows to drive efficiency, innovation, and impact. GitLab is where careers accelerate, innovation flourishes, and every voice is valued. Our high-performance culture is driven by our values&nbsp;and continuous knowledge exchange, enabling our team members to reach their full potential while collaborating with industry leaders t…",
+      "sourceUrl": "https://job-boards.greenhouse.io/gitlab/jobs/8736877002",
+      "postedAt": "2026-09-03T02:59:02-04:00"
+    },
+    {
+      "boardToken": "gitlab",
+      "externalId": "8644572002",
+      "title": "Senior Backend Engineer, Platform Readiness",
+      "location": "Remote, Canada; Remote, United States",
+      "workMode": "remote",
+      "employmentType": "full-time",
+      "experience": {
+        "min": 5,
+        "max": null
+      },
+      "skills": [
+        "Rust",
+        "Security"
+      ],
+      "description": "GitLab is the intelligent orchestration platform for DevSecOps. GitLab enables organizations to increase developer productivity, improve operational efficiency, reduce security and compliance risk, and accelerate digital transformation. More than 50 million registered users and more than 50% of the Fortune 100* trust GitLab to ship better, more secure software faster. The same principles built into our products are reflected in how our team works: we embrace AI as a core productivity multiplier, with all team members expected to incorporate AI into their daily workflows to drive efficiency, innovation, and impact. GitLab is where careers accelerate, innovation flourishes, and every voice is valued. Our high-performance culture is driven by our values&nbsp;and continuous knowledge exchange, enabling our team members to reach their full potential while collaborating with industry leaders t…",
+      "sourceUrl": "https://job-boards.greenhouse.io/gitlab/jobs/8644572002",
+      "postedAt": "2026-08-03T11:54:04-04:00"
+    },
+    {
+      "boardToken": "gitlab",
+      "externalId": "8693103002",
+      "title": "Senior Software Engineer (Typescript), AI Clients: Duo CLI",
+      "location": "Remote, United Kingdom",
+      "workMode": "remote",
+      "employmentType": "full-time",
+      "experience": {
+        "min": 5,
+        "max": null
+      },
+      "skills": [
+        "TypeScript",
+        "Rust",
+        "Security"
+      ],
+      "description": "GitLab is the intelligent orchestration platform for DevSecOps. GitLab enables organizations to increase developer productivity, improve operational efficiency, reduce security and compliance risk, and accelerate digital transformation. More than 50 million registered users and more than 50% of the Fortune 100* trust GitLab to ship better, more secure software faster. The same principles built into our products are reflected in how our team works: we embrace AI as a core productivity multiplier, with all team members expected to incorporate AI into their daily workflows to drive efficiency, innovation, and impact. GitLab is where careers accelerate, innovation flourishes, and every voice is valued. Our high-performance culture is driven by our values&nbsp;and continuous knowledge exchange, enabling our team members to reach their full potential while collaborating with industry leaders t…",
+      "sourceUrl": "https://job-boards.greenhouse.io/gitlab/jobs/8693103002",
+      "postedAt": "2026-08-12T06:18:36-04:00"
+    },
+    {
+      "boardToken": "figma",
+      "externalId": "5426468004",
+      "title": "Account Executive, Enterprise",
+      "location": "San Francisco, CA • New York, NY • United States",
+      "workMode": "onsite",
+      "employmentType": "full-time",
+      "experience": {
+        "min": 0,
+        "max": null
+      },
+      "skills": [
+        "Figma"
+      ],
+      "description": "Figma is growing our team of passionate creatives and builders on a mission to make design accessible to all. Figma’s platform helps teams bring ideas to life—whether you're brainstorming, creating a prototype, translating designs into code, or iterating with AI. From idea to product, Figma empowers teams to streamline workflows, move faster, and work together in real time from anywhere in the world. If you're excited to shape the future of design and collaboration, join us! We are looking for an Enterprise Account Executive who will play a critical role driving sales and maximizing revenue with our Enterprise customers. You will be responsible for targeting, building and nurturing positive relationships with key executive level decision-makers, understanding complex business needs, and delivering innovative solutions across our product suite. This is an opportunity to accelerate your ca…",
+      "sourceUrl": "https://boards.greenhouse.io/figma/jobs/5426468004?gh_jid=5426468004",
+      "postedAt": "2025-01-28T18:57:29-05:00"
+    },
+    {
+      "boardToken": "figma",
+      "externalId": "5692764004",
+      "title": "Designer Advocate - Figma Weave (New York, United States)",
+      "location": "New York, NY",
+      "workMode": "onsite",
+      "employmentType": "full-time",
+      "experience": {
+        "min": 0,
+        "max": null
+      },
+      "skills": [
+        "Figma"
+      ],
+      "description": "Figma is growing our team of passionate creatives and builders on a mission to make design accessible to all. Figma’s platform helps teams bring ideas to life—whether you're brainstorming, creating a prototype, translating designs into code, or iterating with AI. From idea to product, Figma empowers teams to streamline workflows, move faster, and work together in real time from anywhere in the world. If you're excited to shape the future of design and collaboration, join us! We're building the next chapter of AI-native craft and creativity - where craft and technology meet. Our unified platform bridges the gap between AI capabilities and human creativity, and lets professional creatives and designers harness the power of the world’s leading AI models without losing precision, expression, or soul.&nbsp; Together, we’re building tools that help people move faster without sacrificing qualit…",
+      "sourceUrl": "https://boards.greenhouse.io/figma/jobs/5692764004?gh_jid=5692764004",
+      "postedAt": "2025-10-30T10:05:53-04:00"
+    },
+    {
+      "boardToken": "figma",
+      "externalId": "6186265004",
+      "title": "Manager, Mid-Market Sales (London, United Kingdom) ",
+      "location": "London, England",
+      "workMode": "onsite",
+      "employmentType": "full-time",
+      "experience": {
+        "min": 0,
+        "max": null
+      },
+      "skills": [
+        "Figma"
+      ],
+      "description": "Figma is growing our team of passionate creatives and builders on a mission to make design accessible to all. Figma’s platform helps teams bring ideas to life—whether you're brainstorming, creating a prototype, translating designs into code, or iterating with AI. From idea to product, Figma empowers teams to streamline workflows, move faster, and work together in real time from anywhere in the world. If you're excited to shape the future of design and collaboration, join us! We are looking for a Manager, Mid-Market Sales to join our dynamic team of creatives, engineers, marketers, and forward-thinking business folks. As our Manager Mid-Market Sales, you will lead a team of Account Executives in the NEMEA region responsible for continuing the growth of our Enterprise product. You will report directly to our Director, Commercial Sales. With this role you’ll be part of scaling NEMEA in a fa…",
+      "sourceUrl": "https://boards.greenhouse.io/figma/jobs/6186265004?gh_jid=6186265004",
+      "postedAt": "2026-09-10T12:40:02-04:00"
+    },
+    {
+      "boardToken": "figma",
+      "externalId": "6180170004",
+      "title": "Senior Analyst, Revenue Transformation",
+      "location": "San Francisco, CA • New York, NY • United States",
+      "workMode": "onsite",
+      "employmentType": "full-time",
+      "experience": {
+        "min": 5,
+        "max": null
+      },
+      "skills": [
+        "Figma"
+      ],
+      "description": "Figma is growing our team of passionate creatives and builders on a mission to make design accessible to all. Figma’s platform helps teams bring ideas to life—whether you're brainstorming, creating a prototype, translating designs into code, or iterating with AI. From idea to product, Figma empowers teams to streamline workflows, move faster, and work together in real time from anywhere in the world. If you're excited to shape the future of design and collaboration, join us! As a Senior Analyst, Revenue Transformation, you'll help build and scale the systems, processes, and controls behind how Figma generates and recognizes revenue. You'll partner across RevOps, Business Systems, Billing Engineering, and Product to test and launch revenue-impacting system changes, translate business needs into requirements, and integrate new revenue streams as they come online. This role reports to the S…",
+      "sourceUrl": "https://boards.greenhouse.io/figma/jobs/6180170004?gh_jid=6180170004",
+      "postedAt": "2026-09-09T11:23:38-04:00"
+    },
+    {
+      "boardToken": "databricks",
+      "externalId": "8805655002",
+      "title": "デリバリーソリューションアーキテクト",
+      "location": "Tokyo, Japan",
+      "workMode": "onsite",
+      "employmentType": "full-time",
+      "experience": {
+        "min": 0,
+        "max": null
+      },
+      "skills": [],
+      "description": "Req ID: CSQ427R266 Location: Tokyo, Japan Databricksは、お客様がAIプラットフォームを活用して、世界で最も難しいなデータに関する課題を解決できるよう支援することをミッションとしています。デリバリーソリューションアーキテクト（DSA）は、この重要なミッションにおいて、セールスおよびフィールド・エンジニアリングチームと協力し、お客様のDatabricksプラットフォームの導入と利用拡大を加速させる重要な役割を担います。DSAとして、お客様がすでに導入を決定したDatabricksのワークロードについて、お客様がプラットフォームから最大限の価値と投資対効果を得られるよう、技術的な指導とサポートを提供し、お客様の成功を確実にします。特に、複雑な課題を抱えるお客様に対して、より重点的かつ技術的な責任を持って支援を行います。 このポジションは、技術とビジネスの両面を兼ね備えたハイブリッドな役割です。担当するお客様とユースケースにおいて、成長を推進します。ビジネス面では、お客様の意思決定者と関係を構築し、他の専門チームと連携しながら、Databricksが実行できる計画や戦略を策定・推進します。技術面ではDatabricksの全製品における、お客様導入後の技術的なリーダーとなります。組織内のあらゆるレベルの人々と、技術的な専門知識を活かしてコミュニケーションをとる能力が求められます。 あなたがもたらす影響 :&nbsp; 戦略的アカウントにおける複雑なユースケースおよび複数のワークストリーム全体で、技術的な実行戦略を定義し、影響を与える。 お客様のテクニカルリードやアーキテクトにとって信頼される技術アドバイザーとなり、アーキテクチャの議論をリードし、技術的な意思決定をガイドする。 パフォーマンス、コスト、信頼性、長期的なニーズのバランスを取りながら、安全かつガバナンスの効いたスケーラブルなDatabricksアーキテクチャを設計する。 お客様の成果を加速させる実用的なソリューション、プロトタイプ、再利用可能な技術資産を構築・実証する…",
+      "sourceUrl": "https://databricks.com/company/careers/open-positions/job?gh_jid=8805655002",
+      "postedAt": "2026-09-16T09:11:57-04:00"
+    },
+    {
+      "boardToken": "databricks",
+      "externalId": "8604589002",
+      "title": "Manager, Payroll Accounting",
+      "location": "Bengaluru, India",
+      "workMode": "onsite",
+      "employmentType": "full-time",
+      "experience": {
+        "min": 0,
+        "max": null
+      },
+      "skills": [],
+      "description": "GAQ327R160 About the Role We're building a finance function that stays ahead of the curve — leveraging AI, automation, and modern tooling to operate at the pace Databricks demands. We are looking for a &nbsp;Manager, Payroll Accounting , to lead our payroll accounting team based in India. This is a foundational hire — you will help build the team, define the operating model, and set the standard for how payroll accounting operates at Databricks as we continue to scale This role blends team leadership with deep technical accounting expertise. As part of the Global Accounting organisation, you will ensure the accurate and timely recording of all payroll-related financial data while partnering closely with PeopleOps, Payroll Operations, Global Accounting, and FP&amp;A to ensure strict compliance with US GAAP, local tax regulations, and internal policies. The impact you will have: Oversee th…",
+      "sourceUrl": "https://databricks.com/company/careers/open-positions/job?gh_jid=8604589002",
+      "postedAt": "2026-07-01T08:06:26-04:00"
+    },
+    {
+      "boardToken": "databricks",
+      "externalId": "8762388002",
+      "title": "Solutions Architect, CustomerLake ",
+      "location": "London, United Kingdom",
+      "workMode": "onsite",
+      "employmentType": "full-time",
+      "experience": {
+        "min": 0,
+        "max": null
+      },
+      "skills": [
+        "Go"
+      ],
+      "description": "Marketing teams are stuck between fragmented customer data and martech stacks that copy that data into proprietary silos while customers expect real-time, personalized experiences. Customer Lake, the agentic Customer Data Platform (CDP) built natively into Databricks, changes that equation. It unifies first- and third-party data into governed Customer 360 profiles, resolves identities, and uses agents to build audiences, recommend next-best actions, and activate campaigns across channels, all without copying data out of the Lakehouse or adding vendor lock-in. &nbsp; The Solutions Architect (Customer Lake) team is part of a dedicated, global go-to-market organization focused on driving adoption and revenue growth for Customer Lake, Databricks’ agentic Customer Data Platform (CDP) built natively into the Data Intelligence Platform. The Customer Lake SA will engage clients across business u…",
+      "sourceUrl": "https://databricks.com/company/careers/open-positions/job?gh_jid=8762388002",
+      "postedAt": "2026-09-07T05:22:16-04:00"
+    },
+    {
+      "boardToken": "databricks",
+      "externalId": "8620285002",
+      "title": "Sr. Solutions Architect",
+      "location": "Western Australia, Australia",
+      "workMode": "onsite",
+      "employmentType": "full-time",
+      "experience": {
+        "min": 5,
+        "max": null
+      },
+      "skills": [],
+      "description": "FEQ425R198 Location: Perth At Databricks, our core principles are at the heart of everything we do; creating a culture of proactiveness and a customer-centric mindset guides us to create a unified platform that makes data science and analytics accessible to everyone. We aim to inspire our customers to make informed decisions that push their business forward. We provide a user-friendly and intuitive platform that makes it easy to turn insights into action and fosters a culture of creativity, experimentation, and continuous improvement. You will be an essential part of this mission, using your technical expertise to demonstrate how our Data Intelligence Platform can help customers solve their complex data challenges. You'll work with a collaborative, customer-focused team that values innovation and creativity, using your skills to create customized solutions to help our customers achieve t…",
+      "sourceUrl": "https://databricks.com/company/careers/open-positions/job?gh_jid=8620285002",
+      "postedAt": "2026-07-26T23:17:45-04:00"
+    },
+    {
+      "boardToken": "cloudflare",
+      "externalId": "7695702",
+      "title": "Account Executive, FedCiv",
+      "location": "Hybrid",
+      "workMode": "hybrid",
+      "employmentType": "full-time",
+      "experience": {
+        "min": 0,
+        "max": null
+      },
+      "skills": [],
+      "description": "About Us At Cloudflare, we are on a mission to help build a better Internet. Today the company runs one of the world’s largest networks that powers millions of websites and other Internet properties for customers ranging from individual bloggers to SMBs to Fortune 500 companies. Cloudflare protects and accelerates any Internet application online without adding hardware, installing software, or changing a line of code. Internet properties powered by Cloudflare all have web traffic routed through its intelligent global network, which gets smarter with every request. As a result, they see significant improvement in performance and a decrease in spam and other attacks. Cloudflare was named to Entrepreneur Magazine’s Top Company Cultures list and ranked among the World’s Most Innovative Companies by Fast Company. At Cloudflare, we’re not looking for people who wait for a polished roadmap; we’…",
+      "sourceUrl": "https://boards.greenhouse.io/cloudflare/jobs/7695702?gh_jid=7695702",
+      "postedAt": "2026-03-09T16:05:19-04:00"
+    },
+    {
+      "boardToken": "cloudflare",
+      "externalId": "8200786",
+      "title": "Principal Customer Engineer, Majors",
+      "location": "Distributed",
+      "workMode": "onsite",
+      "employmentType": "full-time",
+      "experience": {
+        "min": 8,
+        "max": null
+      },
+      "skills": [],
+      "description": "About Us At Cloudflare, we are on a mission to help build a better Internet. Today the company runs one of the world’s largest networks that powers millions of websites and other Internet properties for customers ranging from individual bloggers to SMBs to Fortune 500 companies. Cloudflare protects and accelerates any Internet application online without adding hardware, installing software, or changing a line of code. Internet properties powered by Cloudflare all have web traffic routed through its intelligent global network, which gets smarter with every request. As a result, they see significant improvement in performance and a decrease in spam and other attacks. Cloudflare was named to Entrepreneur Magazine’s Top Company Cultures list and ranked among the World’s Most Innovative Companies by Fast Company. At Cloudflare, we’re not looking for people who wait for a polished roadmap; we’…",
+      "sourceUrl": "https://boards.greenhouse.io/cloudflare/jobs/8200786?gh_jid=8200786",
+      "postedAt": "2026-09-16T05:35:41-04:00"
+    },
+    {
+      "boardToken": "cloudflare",
+      "externalId": "8093023",
+      "title": "Senior Customer Engineer - Vancouver, BC",
+      "location": "Distributed",
+      "workMode": "onsite",
+      "employmentType": "full-time",
+      "experience": {
+        "min": 5,
+        "max": null
+      },
+      "skills": [],
+      "description": "About Us At Cloudflare, we are on a mission to help build a better Internet. Today the company runs one of the world’s largest networks that powers millions of websites and other Internet properties for customers ranging from individual bloggers to SMBs to Fortune 500 companies. Cloudflare protects and accelerates any Internet application online without adding hardware, installing software, or changing a line of code. Internet properties powered by Cloudflare all have web traffic routed through its intelligent global network, which gets smarter with every request. As a result, they see significant improvement in performance and a decrease in spam and other attacks. Cloudflare was named to Entrepreneur Magazine’s Top Company Cultures list and ranked among the World’s Most Innovative Companies by Fast Company. At Cloudflare, we’re not looking for people who wait for a polished roadmap; we’…",
+      "sourceUrl": "https://boards.greenhouse.io/cloudflare/jobs/8093023?gh_jid=8093023",
+      "postedAt": "2026-07-29T09:43:46-04:00"
+    },
+    {
+      "boardToken": "cloudflare",
+      "externalId": "8077641",
+      "title": "Senior Security Compliance Specialist",
+      "location": "Distributed",
+      "workMode": "onsite",
+      "employmentType": "full-time",
+      "experience": {
+        "min": 5,
+        "max": null
+      },
+      "skills": [
+        "Security"
+      ],
+      "description": "About Us At Cloudflare, we are on a mission to help build a better Internet. Today the company runs one of the world’s largest networks that powers millions of websites and other Internet properties for customers ranging from individual bloggers to SMBs to Fortune 500 companies. Cloudflare protects and accelerates any Internet application online without adding hardware, installing software, or changing a line of code. Internet properties powered by Cloudflare all have web traffic routed through its intelligent global network, which gets smarter with every request. As a result, they see significant improvement in performance and a decrease in spam and other attacks. Cloudflare was named to Entrepreneur Magazine’s Top Company Cultures list and ranked among the World’s Most Innovative Companies by Fast Company. At Cloudflare, we’re not looking for people who wait for a polished roadmap; we’…",
+      "sourceUrl": "https://boards.greenhouse.io/cloudflare/jobs/8077641?gh_jid=8077641",
+      "postedAt": "2026-07-22T14:52:51-04:00"
+    },
+    {
+      "boardToken": "robinhood",
+      "externalId": "8198153",
+      "title": "Accounting Intern (Summer 2027)",
+      "location": "New York, NY",
+      "workMode": "onsite",
+      "employmentType": "internship",
+      "experience": {
+        "min": 0,
+        "max": 1
+      },
+      "skills": [],
+      "description": "Join us in building the future of finance. Our mission is to democratize finance for all. An estimated $124 trillion of assets will be inherited by younger generations in the next two decades. The largest transfer of wealth in human history. If you’re ready to be at the epicenter of this historic cultural and financial shift, keep reading. About the team + role We are building an elite team, applying frontier technologies to the world’s biggest financial problems. We’re looking for bold thinkers. Sharp problem-solvers. Builders who are wired to make an impact. Robinhood isn’t a place for complacency, it’s where ambitious people do the best work of their careers. We’re a high-performing, fast-moving team with ethics at the center of everything we do. Expectations are high, and so are the rewards.&nbsp; The Crypto Accounting team is a critical part of Robinhood's financial operations, resp…",
+      "sourceUrl": "https://boards.greenhouse.io/robinhood/jobs/8198153?t=gh_src=&gh_jid=8198153",
+      "postedAt": "2026-09-14T08:00:08-04:00"
+    },
+    {
+      "boardToken": "robinhood",
+      "externalId": "8164884",
+      "title": "Financial Operations Manager",
+      "location": "Lake Mary, FL; New York, NY",
+      "workMode": "onsite",
+      "employmentType": "full-time",
+      "experience": {
+        "min": 0,
+        "max": null
+      },
+      "skills": [],
+      "description": "Join us in building the future of finance. Our mission is to democratize finance for all. An estimated $124 trillion of assets will be inherited by younger generations in the next two decades. The largest transfer of wealth in human history. If you’re ready to be at the epicenter of this historic cultural and financial shift, keep reading. About the team + role We are building an elite team, applying frontier technologies to the world’s biggest financial problems. We’re looking for bold thinkers. Sharp problem-solvers. Builders who are wired to make an impact. Robinhood isn’t a place for complacency, it’s where ambitious people do the best work of their careers. We’re a high-performing, fast-moving team with ethics at the center of everything we do. Expectations are high, and so are the rewards.&nbsp; The Financial Operations group is primarily responsible for the firm's compliance with…",
+      "sourceUrl": "https://boards.greenhouse.io/robinhood/jobs/8164884?t=gh_src=&gh_jid=8164884",
+      "postedAt": "2026-09-01T15:04:38-04:00"
+    },
+    {
+      "boardToken": "robinhood",
+      "externalId": "8147756",
+      "title": "Senior Product Designer, DeFi",
+      "location": "Menlo Park, CA; New York, NY",
+      "workMode": "onsite",
+      "employmentType": "full-time",
+      "experience": {
+        "min": 5,
+        "max": null
+      },
+      "skills": [],
+      "description": "Join us in building the future of finance. Our mission is to democratize finance for all. An estimated $124 trillion of assets will be inherited by younger generations in the next two decades. The largest transfer of wealth in human history. If you’re ready to be at the epicenter of this historic cultural and financial shift, keep reading. About the team + role We are building an elite team, applying frontier technologies to the world’s biggest financial problems. We’re looking for bold thinkers. Sharp problem-solvers. Builders who are wired to make an impact. Robinhood isn’t a place for complacency, it’s where ambitious people do the best work of their careers. We’re a high-performing, fast-moving team with ethics at the center of everything we do. Expectations are high, and so are the rewards. We're looking for a Senior Product Designer to help shape the future of our decentralized fin…",
+      "sourceUrl": "https://boards.greenhouse.io/robinhood/jobs/8147756?t=gh_src=&gh_jid=8147756",
+      "postedAt": "2026-08-21T16:11:58-04:00"
+    },
+    {
+      "boardToken": "robinhood",
+      "externalId": "8194428",
+      "title": "Software Developer Intern/Co-op, Backend (Winter 2027)",
+      "location": "Toronto, Canada",
+      "workMode": "onsite",
+      "employmentType": "internship",
+      "experience": {
+        "min": 0,
+        "max": 1
+      },
+      "skills": [],
+      "description": "Join us in building the future of finance. Our mission is to democratize finance for all. An estimated $124 trillion of assets will be inherited by younger generations in the next two decades. The largest transfer of wealth in human history. If you’re ready to be at the epicenter of this historic cultural and financial shift, keep reading. About the team + role We are building an elite team, applying frontier technologies to the world's biggest financial problems. We're looking for bold thinkers. Sharp problem-solvers. Builders who are wired to make an impact. Robinhood isn't a place for complacency, it's where ambitious people do the best work of their careers. We're a high-performing, fast-moving team with ethics at the center of everything we do. Expectations are high, and so are the rewards. Our backend developers sit at the core of how Robinhood works — powering the financial produc…",
+      "sourceUrl": "https://boards.greenhouse.io/robinhood/jobs/8194428?t=gh_src=&gh_jid=8194428",
+      "postedAt": "2026-09-14T08:00:08-04:00"
+    },
+    {
+      "boardToken": "discord",
+      "externalId": "8806482002",
+      "title": "Commercial Policy Lead",
+      "location": "San Francisco Bay Area",
+      "workMode": "onsite",
+      "employmentType": "full-time",
+      "experience": {
+        "min": 5,
+        "max": null
+      },
+      "skills": [
+        "Rust"
+      ],
+      "description": "Discord has a highly engaged community of millions of daily active users who use the platform for many different reasons, but there’s one thing that nearly everyone does: play video games. Discord plays a uniquely important role in the future of gaming, and we are focused on making it easier and more fun for people to hang out before, during, and after playing games. We are seeking a strategic Commercial Policy Lead to shape Discord's approach to monetization and revenue products. As a key member of the Product Policy organization, you will develop and implement advertising and commerce policies that enable Discord's business while maintaining platform safety and user trust. This role requires a deep understanding of digital commerce, creator economies, and advertising ecosystems, with the ability to balance business objectives with responsible platform practices. Please note: This role…",
+      "sourceUrl": "https://job-boards.greenhouse.io/discord/jobs/8806482002",
+      "postedAt": "2026-09-15T12:52:11-04:00"
+    },
+    {
+      "boardToken": "discord",
+      "externalId": "8703614002",
+      "title": "QA/DevOps Engineer",
+      "location": "San Francisco Bay Area",
+      "workMode": "onsite",
+      "employmentType": "full-time",
+      "experience": {
+        "min": 0,
+        "max": null
+      },
+      "skills": [
+        "CI/CD",
+        "Salesforce"
+      ],
+      "description": "Discord has a highly engaged community of millions of daily active users who use the platform for many different reasons, but there’s one thing that nearly everyone does: play video games. Discord plays a uniquely important role in the future of gaming, and we are focused on making it easier and more fun for people to hang out before, during, and after playing games. We are seeking a QA/DevOps Engineer&nbsp;to join Discord’s Business Systems team. In this role, you will own automated test suite development and maintenance across Oracle ERP Cloud (Fusion) and Salesforce, with a focus on Tosca-based regression and progression testing. You will embed automated testing into CI/CD pipelines and partner closely with ERP Functional, Technical, and DevOps teams to ensure every release is tested consistently and defects are caught early. What you'll be doing Run Oracle ERP Cloud and Salesforce QA…",
+      "sourceUrl": "https://job-boards.greenhouse.io/discord/jobs/8703614002",
+      "postedAt": "2026-08-13T23:27:33-04:00"
+    },
+    {
+      "boardToken": "discord",
+      "externalId": "8581126002",
+      "title": "Senior Product Manager, Safety",
+      "location": "San Francisco Bay Area",
+      "workMode": "onsite",
+      "employmentType": "full-time",
+      "experience": {
+        "min": 5,
+        "max": null
+      },
+      "skills": [],
+      "description": "Discord has a highly engaged community of millions of daily active users who use the platform for many different reasons, but there’s one thing that nearly everyone does: play video games. Discord plays a uniquely important role in the future of gaming, and we are focused on making it easier and more fun for people to hang out before, during, and after playing games. At the heart of Discord's communities is Safety. The Safety team at Discord is responsible for ensuring users find belonging by minimizing exposure to abuse on the platform. We're looking for a Product Manager to lead our work on scaled abuse — fake accounts, account takeovers, scraping — and help keep Discord a safe and welcoming place. Reporting to our safety Group Product Manager, you'll create the vision, build the systems, and lead the cross-functional strategy that detects and prevents scaled abuse before it reaches ou…",
+      "sourceUrl": "https://job-boards.greenhouse.io/discord/jobs/8581126002",
+      "postedAt": "2026-06-08T13:57:48-04:00"
+    },
+    {
+      "boardToken": "discord",
+      "externalId": "8806163002",
+      "title": "Software Engineer, Distributed Systems",
+      "location": "San Francisco Bay Area",
+      "workMode": "onsite",
+      "employmentType": "full-time",
+      "experience": {
+        "min": 0,
+        "max": null
+      },
+      "skills": [],
+      "description": "Discord has a highly engaged community of millions of daily active users who use the platform for many different reasons, but there’s one thing that nearly everyone does: play video games. Discord plays a uniquely important role in the future of gaming, and we are focused on making it easier and more fun for people to hang out before, during, and after playing games. The Realtime Infrastructure team is responsible for building and maintaining some of Discord’s highest scale and most critical services. Those systems are at the core of our text chat infrastructure and facilitate the dispatching of every update to our users sessions. This role will have a significant impact on Discord’s overall reliability and performance. It will also help our product teams build new features on top of our infrastructure. This team is small but critical, and its work has a direct impact on Discord's succes…",
+      "sourceUrl": "https://job-boards.greenhouse.io/discord/jobs/8806163002",
+      "postedAt": "2026-09-15T15:10:07-04:00"
+    },
+    {
+      "boardToken": "reddit",
+      "externalId": "8089959",
+      "title": "3rd Party Partnerships Manager - Signals",
+      "location": "New York City, NY",
+      "workMode": "onsite",
+      "employmentType": "full-time",
+      "experience": {
+        "min": 0,
+        "max": null
+      },
+      "skills": [
+        "Rust"
+      ],
+      "description": "Reddit is a community of communities. It’s built on shared interests, passion, and trust, and is home to the most open and authentic conversations on the internet. Every day, Reddit users submit, vote, and comment on the topics they care most about. With 100,000+ active communities and approximately 130 million daily active unique visitors, Reddit is one of the internet’s largest sources of information. For more information, visit www.redditinc.com . Reddit is seeking a Signals Partner Manager to own and scale strategic signal and data partnerships across the global ads ecosystem. This role will lead the partner management motion for platforms that help advertisers send higher-quality conversion signals to Reddit (for example CDPs, tag managers, and bespoke signal partners). This role will own the strategies and relationships with the most impactful signal partners globally, achieving be…",
+      "sourceUrl": "https://job-boards.greenhouse.io/reddit/jobs/8089959",
+      "postedAt": "2026-07-29T02:19:34-04:00"
+    },
+    {
+      "boardToken": "reddit",
+      "externalId": "7886615",
+      "title": "Principal Engineer, iOS Performance",
+      "location": "Remote - United States",
+      "workMode": "remote",
+      "employmentType": "full-time",
+      "experience": {
+        "min": 8,
+        "max": null
+      },
+      "skills": [
+        "Rust"
+      ],
+      "description": "Reddit is a community of communities. It’s built on shared interests, passion, and trust, and is home to the most open and authentic conversations on the internet. Every day, Reddit users submit, vote, and comment on the topics they care most about. With 100,000+ active communities and approximately 130 million daily active unique visitors, Reddit is one of the internet’s largest sources of information. For more information, visit www.redditinc.com . The iOS Platform team sets the technical direction for iOS at Reddit. Our customers are primarily other engineers. It’s our job to help improve developer efficiency by providing libraries/APIs/frameworks, monitoring performance, building shared components, improving build tools, etc. In the codebase, we own the core components of the app such as the networking and caching stack. We set the direction in which the codebase builds by defining w…",
+      "sourceUrl": "https://job-boards.greenhouse.io/reddit/jobs/7886615",
+      "postedAt": "2026-05-04T12:51:48-04:00"
+    },
+    {
+      "boardToken": "reddit",
+      "externalId": "6960831",
+      "title": "Senior Machine Learning Engineer",
+      "location": "Remote - United States",
+      "workMode": "remote",
+      "employmentType": "full-time",
+      "experience": {
+        "min": 5,
+        "max": null
+      },
+      "skills": [
+        "Rust",
+        "Machine Learning"
+      ],
+      "description": "Reddit is a community of communities. It’s built on shared interests, passion, and trust, and is home to the most open and authentic conversations on the internet. Every day, Reddit users submit, vote, and comment on the topics they care most about. With 100,000+ active communities and approximately 130 million daily active unique visitors, Reddit is one of the internet’s largest sources of information. For more information, visit www.redditinc.com . At Reddit, machine learning sits at the heart of how millions of people discover, connect, and engage with the world’s largest collection of human conversations. From powering personalized recommendations and search to optimizing advertising systems and marketplace dynamics, our ML engineers tackle some of the most interesting and impactful problems in large-scale applied machine learning. We hire Machine Learning Engineers across both our C…",
+      "sourceUrl": "https://job-boards.greenhouse.io/reddit/jobs/6960831",
+      "postedAt": "2025-08-14T15:50:35-04:00"
+    },
+    {
+      "boardToken": "reddit",
+      "externalId": "6512458",
+      "title": "Software Engineer, Ads",
+      "location": "Remote - Ontario, Canada",
+      "workMode": "remote",
+      "employmentType": "full-time",
+      "experience": {
+        "min": 0,
+        "max": null
+      },
+      "skills": [
+        "Rust"
+      ],
+      "description": "Reddit is a community of communities. It’s built on shared interests, passion, and trust, and is home to the most open and authentic conversations on the internet. Every day, Reddit users submit, vote, and comment on the topics they care most about. With 100,000+ active communities and approximately 130 million daily active unique visitors, Reddit is one of the internet’s largest sources of information. For more information, visit www.redditinc.com . Reddit has a flexible workforce! If you happen to live close to one of our physical office locations our doors are open for you to come into the office as often as you'd like. Don't live near one of our offices? No worries: You can apply to work remotely in any country in which we have a physical presence. Team Description Reddit is poised to rapidly innovate and grow like no other time in its history. We’re currently hiring across multiple…",
+      "sourceUrl": "https://job-boards.greenhouse.io/reddit/jobs/6512458",
+      "postedAt": "2025-01-06T19:00:56-05:00"
+    },
+    {
+      "boardToken": "twilio",
+      "externalId": "8177722",
+      "title": "Account Executive 3",
+      "location": "Remote - US",
+      "workMode": "remote",
+      "employmentType": "full-time",
+      "experience": {
+        "min": 0,
+        "max": null
+      },
+      "skills": [],
+      "description": "Who we are&nbsp; At Twilio, we’re shaping the future of communications, all from the comfort of our homes. We deliver innovative solutions to &nbsp;hundreds of thousands of businesses&nbsp; and empower millions of developers worldwide to craft personalized customer experiences. Our dedication to remote-first work , and strong culture of connection and global inclusion means that no matter your location, you’re part of a vibrant team with diverse experiences making a global impact each day. As we continue to revolutionize how the world interacts, we’re acquiring new skills and experiences that make work feel truly rewarding. Your career at Twilio is in your hands. . Hiring and how we work We use Artificial Intelligence (AI) to help make our hiring process efficient. That said, every hiring decision is made by real Twilions!&nbsp; Also, while we are a remote-first company, you may be asked…",
+      "sourceUrl": "https://job-boards.greenhouse.io/twilio/jobs/8177722",
+      "postedAt": "2026-09-04T11:07:38-04:00"
+    },
+    {
+      "boardToken": "twilio",
+      "externalId": "6372770",
+      "title": "New Business Account Executive ",
+      "location": "Remote - Singapore",
+      "workMode": "remote",
+      "employmentType": "full-time",
+      "experience": {
+        "min": 0,
+        "max": null
+      },
+      "skills": [],
+      "description": "Who we are&nbsp; At Twilio, we’re shaping the future of communications, all from the comfort of our homes. We deliver innovative solutions to &nbsp;hundreds of thousands of businesses&nbsp; and empower millions of developers worldwide to craft personalized customer experiences. Our dedication to remote-first work , and strong culture of connection and global inclusion means that no matter your location, you’re part of a vibrant team with diverse experiences making a global impact each day. As we continue to revolutionize how the world interacts, we’re acquiring new skills and experiences that make work feel truly rewarding. Your career at Twilio is in your hands. . Hiring and how we work We use Artificial Intelligence (AI) to help make our hiring process efficient. That said, every hiring decision is made by real Twilions!&nbsp; Also, while we are a remote-first company, you may be asked…",
+      "sourceUrl": "https://job-boards.greenhouse.io/twilio/jobs/6372770",
+      "postedAt": "2025-01-20T08:02:56-05:00"
+    },
+    {
+      "boardToken": "twilio",
+      "externalId": "8204351",
+      "title": "Senior Engineering Manager",
+      "location": "Remote - US",
+      "workMode": "remote",
+      "employmentType": "full-time",
+      "experience": {
+        "min": 5,
+        "max": null
+      },
+      "skills": [],
+      "description": "Who we are&nbsp; At Twilio, we’re shaping the future of communications, all from the comfort of our homes. We deliver innovative solutions to &nbsp;hundreds of thousands of businesses&nbsp; and empower millions of developers worldwide to craft personalized customer experiences. Our dedication to remote-first work , and strong culture of connection and global inclusion means that no matter your location, you’re part of a vibrant team with diverse experiences making a global impact each day. As we continue to revolutionize how the world interacts, we’re acquiring new skills and experiences that make work feel truly rewarding. Your career at Twilio is in your hands. . Hiring and how we work We use Artificial Intelligence (AI) to help make our hiring process efficient. That said, every hiring decision is made by real Twilions!&nbsp; Also, while we are a remote-first company, you may be asked…",
+      "sourceUrl": "https://job-boards.greenhouse.io/twilio/jobs/8204351",
+      "postedAt": "2026-09-15T16:07:57-04:00"
+    },
+    {
+      "boardToken": "twilio",
+      "externalId": "8100236",
+      "title": "Software Engineer (L2)",
+      "location": "Remote - US",
+      "workMode": "remote",
+      "employmentType": "full-time",
+      "experience": {
+        "min": 0,
+        "max": null
+      },
+      "skills": [],
+      "description": "Who we are&nbsp; At Twilio, we’re shaping the future of communications, all from the comfort of our homes. We deliver innovative solutions to &nbsp;hundreds of thousands of businesses&nbsp; and empower millions of developers worldwide to craft personalized customer experiences. Our dedication to remote-first work , and strong culture of connection and global inclusion means that no matter your location, you’re part of a vibrant team with diverse experiences making a global impact each day. As we continue to revolutionize how the world interacts, we’re acquiring new skills and experiences that make work feel truly rewarding. Your career at Twilio is in your hands. . Hiring and how we work We use Artificial Intelligence (AI) to help make our hiring process efficient. That said, every hiring decision is made by real Twilions!&nbsp; Also, while we are a remote-first company, you may be asked…",
+      "sourceUrl": "https://job-boards.greenhouse.io/twilio/jobs/8100236",
+      "postedAt": "2026-07-31T16:58:59-04:00"
+    },
+    {
+      "boardToken": "mongodb",
+      "externalId": "7311234",
+      "title": "Account Development Representative",
+      "location": "Toronto",
+      "workMode": "onsite",
+      "employmentType": "full-time",
+      "experience": {
+        "min": 0,
+        "max": null
+      },
+      "skills": [
+        "Go",
+        "MongoDB"
+      ],
+      "description": "At MongoDB, our Account Development team works closely with our partners in both Sales and Marketing to build fanatical customer enthusiasm around MongoDB. ADR reps are responsible for identifying and qualifying new opportunities for our sales organization. We view our Account Development program as the best way to turbocharge a long and successful career in sales and view our Account Development Representatives (ADRs) as the next wave of Account Executives at MongoDB. The Opportunity&nbsp; Being an ADR is often a first step to jump-starting a career in sales. At MongoDB, we have a culture that celebrates diversity, fosters growth and enablement, and ensures that we provide our ADRs with the tools and the confidence that they need to grow their careers. We invest heavily in the training and development of our team. You will always have the support from our sales enablement org and manage…",
+      "sourceUrl": "https://www.mongodb.com/careers/job/?gh_jid=7311234",
+      "postedAt": "2025-10-13T10:51:11-04:00"
+    },
+    {
+      "boardToken": "mongodb",
+      "externalId": "7429695",
+      "title": "Enterprise Account Executive, KSA Public Sector (Arabic Speaker)",
+      "location": "Dubai",
+      "workMode": "onsite",
+      "employmentType": "full-time",
+      "experience": {
+        "min": 0,
+        "max": null
+      },
+      "skills": [
+        "Go",
+        "MongoDB",
+        "Salesforce"
+      ],
+      "description": "We’re looking for a hardworking, driven individual with superb energy, passion and initiative for new business acquisition. The Enterprise Account Executive role focuses exclusively on formulating and executing a sales strategy within an assigned territory, resulting in revenue growth and new customer acquisition. We are looking to speak to candidates who are based in Dubai for our hybrid working model. About The Sales Culture MongoDB is always developing and innovating — not only in our technology, but also in our sales go-to-market strategy. Our sales leadership is committed to building the best salesforce in technology. This means, inspiring and enabling success for everyone on the team. We not only equip you to be successful and close deals, but we want your feedback and input on how we can continue to “ Think Big and Go Far .” As a crucial part of the Sales team at MongoDB, you will…",
+      "sourceUrl": "https://www.mongodb.com/careers/job/?gh_jid=7429695",
+      "postedAt": "2026-04-07T06:00:55-04:00"
+    },
+    {
+      "boardToken": "mongodb",
+      "externalId": "8135458",
+      "title": "Senior Data Scientist",
+      "location": "Cork, Ireland; Dublin, Ireland",
+      "workMode": "onsite",
+      "employmentType": "full-time",
+      "experience": {
+        "min": 5,
+        "max": null
+      },
+      "skills": [
+        "Go",
+        "MongoDB",
+        "Machine Learning"
+      ],
+      "description": "As Senior Data Scientist for Engineering Systems you will work independently alongside sharp, generous, and pragmatic engineers from Server Query, Atlas Clusters, and Release Quality, among other teams. Together, we tackle problems spanning resource scaling across the Atlas fleet, safe feature rollout to MongoDB clusters, automated incident response and query engine performance. Join the Platform Data Science team and help us research, prototype and ship machine learning features for MongoDB’s core server, query engine and Atlas, our database-as-a-service cloud offering. We are looking to speak to candidates who are based in Dublin or Cork for our hybrid working model. What You'll Do Partner with Server Query, Atlas Clusters, Release Quality and other engineers to embed algorithmic rigor and optimization into resource scaling, release-safety and monitoring systems across the fleet and in…",
+      "sourceUrl": "https://www.mongodb.com/careers/job/?gh_jid=8135458",
+      "postedAt": "2026-08-21T10:48:17-04:00"
+    },
+    {
+      "boardToken": "mongodb",
+      "externalId": "8152813",
+      "title": "Senior Solutions Architect (Pre-Sales)",
+      "location": "Austin; Dallas; Houston",
+      "workMode": "onsite",
+      "employmentType": "full-time",
+      "experience": {
+        "min": 5,
+        "max": null
+      },
+      "skills": [
+        "Go",
+        "Rust",
+        "MongoDB"
+      ],
+      "description": "We are looking for passionate technologists to join our Pre-Sales organization to ensure that our growth is grounded and guided by strong technical alignment with our platform and the needs of our customers. MongoDB Pre-Sales Solution Architects are responsible for guiding our customers and users to design and build reliable, scalable systems using our data platform. Our team is made up of seasoned technical sales professionals, software architects, entrepreneurs, and developers who take direct responsibility for customer success, including the design of their software, deployment, and operations. You'll work closely with our sales executives, helping customers solve business problems by leveraging our solutions, playing a key role in winning deals and driving the business forward. You'll be a trusted advisor to a wide range of users from startups to the world's largest enterprise IT org…",
+      "sourceUrl": "https://www.mongodb.com/careers/job/?gh_jid=8152813",
+      "postedAt": "2026-08-26T10:43:47-04:00"
+    },
+    {
+      "boardToken": "elastic",
+      "externalId": "8148720",
+      "title": "ABM Manager, Global Public Sector",
+      "location": "United States",
+      "workMode": "onsite",
+      "employmentType": "full-time",
+      "experience": {
+        "min": 0,
+        "max": null
+      },
+      "skills": [
+        "Security"
+      ],
+      "description": "Elastic, the Search AI Company, enables everyone to find the answers they need in real time, using all their data, at scale — unleashing the potential of businesses and people. The Elastic Search AI Platform, used by more than 50% of the Fortune 500, brings together the precision of search and the intelligence of AI to enable everyone to accelerate the results that matter. By taking advantage of all structured and unstructured data — securing and protecting private information more effectively — Elastic’s complete, cloud-based solutions for search, security, and observability help organizations deliver on the promise of AI. What is The Role We're looking for a strategic, creative, meticulous, and highly collaborative Account-Based Marketing Manager to craft, lead, and scale ABM programs across priority Public Sector accounts in AMER. This role sits at the intersection of marketing, sales…",
+      "sourceUrl": "https://jobs.elastic.co/jobs?gh_jid=8148720&gh_jid=8148720",
+      "postedAt": "2026-08-26T10:52:01-04:00"
+    },
+    {
+      "boardToken": "elastic",
+      "externalId": "8002560",
+      "title": "Principal Java Engineer - Distributed Systems, Serverless - Elasticsearch",
+      "location": "Portugal",
+      "workMode": "onsite",
+      "employmentType": "full-time",
+      "experience": {
+        "min": 8,
+        "max": null
+      },
+      "skills": [
+        "Java",
+        "Elasticsearch",
+        "Security"
+      ],
+      "description": "Elastic, the Search AI Company, enables everyone to find the answers they need in real time, using all their data, at scale — unleashing the potential of businesses and people. The Elastic Search AI Platform, used by more than 50% of the Fortune 500, brings together the precision of search and the intelligence of AI to enable everyone to accelerate the results that matter. By taking advantage of all structured and unstructured data — securing and protecting private information more effectively — Elastic’s complete, cloud-based solutions for search, security, and observability help organizations deliver on the promise of AI. What Is The Role: We are on the lookout for a Principal Software Engineer to join our Elasticsearch - Distributed Systems team and focus on how Elasticsearch provides scale, performance, and resilience, especially in the context of our Serverless offering. You will be…",
+      "sourceUrl": "https://jobs.elastic.co/jobs?gh_jid=8002560&gh_jid=8002560",
+      "postedAt": "2026-06-12T06:31:21-04:00"
+    },
+    {
+      "boardToken": "elastic",
+      "externalId": "8114222",
+      "title": "RVP - AI Natives",
+      "location": "United States",
+      "workMode": "onsite",
+      "employmentType": "full-time",
+      "experience": {
+        "min": 0,
+        "max": null
+      },
+      "skills": [
+        "Security"
+      ],
+      "description": "Elastic, the Search AI Company, enables everyone to find the answers they need in real time, using all their data, at scale — unleashing the potential of businesses and people. The Elastic Search AI Platform, used by more than 50% of the Fortune 500, brings together the precision of search and the intelligence of AI to enable everyone to accelerate the results that matter. By taking advantage of all structured and unstructured data — securing and protecting private information more effectively — Elastic’s complete, cloud-based solutions for search, security, and observability help organizations deliver on the promise of AI. What Is The Role: Elastic is seeking a visionary RVP - AI Natives to lead, scale, and accelerate the growth of our specialized AI Native business unit. In this strategic executive role, you will lead a high-performing team responsible for a dual motion: selling Elasti…",
+      "sourceUrl": "https://jobs.elastic.co/jobs?gh_jid=8114222&gh_jid=8114222",
+      "postedAt": "2026-08-07T11:21:22-04:00"
+    },
+    {
+      "boardToken": "elastic",
+      "externalId": "8207678",
+      "title": "Senior Software Engineer -Observability, Managed Inputs ",
+      "location": "Romania",
+      "workMode": "onsite",
+      "employmentType": "full-time",
+      "experience": {
+        "min": 5,
+        "max": null
+      },
+      "skills": [
+        "Security"
+      ],
+      "description": "Elastic, the Search AI Company, enables everyone to find the answers they need in real time, using all their data, at scale — unleashing the potential of businesses and people. The Elastic Search AI Platform, used by more than 50% of the Fortune 500, brings together the precision of search and the intelligence of AI to enable everyone to accelerate the results that matter. By taking advantage of all structured and unstructured data — securing and protecting private information more effectively — Elastic’s complete, cloud-based solutions for search, security, and observability help organizations deliver on the promise of AI. What is The Role As part of the Observability organization and inside the Streams program, the Managed Inputs team builds high-performing backend ingestion pipelines. We collect telemetry across diverse environments—including Elastic Agents, agentless setups, OpenTele…",
+      "sourceUrl": "https://jobs.elastic.co/jobs?gh_jid=8207678&gh_jid=8207678",
+      "postedAt": "2026-09-16T09:07:34-04:00"
+    },
+    {
+      "boardToken": "gusto",
+      "externalId": "8143038",
+      "title": "Account Coordinator (Retirement Sponsor Support)",
+      "location": "Scottsdale, Arizona, United States",
+      "workMode": "onsite",
+      "employmentType": "full-time",
+      "experience": {
+        "min": 0,
+        "max": null
+      },
+      "skills": [],
+      "description": "&nbsp; About Gusto At Gusto, we're on a mission to grow the small business economy. We handle the hard stuff — payroll, health insurance, 401(k)s, and HR — so owners can focus on their craft and their customers. With teams in Denver, San Francisco, and New York, we support more than 500,000 small businesses nationwide and are building a workplace that reflects the people we serve. &nbsp; All full-time employees receive competitive base pay, benefits, and equity (RSUs) — because everyone who helps build Gusto should share in its success. Offer amounts are determined by role, level, and location. Learn more about our Total Rewards philosophy . &nbsp; AI is a fundamental part of how work gets done at Gusto. We expect all team members to actively engage with AI tools relevant to their role and grow their fluency as the technology evolves. AI experience requirements vary by role and will be a…",
+      "sourceUrl": "https://job-boards.greenhouse.io/gusto/jobs/8143038",
+      "postedAt": "2026-08-20T01:23:51-04:00"
+    },
+    {
+      "boardToken": "gusto",
+      "externalId": "8100353",
+      "title": "Gusto Pro Core, Junior Account Manager",
+      "location": "Atlanta, GA - Remote; Denver, CO - Hybrid; Phoenix, AZ - Remote",
+      "workMode": "hybrid",
+      "employmentType": "full-time",
+      "experience": {
+        "min": 0,
+        "max": 2
+      },
+      "skills": [],
+      "description": "&nbsp; About Gusto At Gusto, we're on a mission to grow the small business economy. We handle the hard stuff — payroll, health insurance, 401(k)s, and HR — so owners can focus on their craft and their customers. With teams in Denver, San Francisco, and New York, we support more than 500,000 small businesses nationwide and are building a workplace that reflects the people we serve. &nbsp; All full-time employees receive competitive base pay, benefits, and equity (RSUs) — because everyone who helps build Gusto should share in its success. Offer amounts are determined by role, level, and location. Learn more about our Total Rewards philosophy . &nbsp; AI is a fundamental part of how work gets done at Gusto. We expect all team members to actively engage with AI tools relevant to their role and grow their fluency as the technology evolves. AI experience requirements vary by role and will be a…",
+      "sourceUrl": "https://job-boards.greenhouse.io/gusto/jobs/8100353",
+      "postedAt": "2026-08-06T09:29:34-04:00"
+    },
+    {
+      "boardToken": "gusto",
+      "externalId": "8191997",
+      "title": "Retirement Compliance Specialist",
+      "location": "Denver, CO - Hybrid; Los Angeles, CA - Remote; Scottsdale, Arizona, United States",
+      "workMode": "hybrid",
+      "employmentType": "full-time",
+      "experience": {
+        "min": 0,
+        "max": null
+      },
+      "skills": [],
+      "description": "&nbsp; About Gusto At Gusto, we're on a mission to grow the small business economy. We handle the hard stuff — payroll, health insurance, 401(k)s, and HR — so owners can focus on their craft and their customers. With teams in Denver, San Francisco, and New York, we support more than 500,000 small businesses nationwide and are building a workplace that reflects the people we serve. &nbsp; All full-time employees receive competitive base pay, benefits, and equity (RSUs) — because everyone who helps build Gusto should share in its success. Offer amounts are determined by role, level, and location. Learn more about our Total Rewards philosophy . &nbsp; AI is a fundamental part of how work gets done at Gusto. We expect all team members to actively engage with AI tools relevant to their role and grow their fluency as the technology evolves. AI experience requirements vary by role and will be a…",
+      "sourceUrl": "https://job-boards.greenhouse.io/gusto/jobs/8191997",
+      "postedAt": "2026-09-15T14:21:33-04:00"
+    },
+    {
+      "boardToken": "gusto",
+      "externalId": "8073232",
+      "title": "Software Engineer, ML Platform",
+      "location": "Denver, CO - Hybrid; New York, NY - Hybrid; San Francisco, CA - Hybrid",
+      "workMode": "hybrid",
+      "employmentType": "full-time",
+      "experience": {
+        "min": 0,
+        "max": null
+      },
+      "skills": [],
+      "description": "&nbsp; About Gusto At Gusto, we're on a mission to grow the small business economy. We handle the hard stuff — payroll, health insurance, 401(k)s, and HR — so owners can focus on their craft and their customers. With teams in Denver, San Francisco, and New York, we support more than 500,000 small businesses nationwide and are building a workplace that reflects the people we serve. &nbsp; All full-time employees receive competitive base pay, benefits, and equity (RSUs) — because everyone who helps build Gusto should share in its success. Offer amounts are determined by role, level, and location. Learn more about our Total Rewards philosophy . &nbsp; AI is a fundamental part of how work gets done at Gusto. We expect all team members to actively engage with AI tools relevant to their role and grow their fluency as the technology evolves. AI experience requirements vary by role and will be a…",
+      "sourceUrl": "https://job-boards.greenhouse.io/gusto/jobs/8073232",
+      "postedAt": "2026-08-10T13:18:12-04:00"
+    },
+    {
+      "boardToken": "airtable",
+      "externalId": "8403127002",
+      "title": "Account Executive, Strategic Accounts",
+      "location": "Remote - US",
+      "workMode": "remote",
+      "employmentType": "full-time",
+      "experience": {
+        "min": 0,
+        "max": null
+      },
+      "skills": [
+        "Go",
+        "Rust"
+      ],
+      "description": "Airtable is the no-code app platform that empowers people closest to the work to accelerate their most critical business processes. More than 500,000 organizations, including 80% of the Fortune 100, rely on Airtable to transform how work gets done. As a Strategic Account Executive at Airtable you will have the opportunity to work closely with a variety of strategic accounts across the Fortune 500 globally. Each client has unique needs and you act as a trusted business advisor, helping them effectively leverage our product to drive maximum impact for their business. Just like Lego blocks, what our customers can build with Airtable is virtually limitless. The opportunity for an Account Executive to make an impact on the largest global businesses is massive. Do you thrive working closely with strategic accounts on their unique business needs? Are you looking for some truly fascinating work,…",
+      "sourceUrl": "https://job-boards.greenhouse.io/airtable/jobs/8403127002",
+      "postedAt": "2026-02-28T09:04:24-05:00"
+    },
+    {
+      "boardToken": "airtable",
+      "externalId": "8626638002",
+      "title": "Manager, Business Development Representatives",
+      "location": "Austin, TX",
+      "workMode": "onsite",
+      "employmentType": "full-time",
+      "experience": {
+        "min": 0,
+        "max": null
+      },
+      "skills": [
+        "Go"
+      ],
+      "description": "Airtable is the no-code app platform that empowers people closest to the work to accelerate their most critical business processes. More than 500,000 organizations, including 80% of the Fortune 100, rely on Airtable to transform how work gets done. At Airtable, we are passionate about how our product democratizes software creation and empowers anyone to “create anything.” As the Business Development Manager, you will manage the hiring, training, strategy, and design of a newly built out BDR team. This includes helping build the right outbound messaging, refining our qualification criteria, and developing the next generation of Airtable sellers.&nbsp; Just like Lego blocks, what our customers can build with Airtable is virtually limitless. This opens up all sorts of exciting possibilities for our Sales team in terms of who our potential customer is. As a result, the demand for our product…",
+      "sourceUrl": "https://job-boards.greenhouse.io/airtable/jobs/8626638002",
+      "postedAt": "2026-07-09T12:34:15-04:00"
+    },
+    {
+      "boardToken": "airtable",
+      "externalId": "8582568002",
+      "title": "Senior Delivery Consultant",
+      "location": "New York, NY; Remote - US",
+      "workMode": "remote",
+      "employmentType": "full-time",
+      "experience": {
+        "min": 5,
+        "max": null
+      },
+      "skills": [],
+      "description": "Airtable is the no-code app platform that empowers people closest to the work to accelerate their most critical business processes. More than 500,000 organizations, including 80% of the Fortune 100, rely on Airtable to transform how work gets done. Work isn't being replaced. It's being redesigned. Airtable is built for that moment: the same platform humans run their most critical workflows on is where agents now operate alongside them. Professional Services is where that redesign happens. &nbsp; The Delivery Consultant turns a solution vision into systems that achieve outcomes. You build the systems: interfaces, automations, data models, integrations, and you run the customer sessions that close the gap between how the work was designed and how it actually gets done. The two are inseparable: what you learn in the room changes what you build, and what you build is how you earn the room's…",
+      "sourceUrl": "https://job-boards.greenhouse.io/airtable/jobs/8582568002",
+      "postedAt": "2026-06-08T16:56:57-04:00"
+    },
+    {
+      "boardToken": "airtable",
+      "externalId": "8597941002",
+      "title": "Senior Solutions Architect- West Coast",
+      "location": "Remote-US",
+      "workMode": "remote",
+      "employmentType": "full-time",
+      "experience": {
+        "min": 5,
+        "max": null
+      },
+      "skills": [],
+      "description": "Airtable is the no-code app platform that empowers people closest to the work to accelerate their most critical business processes. More than 500,000 organizations, including 80% of the Fortune 100, rely on Airtable to transform how work gets done. Work is being redesigned, and Airtable is built for that moment: the same platform humans run their most critical workflows on is where agents now operate alongside them. Professional Services is where that redesign happens. &nbsp; The Senior Solutions Architect leads it. You hear a customer describe their problem and see the organizational design question underneath it. You bring a point of view early, design solutions that hold through delivery, and stay accountable for outcomes, not just recommendations. Depending on the engagement, you may own solution design, contribute to the build, lead delivery coordination, or all three. What you'll d…",
+      "sourceUrl": "https://job-boards.greenhouse.io/airtable/jobs/8597941002",
+      "postedAt": "2026-06-17T18:55:46-04:00"
+    },
+    {
+      "boardToken": "samsara",
+      "externalId": "8024328",
+      "title": "Accountant II",
+      "location": "Remote - Mexico",
+      "workMode": "remote",
+      "employmentType": "full-time",
+      "experience": {
+        "min": 0,
+        "max": null
+      },
+      "skills": [],
+      "description": "Who we are Samsara (NYSE: IOT) is the pioneer of the Connected Operations™ Cloud, which is a platform that enables organizations that depend on physical operations to harness Internet of Things (IoT) data to develop actionable insights and improve their operations. At Samsara, we are helping improve the safety, efficiency and sustainability of the physical operations that power our global economy. Representing more than 40% of global GDP, these industries are the infrastructure of our planet, including agriculture, construction, field services, transportation, and manufacturing — and we are excited to help digitally transform their operations at scale. Working at Samsara means you’ll help define the future of physical operations and be on a team that’s shaping an exciting array of product solutions, including Video-Based Safety, Vehicle Telematics, Apps and Driver Workflows, and Equipmen…",
+      "sourceUrl": "https://www.samsara.com/company/careers/roles/8024328?gh_jid=8024328",
+      "postedAt": "2026-08-12T12:15:02-04:00"
+    },
+    {
+      "boardToken": "samsara",
+      "externalId": "8121332",
+      "title": "Enterprise Implementation Consultant",
+      "location": "Remote - US",
+      "workMode": "remote",
+      "employmentType": "full-time",
+      "experience": {
+        "min": 0,
+        "max": null
+      },
+      "skills": [],
+      "description": "Who we are Samsara (NYSE: IOT) is the pioneer of the Connected Operations™ Cloud, which is a platform that enables organizations that depend on physical operations to harness Internet of Things (IoT) data to develop actionable insights and improve their operations. At Samsara, we are helping improve the safety, efficiency and sustainability of the physical operations that power our global economy. Representing more than 40% of global GDP, these industries are the infrastructure of our planet, including agriculture, construction, field services, transportation, and manufacturing — and we are excited to help digitally transform their operations at scale. Working at Samsara means you’ll help define the future of physical operations and be on a team that’s shaping an exciting array of product solutions, including Video-Based Safety, Vehicle Telematics, Apps and Driver Workflows, and Equipmen…",
+      "sourceUrl": "https://www.samsara.com/company/careers/roles/8121332?gh_jid=8121332",
+      "postedAt": "2026-08-13T16:52:14-04:00"
+    },
+    {
+      "boardToken": "samsara",
+      "externalId": "8120781",
+      "title": "Sales Compensation Manager",
+      "location": "Remote - UT",
+      "workMode": "remote",
+      "employmentType": "full-time",
+      "experience": {
+        "min": 0,
+        "max": null
+      },
+      "skills": [],
+      "description": "Who we are Samsara (NYSE: IOT) is the pioneer of the Connected Operations™ Cloud, which is a platform that enables organizations that depend on physical operations to harness Internet of Things (IoT) data to develop actionable insights and improve their operations. At Samsara, we are helping improve the safety, efficiency and sustainability of the physical operations that power our global economy. Representing more than 40% of global GDP, these industries are the infrastructure of our planet, including agriculture, construction, field services, transportation, and manufacturing — and we are excited to help digitally transform their operations at scale. Working at Samsara means you’ll help define the future of physical operations and be on a team that’s shaping an exciting array of product solutions, including Video-Based Safety, Vehicle Telematics, Apps and Driver Workflows, and Equipmen…",
+      "sourceUrl": "https://www.samsara.com/company/careers/roles/8120781?gh_jid=8120781",
+      "postedAt": "2026-08-17T17:25:32-04:00"
+    },
+    {
+      "boardToken": "samsara",
+      "externalId": "7992889",
+      "title": "Software Engineer - Data Platform",
+      "location": "Remote - Canada",
+      "workMode": "remote",
+      "employmentType": "full-time",
+      "experience": {
+        "min": 0,
+        "max": null
+      },
+      "skills": [],
+      "description": "Who we are Samsara (NYSE: IOT) is the pioneer of the Connected Operations™ Cloud, which is a platform that enables organizations that depend on physical operations to harness Internet of Things (IoT) data to develop actionable insights and improve their operations. At Samsara, we are helping improve the safety, efficiency and sustainability of the physical operations that power our global economy. Representing more than 40% of global GDP, these industries are the infrastructure of our planet, including agriculture, construction, field services, transportation, and manufacturing — and we are excited to help digitally transform their operations at scale. Working at Samsara means you’ll help define the future of physical operations and be on a team that’s shaping an exciting array of product solutions, including Video-Based Safety, Vehicle Telematics, Apps and Driver Workflows, and Equipmen…",
+      "sourceUrl": "https://www.samsara.com/company/careers/roles/7992889?gh_jid=7992889",
+      "postedAt": "2026-06-09T11:21:07-04:00"
+    },
+    {
+      "boardToken": "instacart",
+      "externalId": "7144697",
+      "title": "Activation Sales Development Representative I",
+      "location": "United States - Remote",
+      "workMode": "remote",
+      "employmentType": "full-time",
+      "experience": {
+        "min": 0,
+        "max": null
+      },
+      "skills": [
+        "Go"
+      ],
+      "description": "We're transforming the grocery industry At Instacart, we invite the world to share love through food because we believe everyone should have access to the food they love and more time to enjoy it together. Where others see a simple need for grocery delivery, we see exciting complexity and endless opportunity to serve the varied needs of our community. We work to deliver an essential service that customers rely on to get their groceries and household goods, while also offering safe and flexible earnings opportunities to Instacart Personal Shoppers. Instacart has become a lifeline for millions of people, and we’re building the team to help push our shopping cart forward. If you’re ready to do the best work of your life, come join our table. Instacart is a Flex First team There’s no one-size fits all approach to how we do our best work. Our employees have the flexibility to choose where the…",
+      "sourceUrl": "https://instacart.careers/job/?gh_jid=7144697",
+      "postedAt": "2025-08-07T19:08:44-04:00"
+    },
+    {
+      "boardToken": "instacart",
+      "externalId": "8155140",
+      "title": "Principal Computer Vision Engineer",
+      "location": "Israel - Hybrid (3 days/week in office required)",
+      "workMode": "hybrid",
+      "employmentType": "full-time",
+      "experience": {
+        "min": 8,
+        "max": null
+      },
+      "skills": [
+        "Go"
+      ],
+      "description": "We're transforming the grocery industry At Instacart, we invite the world to share love through food because we believe everyone should have access to the food they love and more time to enjoy it together. Where others see a simple need for grocery delivery, we see exciting complexity and endless opportunity to serve the varied needs of our community. We work to deliver an essential service that customers rely on to get their groceries and household goods, while also offering safe and flexible earnings opportunities to Instacart Personal Shoppers. Instacart has become a lifeline for millions of people, and we’re building the team to help push our shopping cart forward. If you’re ready to do the best work of your life, come join our table. Instacart is a Flex First team There’s no one-size fits all approach to how we do our best work. Our employees have the flexibility to choose where the…",
+      "sourceUrl": "https://instacart.careers/job/?gh_jid=8155140",
+      "postedAt": "2026-08-24T16:46:52-04:00"
+    },
+    {
+      "boardToken": "instacart",
+      "externalId": "8143147",
+      "title": "Senior Machine Learning Engineer, Digital Twin Platform",
+      "location": "Canada - Remote (ON, AB, BC, or NS Only)",
+      "workMode": "remote",
+      "employmentType": "full-time",
+      "experience": {
+        "min": 5,
+        "max": null
+      },
+      "skills": [
+        "Go",
+        "Machine Learning"
+      ],
+      "description": "We're transforming the grocery industry At Instacart, we invite the world to share love through food because we believe everyone should have access to the food they love and more time to enjoy it together. Where others see a simple need for grocery delivery, we see exciting complexity and endless opportunity to serve the varied needs of our community. We work to deliver an essential service that customers rely on to get their groceries and household goods, while also offering safe and flexible earnings opportunities to Instacart Personal Shoppers. Instacart has become a lifeline for millions of people, and we’re building the team to help push our shopping cart forward. If you’re ready to do the best work of your life, come join our table. Instacart is a Flex First team There’s no one-size fits all approach to how we do our best work. Our employees have the flexibility to choose where the…",
+      "sourceUrl": "https://instacart.careers/job/?gh_jid=8143147",
+      "postedAt": "2026-08-20T15:12:31-04:00"
+    },
+    {
+      "boardToken": "instacart",
+      "externalId": "8017071",
+      "title": "Senior Product Security Engineer II",
+      "location": "United States - Remote",
+      "workMode": "remote",
+      "employmentType": "full-time",
+      "experience": {
+        "min": 5,
+        "max": null
+      },
+      "skills": [
+        "Go",
+        "Security"
+      ],
+      "description": "We're transforming the grocery industry At Instacart, we invite the world to share love through food because we believe everyone should have access to the food they love and more time to enjoy it together. Where others see a simple need for grocery delivery, we see exciting complexity and endless opportunity to serve the varied needs of our community. We work to deliver an essential service that customers rely on to get their groceries and household goods, while also offering safe and flexible earnings opportunities to Instacart Personal Shoppers. Instacart has become a lifeline for millions of people, and we’re building the team to help push our shopping cart forward. If you’re ready to do the best work of your life, come join our table. Instacart is a Flex First team There’s no one-size fits all approach to how we do our best work. Our employees have the flexibility to choose where the…",
+      "sourceUrl": "https://instacart.careers/job/?gh_jid=8017071",
+      "postedAt": "2026-06-18T16:33:58-04:00"
+    },
+    {
+      "boardToken": "dropbox",
+      "externalId": "8159652",
+      "title": "Account Executive",
+      "location": "Remote - US: Select locations",
+      "workMode": "remote",
+      "employmentType": "full-time",
+      "experience": {
+        "min": 0,
+        "max": null
+      },
+      "skills": [],
+      "description": "Role Description As an Account Executive on the Growth team, you will help Dropbox expand how we bring our Product Suite and emerging AI products to new customers. In this role, you’ll focus on identifying, engaging, and developing opportunities with net new customers. You’ll work with prospects to understand their needs, learn which use cases resonate, and help create successful outcomes.&nbsp; You’ll be expected to execute consistently, manage your pipeline effectively, and contribute feedback that helps improve our sales motion, messaging, and approach over time. This is an opportunity to build strong sales experience across a growing portfolio of products while contributing to Dropbox’s next phase of growth. Responsibilities Own the full sales cycle from pipeline generation through close and renewal within your territory Build pipeline from scratch by prospecting into new teams, depa…",
+      "sourceUrl": "https://jobs.dropbox.com/listing/8159652?gh_jid=8159652",
+      "postedAt": "2026-09-01T09:20:17-04:00"
+    },
+    {
+      "boardToken": "dropbox",
+      "externalId": "8036650",
+      "title": "Enterprise Context Architect",
+      "location": "Remote - Canada: Select locations",
+      "workMode": "remote",
+      "employmentType": "full-time",
+      "experience": {
+        "min": 0,
+        "max": null
+      },
+      "skills": [
+        "Rust"
+      ],
+      "description": "Role Description Dropbox is building the knowledge layer that connects content, context, and action. As AI moves from assistants to systems that act, the structure and stewardship of enterprise knowledge becomes the difference between AI that helps and AI that fails. This role defines the architecture and technical requirements for the context layer our AI depends on: what it can know, what it can trust, and what it is allowed to act on. You will shape the standards and approaches that make enterprise knowledge reliable, current, and permissions-aware, working across the enterprise on content and context architecture, retrieval and grounding, evaluation, semantic structure, permissions requirements, and prototyping, while domain experts remain accountable for the accuracy and stewardship of their content. This is the first role of its kind at Dropbox. You will partner with IT, Engineerin…",
+      "sourceUrl": "https://jobs.dropbox.com/listing/8036650?gh_jid=8036650",
+      "postedAt": "2026-08-03T11:24:36-04:00"
+    },
+    {
+      "boardToken": "dropbox",
+      "externalId": "8092225",
+      "title": "Program Manager, Workforce Planning",
+      "location": "Remote - Canada: Select locations",
+      "workMode": "remote",
+      "employmentType": "full-time",
+      "experience": {
+        "min": 0,
+        "max": null
+      },
+      "skills": [
+        "Go"
+      ],
+      "description": "Role Description Reporting to the Head of Strategic Workforce Planning, this role is responsible for building and operating the systems, operating rhythms, and governance that enable the Workforce Planning team to deliver strategic work consistently and at scale. As the owner of the Workforce Planning operating system, this person will drive the team's core planning and execution cadence, including planning cycles, governance forums, SteerCo meetings, executive reporting, quarterly organizational health reviews, and recurring team operating rhythms. They will also oversee the integrated portfolio plan across Workforce Planning workstreams, ensuring clear priorities, ownership, milestones, dependencies, and risk management to keep initiatives moving forward in a coordinated way. In addition, this role will lead the enablement and adoption of Workforce Planning tools, outputs, and policies…",
+      "sourceUrl": "https://jobs.dropbox.com/listing/8092225?gh_jid=8092225",
+      "postedAt": "2026-07-31T11:14:44-04:00"
+    },
+    {
+      "boardToken": "dropbox",
+      "externalId": "6333181",
+      "title": "Senior Infrastructure Software Engineer",
+      "location": "Remote - Poland",
+      "workMode": "remote",
+      "employmentType": "full-time",
+      "experience": {
+        "min": 5,
+        "max": null
+      },
+      "skills": [],
+      "description": "Role Description As an Infrastructure Engineer, your role will be crucial in shaping and constructing the robust systems that not only support our current flagship products but also lay the groundwork for the next wave of engineering innovations. From optimizing user experiences across various projects to ensuring seamless scalability and data integrity, you'll be at the forefront of shaping the technological backbone of our platform. Collaborating closely with cross-functional teams, you'll leverage your expertise to tackle audacious challenges and push the boundaries of what's possible. Your contributions will directly impact millions of users, as every line of code you write furthers our mission to revolutionize the way people work and collaborate. Join us in redefining the future, where your passion for building scalable, reliable systems will drive meaningful change on a global scal…",
+      "sourceUrl": "https://jobs.dropbox.com/listing/6333181?gh_jid=6333181",
+      "postedAt": "2025-07-16T10:24:34-04:00"
+    }
+  ]
+}

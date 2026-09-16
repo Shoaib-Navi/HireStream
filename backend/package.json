@@ -11,6 +11,7 @@
     "start": "node index.js",
     "migrate": "node src/scripts/migrate.js",
     "seed": "node src/scripts/seed.js",
+    "fetch:jobs": "node src/scripts/fetch-public-jobs.js",
     "create-admin": "node src/scripts/create-admin.js",
     "test": "node --test --test-concurrency=2"
   },
