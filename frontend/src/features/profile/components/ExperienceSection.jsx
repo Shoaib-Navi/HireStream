@@ -1,4 +1,4 @@
-import FormField from "@/components/common/FormField";
+import FormField, { FIELD_LABEL } from "@/components/common/FormField";
 import LoadingButton from "@/components/common/LoadingButton";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -32,20 +32,20 @@ const ExperienceForm = ({ initialValues, errors, saving, onSubmit, onCancel }) =
   return (
     <form onSubmit={handleSubmit} className="space-y-4" noValidate>
       <div className="grid gap-4 sm:grid-cols-2">
-        <FormField label="Job title" htmlFor="exp-title" error={errors.title} required>
-          <Input id="exp-title" name="title" maxLength={100} value={values.title} onChange={handleChange} aria-invalid={Boolean(errors.title)} />
+        <FormField labelClassName={FIELD_LABEL} label="Job title" htmlFor="exp-title" error={errors.title} required>
+          <Input variant="underline" id="exp-title" name="title" maxLength={100} value={values.title} onChange={handleChange} aria-invalid={Boolean(errors.title)} />
         </FormField>
-        <FormField label="Company" htmlFor="exp-company" error={errors.company} required>
-          <Input id="exp-company" name="company" maxLength={100} value={values.company} onChange={handleChange} aria-invalid={Boolean(errors.company)} />
+        <FormField labelClassName={FIELD_LABEL} label="Company" htmlFor="exp-company" error={errors.company} required>
+          <Input variant="underline" id="exp-company" name="company" maxLength={100} value={values.company} onChange={handleChange} aria-invalid={Boolean(errors.company)} />
         </FormField>
-        <FormField label="Location" htmlFor="exp-location" error={errors.location} className="sm:col-span-2">
-          <Input id="exp-location" name="location" maxLength={100} value={values.location} onChange={handleChange} />
+        <FormField labelClassName={FIELD_LABEL} label="Location" htmlFor="exp-location" error={errors.location} className="sm:col-span-2">
+          <Input variant="underline" id="exp-location" name="location" maxLength={100} value={values.location} onChange={handleChange} />
         </FormField>
-        <FormField label="Start date" htmlFor="exp-start" error={errors.startDate} required>
-          <Input id="exp-start" name="startDate" type="date" value={values.startDate} onChange={handleChange} aria-invalid={Boolean(errors.startDate)} />
+        <FormField labelClassName={FIELD_LABEL} label="Start date" htmlFor="exp-start" error={errors.startDate} required>
+          <Input variant="underline" id="exp-start" name="startDate" type="date" value={values.startDate} onChange={handleChange} aria-invalid={Boolean(errors.startDate)} />
         </FormField>
-        <FormField label="End date" htmlFor="exp-end" error={errors.endDate}>
-          <Input id="exp-end" name="endDate" type="date" value={values.endDate} onChange={handleChange} disabled={values.isCurrent} aria-invalid={Boolean(errors.endDate)} />
+        <FormField labelClassName={FIELD_LABEL} label="End date" htmlFor="exp-end" error={errors.endDate}>
+          <Input variant="underline" id="exp-end" name="endDate" type="date" value={values.endDate} onChange={handleChange} disabled={values.isCurrent} aria-invalid={Boolean(errors.endDate)} />
         </FormField>
         <div className="flex items-center gap-2 sm:col-span-2">
           <Checkbox id="exp-current" checked={values.isCurrent} onCheckedChange={(checked) => setField("isCurrent", checked === true)} />
@@ -53,8 +53,8 @@ const ExperienceForm = ({ initialValues, errors, saving, onSubmit, onCancel }) =
             I currently work here
           </Label>
         </div>
-        <FormField label="Description" htmlFor="exp-description" error={errors.description} className="sm:col-span-2">
-          <Textarea id="exp-description" name="description" rows={4} maxLength={2000} value={values.description} onChange={handleChange} />
+        <FormField labelClassName={FIELD_LABEL} label="Description" htmlFor="exp-description" error={errors.description} className="sm:col-span-2">
+          <Textarea variant="underline" id="exp-description" name="description" rows={4} maxLength={2000} value={values.description} onChange={handleChange} />
         </FormField>
       </div>
       <DialogFooter>

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { toast } from "sonner";
-import FormField from "@/components/common/FormField";
+import FormField, { FIELD_LABEL } from "@/components/common/FormField";
 import LineListInput from "@/components/common/LineListInput";
 import LoadingButton from "@/components/common/LoadingButton";
 import SectionCard from "@/components/common/SectionCard";
@@ -19,9 +19,9 @@ const EDIT = "edit";
 const todayInputValue = () => new Date().toISOString().slice(0, 10);
 
 const SelectField = ({ id, label, value, options, onChange, error, placeholder }) => (
-  <FormField label={label} htmlFor={id} error={error} required>
+  <FormField labelClassName={FIELD_LABEL} label={label} htmlFor={id} error={error} required>
     <Select value={value} onValueChange={onChange}>
-      <SelectTrigger id={id} className="w-full" aria-invalid={Boolean(error)}>
+      <SelectTrigger variant="underline" id={id} className="w-full" aria-invalid={Boolean(error)}>
         <SelectValue placeholder={placeholder} />
       </SelectTrigger>
       <SelectContent>
@@ -67,7 +67,7 @@ const JobForm = ({ companies, initialValues, isEditing = false, onSubmit }) => {
     }));
 
   const textInput = (name, props = {}) => (
-    <Input id={name} name={name} value={values[name]} onChange={handleChange} aria-invalid={Boolean(errors[name])} {...props} />
+    <Input variant="underline" id={name} name={name} value={values[name]} onChange={handleChange} aria-invalid={Boolean(errors[name])} {...props} />
   );
 
   const companyOptions = companies.map((company) => ({ value: company._id, label: company.name }));
@@ -92,7 +92,7 @@ const JobForm = ({ companies, initialValues, isEditing = false, onSubmit }) => {
             error={errors.companyId}
             placeholder="Choose a company"
           />
-          <FormField label="Job title" htmlFor="title" error={errors.title} required>
+          <FormField labelClassName={FIELD_LABEL} label="Job title" htmlFor="title" error={errors.title} required>
             {textInput("title", { placeholder: "e.g. Frontend Developer", maxLength: 120 })}
           </FormField>
           <SelectField
@@ -111,13 +111,13 @@ const JobForm = ({ companies, initialValues, isEditing = false, onSubmit }) => {
             onChange={(value) => setField("workMode", value)}
             error={errors.workMode}
           />
-          <FormField label="Location" htmlFor="location" error={errors.location} required>
+          <FormField labelClassName={FIELD_LABEL} label="Location" htmlFor="location" error={errors.location} required>
             {textInput("location", { placeholder: "e.g. Bangalore", maxLength: 100 })}
           </FormField>
-          <FormField label="Openings" htmlFor="openings" error={errors.openings}>
+          <FormField labelClassName={FIELD_LABEL} label="Openings" htmlFor="openings" error={errors.openings}>
             {textInput("openings", { type: "number", min: 1, max: 1000 })}
           </FormField>
-          <FormField label="Application deadline" htmlFor="deadline" error={errors.deadline} hint="Optional">
+          <FormField labelClassName={FIELD_LABEL} label="Application deadline" htmlFor="deadline" error={errors.deadline} hint="Optional">
             {textInput("deadline", { type: "date", min: todayInputValue() })}
           </FormField>
         </div>
@@ -125,16 +125,16 @@ const JobForm = ({ companies, initialValues, isEditing = false, onSubmit }) => {
 
       <SectionCard title="Experience & salary" description="Salary is annual, in lakhs per annum (LPA). Leave it empty to hide it.">
         <div className="grid gap-5 sm:grid-cols-2">
-          <FormField label="Minimum experience (years)" htmlFor="experienceMin" error={errors.experienceMin}>
+          <FormField labelClassName={FIELD_LABEL} label="Minimum experience (years)" htmlFor="experienceMin" error={errors.experienceMin}>
             {textInput("experienceMin", { type: "number", min: 0, max: 50 })}
           </FormField>
-          <FormField label="Maximum experience (years)" htmlFor="experienceMax" error={errors.experienceMax} hint="Optional">
+          <FormField labelClassName={FIELD_LABEL} label="Maximum experience (years)" htmlFor="experienceMax" error={errors.experienceMax} hint="Optional">
             {textInput("experienceMax", { type: "number", min: 0, max: 50 })}
           </FormField>
-          <FormField label="Minimum salary (LPA)" htmlFor="salaryMin" error={errors.salaryMin}>
+          <FormField labelClassName={FIELD_LABEL} label="Minimum salary (LPA)" htmlFor="salaryMin" error={errors.salaryMin}>
             {textInput("salaryMin", { type: "number", min: 0, step: "0.5" })}
           </FormField>
-          <FormField label="Maximum salary (LPA)" htmlFor="salaryMax" error={errors.salaryMax}>
+          <FormField labelClassName={FIELD_LABEL} label="Maximum salary (LPA)" htmlFor="salaryMax" error={errors.salaryMax}>
             {textInput("salaryMax", { type: "number", min: 0, step: "0.5" })}
           </FormField>
         </div>
@@ -146,8 +146,9 @@ const JobForm = ({ companies, initialValues, isEditing = false, onSubmit }) => {
         action={<DescriptionDraftButton values={values} onDraft={applyDraft} />}
       >
         <div className="grid gap-5">
-          <FormField label="About the role" htmlFor="description" error={errors.description} hint="At least 30 characters." required>
+          <FormField labelClassName={FIELD_LABEL} label="About the role" htmlFor="description" error={errors.description} hint="At least 30 characters." required>
             <Textarea
+              variant="underline"
               id="description"
               name="description"
               rows={8}
@@ -157,24 +158,27 @@ const JobForm = ({ companies, initialValues, isEditing = false, onSubmit }) => {
               aria-invalid={Boolean(errors.description)}
             />
           </FormField>
-          <FormField label="Responsibilities" htmlFor="responsibilities" error={errors.responsibilities} hint="One per line.">
+          <FormField labelClassName={FIELD_LABEL} label="Responsibilities" htmlFor="responsibilities" error={errors.responsibilities} hint="One per line.">
             <LineListInput
+              variant="underline"
               id="responsibilities"
               rows={4}
               value={values.responsibilities}
               onChange={(items) => setField("responsibilities", items)}
             />
           </FormField>
-          <FormField label="Requirements" htmlFor="requirements" error={errors.requirements} hint="One per line.">
+          <FormField labelClassName={FIELD_LABEL} label="Requirements" htmlFor="requirements" error={errors.requirements} hint="One per line.">
             <LineListInput
+              variant="underline"
               id="requirements"
               rows={4}
               value={values.requirements}
               onChange={(items) => setField("requirements", items)}
             />
           </FormField>
-          <FormField label="Skills" htmlFor="skills" error={errors.skills} hint="Press Enter or comma after each skill.">
+          <FormField labelClassName={FIELD_LABEL} label="Skills" htmlFor="skills" error={errors.skills} hint="Press Enter or comma after each skill.">
             <TagInput
+              variant="underline"
               id="skills"
               value={values.skills}
               onChange={(items) => setField("skills", items)}

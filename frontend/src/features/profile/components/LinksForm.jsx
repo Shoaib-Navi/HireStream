@@ -1,5 +1,5 @@
 import { toast } from "sonner";
-import FormField from "@/components/common/FormField";
+import FormField, { FIELD_LABEL } from "@/components/common/FormField";
 import LoadingButton from "@/components/common/LoadingButton";
 import SectionCard from "@/components/common/SectionCard";
 import { Input } from "@/components/ui/input";
@@ -49,8 +49,9 @@ const LinksForm = ({ profile }) => {
       >
         <div className="grid gap-5 sm:grid-cols-2">
           {LINK_FIELDS.map(({ name, label, placeholder }) => (
-            <FormField key={name} label={label} htmlFor={`link-${name}`} error={errors[name]}>
+            <FormField labelClassName={FIELD_LABEL} key={name} label={label} htmlFor={`link-${name}`} error={errors[name]}>
               <Input
+                variant="underline"
                 id={`link-${name}`}
                 name={name}
                 type="url"

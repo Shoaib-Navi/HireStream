@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { toast } from "sonner";
-import FormField from "@/components/common/FormField";
+import FormField, { FIELD_LABEL } from "@/components/common/FormField";
 import LoadingButton from "@/components/common/LoadingButton";
 import SectionCard from "@/components/common/SectionCard";
 import { Input } from "@/components/ui/input";
@@ -47,7 +47,7 @@ const CompanyForm = ({ company, submitLabel, onSubmit }) => {
   };
 
   const textInput = (name, props = {}) => (
-    <Input id={name} name={name} value={values[name]} onChange={handleChange} aria-invalid={Boolean(errors[name])} {...props} />
+    <Input variant="underline" id={name} name={name} value={values[name]} onChange={handleChange} aria-invalid={Boolean(errors[name])} {...props} />
   );
 
   return (
@@ -62,21 +62,21 @@ const CompanyForm = ({ company, submitLabel, onSubmit }) => {
         }
       >
         <div className="grid gap-5 sm:grid-cols-2">
-          <FormField label="Company name" htmlFor="name" error={errors.name} required className="sm:col-span-2">
+          <FormField labelClassName={FIELD_LABEL} label="Company name" htmlFor="name" error={errors.name} required className="sm:col-span-2">
             {textInput("name", { maxLength: 100, placeholder: "e.g. Acme Technologies" })}
           </FormField>
-          <FormField label="Website" htmlFor="website" error={errors.website}>
+          <FormField labelClassName={FIELD_LABEL} label="Website" htmlFor="website" error={errors.website}>
             {textInput("website", { type: "url", placeholder: "https://example.com" })}
           </FormField>
-          <FormField label="Location" htmlFor="location" error={errors.location}>
+          <FormField labelClassName={FIELD_LABEL} label="Location" htmlFor="location" error={errors.location}>
             {textInput("location", { maxLength: 100, placeholder: "e.g. Pune" })}
           </FormField>
-          <FormField label="Industry" htmlFor="industry" error={errors.industry}>
+          <FormField labelClassName={FIELD_LABEL} label="Industry" htmlFor="industry" error={errors.industry}>
             {textInput("industry", { maxLength: 60, placeholder: "e.g. Fintech" })}
           </FormField>
-          <FormField label="Company size" htmlFor="size" error={errors.size}>
+          <FormField labelClassName={FIELD_LABEL} label="Company size" htmlFor="size" error={errors.size}>
             <Select value={values.size || NOT_SET} onValueChange={(value) => setField("size", value === NOT_SET ? "" : value)}>
-              <SelectTrigger id="size" className="w-full">
+              <SelectTrigger variant="underline" id="size" className="w-full">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
@@ -89,11 +89,12 @@ const CompanyForm = ({ company, submitLabel, onSubmit }) => {
               </SelectContent>
             </Select>
           </FormField>
-          <FormField label="Founded" htmlFor="foundedYear" error={errors.foundedYear}>
+          <FormField labelClassName={FIELD_LABEL} label="Founded" htmlFor="foundedYear" error={errors.foundedYear}>
             {textInput("foundedYear", { type: "number", min: 1800, max: new Date().getFullYear(), placeholder: "e.g. 2015" })}
           </FormField>
-          <FormField label="About the company" htmlFor="description" error={errors.description} className="sm:col-span-2">
+          <FormField labelClassName={FIELD_LABEL} label="About the company" htmlFor="description" error={errors.description} className="sm:col-span-2">
             <Textarea
+              variant="underline"
               id="description"
               name="description"
               rows={6}

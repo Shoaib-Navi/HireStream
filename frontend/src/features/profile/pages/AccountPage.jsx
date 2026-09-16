@@ -1,6 +1,6 @@
 import { toast } from "sonner";
 import FileUpload from "@/components/common/FileUpload";
-import FormField from "@/components/common/FormField";
+import FormField, { FIELD_LABEL } from "@/components/common/FormField";
 import LoadingButton from "@/components/common/LoadingButton";
 import PageHeader from "@/components/common/PageHeader";
 import SectionCard from "@/components/common/SectionCard";
@@ -75,13 +75,14 @@ const AccountPage = () => {
           }
         >
           <div className="grid gap-5 sm:grid-cols-2">
-            <FormField label="Full name" htmlFor="fullName" error={errors.fullName} required>
-              <Input id="fullName" name="fullName" autoComplete="name" maxLength={100} value={values.fullName} onChange={handleChange} aria-invalid={Boolean(errors.fullName)} />
+            <FormField labelClassName={FIELD_LABEL} label="Full name" htmlFor="fullName" error={errors.fullName} required>
+              <Input variant="underline" id="fullName" name="fullName" autoComplete="name" maxLength={100} value={values.fullName} onChange={handleChange} aria-invalid={Boolean(errors.fullName)} />
             </FormField>
-            <FormField label="Phone" htmlFor="phone" error={errors.phone}>
-              <Input id="phone" name="phone" type="tel" autoComplete="tel" value={values.phone} onChange={handleChange} aria-invalid={Boolean(errors.phone)} />
+            <FormField labelClassName={FIELD_LABEL} label="Phone" htmlFor="phone" error={errors.phone}>
+              <Input variant="underline" id="phone" name="phone" type="tel" autoComplete="tel" value={values.phone} onChange={handleChange} aria-invalid={Boolean(errors.phone)} />
             </FormField>
             <FormField
+              labelClassName={FIELD_LABEL}
               label={
                 <span className="flex items-center gap-2">
                   Email
@@ -94,7 +95,7 @@ const AccountPage = () => {
               hint="Your email is used to sign in and can't be changed here."
               className="sm:col-span-2"
             >
-              <Input id="email" value={user.email} disabled />
+              <Input variant="underline" id="email" value={user.email} disabled />
             </FormField>
           </div>
         </SectionCard>
