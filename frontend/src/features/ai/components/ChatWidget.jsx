@@ -13,7 +13,7 @@ const SUGGESTIONS = ["Show jobs matching my skills", "How can I improve my profi
 
 const greeting = (user) => ({
   role: "assistant",
-  content: `Hi ${user?.fullName?.split(" ")[0] || "there"}! 👋 I'm the HireStream assistant. I can help you find jobs, improve your profile or prepare for interviews. What can I help with?`,
+  content: `Hi ${user?.fullName?.split(" ")[0] || "there"} — I'm the HireStream assistant. I can help you find jobs, sharpen your profile or prepare for interviews. What would you like to start with?`,
 });
 
 // Floating career assistant. The backend adds job and profile context and keeps the API key private.
@@ -48,7 +48,7 @@ const ChatWidget = () => {
     } catch (error) {
       setMessages((previous) => [
         ...previous,
-        { role: "assistant", content: getErrorMessage(error, "Oops! Something went wrong. Please try again."), isError: true },
+        { role: "assistant", content: getErrorMessage(error, "Something went wrong. Please try again."), isError: true },
       ]);
     }
   };
@@ -75,32 +75,21 @@ const ChatWidget = () => {
     <div
       role="dialog"
       aria-label="HireStream assistant"
-      className="fixed inset-x-0 bottom-0 z-50 flex h-[85vh] flex-col overflow-hidden rounded-t-2xl border bg-card shadow-elevated sm:inset-x-auto sm:right-6 sm:bottom-6 sm:h-[34rem] sm:w-[23rem] sm:rounded-2xl"
+      className="fixed inset-x-0 bottom-0 z-50 flex h-[85vh] flex-col overflow-hidden rounded-t-2xl border bg-card shadow-elevated sm:inset-x-auto sm:right-6 sm:bottom-6 sm:h-[34rem] sm:w-[23rem] sm:rounded-xl"
     >
-      <div className="flex items-center justify-between gap-3 bg-primary px-4 py-3 text-primary-foreground">
-        <div className="flex items-center gap-2.5">
-          <div className="flex size-8 items-center justify-center rounded-full bg-primary-foreground/15">
-            <MessageCircle className="size-4" />
-          </div>
-          <div>
-            <p className="text-sm font-semibold">HireStream assistant</p>
-            <p className="text-xs opacity-80">Replies may not always be accurate</p>
-          </div>
+      {/* Dark header, like the navbar and footer */}
+      <div className="dark flex items-center justify-between gap-3 border-b bg-background px-4 py-3.5 text-foreground">
+        <div className="min-w-0">
+          <p className="type-h4 truncate">HireStream assistant</p>
+          <p className="type-caption text-muted-foreground">Replies may not always be accurate</p>
         </div>
-        <div className="flex items-center gap-1">
-          <Button
-            variant="ghost"
-            size="icon-sm"
-            className="text-primary-foreground hover:bg-primary-foreground/15 hover:text-primary-foreground"
-            onClick={() => setIsOpen(false)}
-            aria-label="Minimize assistant"
-          >
+        <div className="flex shrink-0 items-center gap-1">
+          <Button variant="ghost" size="icon-sm" onClick={() => setIsOpen(false)} aria-label="Minimize assistant">
             <Minus />
           </Button>
           <Button
             variant="ghost"
             size="icon-sm"
-            className="text-primary-foreground hover:bg-primary-foreground/15 hover:text-primary-foreground"
             onClick={() => {
               setIsOpen(false);
               setMessages([greeting(user)]);
@@ -117,10 +106,8 @@ const ChatWidget = () => {
           <div key={index} className={cn("flex", message.role === "user" ? "justify-end" : "justify-start")}>
             <div
               className={cn(
-                "type-body max-w-[85%] rounded-2xl px-3.5 py-2 whitespace-pre-wrap",
-                message.role === "user"
-                  ? "rounded-br-sm bg-primary text-primary-foreground"
-                  : "rounded-bl-sm border bg-card text-foreground",
+                "type-body max-w-[85%] rounded-md px-3.5 py-2.5 whitespace-pre-wrap",
+                message.role === "user" ? "bg-primary text-primary-foreground" : "border bg-card text-foreground",
                 message.isError && "border-destructive/30 text-destructive",
               )}
             >
@@ -130,11 +117,11 @@ const ChatWidget = () => {
         ))}
         {isLoading && (
           <div className="flex justify-start" role="status" aria-label="Assistant is typing">
-            <div className="flex gap-1 rounded-2xl rounded-bl-sm border bg-card px-4 py-3">
+            <div className="flex gap-1 rounded-md border bg-card px-4 py-3">
               {[0, 1, 2].map((dot) => (
                 <span
                   key={dot}
-                  className="size-1.5 animate-bounce rounded-full bg-foreground/50"
+                  className="size-1.5 animate-bounce rounded-full bg-muted-foreground"
                   style={{ animationDelay: `${dot * 0.15}s` }}
                 />
               ))}
@@ -145,13 +132,13 @@ const ChatWidget = () => {
       </div>
 
       {messages.length === 1 && (
-        <div className="flex flex-wrap gap-1.5 border-t bg-surface px-4 py-2.5">
+        <div className="flex flex-wrap gap-1.5 border-t bg-surface px-4 py-3">
           {SUGGESTIONS.map((suggestion) => (
             <button
               key={suggestion}
               type="button"
               onClick={() => send(suggestion)}
-              className="type-caption rounded-full border bg-card px-2.5 py-1 text-foreground transition-colors hover:bg-accent"
+              className="type-label rounded-md border px-3 py-1.5 text-muted-foreground transition-colors hover:border-foreground hover:text-foreground"
             >
               {suggestion}
             </button>
@@ -159,7 +146,8 @@ const ChatWidget = () => {
         </div>
       )}
 
-      <form onSubmit={handleSubmit} className="flex items-center gap-2 border-t p-3">
+      {/* Composer uses the same hairline field treatment as the app's forms */}
+      <form onSubmit={handleSubmit} className="flex items-end gap-2 border-t px-4 py-3">
         <label htmlFor="chat-input" className="sr-only">
           Message
         </label>
@@ -169,9 +157,9 @@ const ChatWidget = () => {
           value={input}
           onChange={(event) => setInput(event.target.value)}
           maxLength={MAX_INPUT_LENGTH}
-          placeholder="Ask me anything…"
+          placeholder="Ask anything"
           autoComplete="off"
-          className="h-10 min-w-0 flex-1 rounded-md border bg-background px-3 text-sm outline-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50"
+          className="h-10 min-w-0 flex-1 border-b bg-transparent text-sm outline-none transition-colors placeholder:text-xs placeholder:font-semibold placeholder:tracking-[0.12em] placeholder:uppercase placeholder:text-muted-foreground hover:border-foreground/40 focus-visible:border-primary"
         />
         <Button type="submit" size="icon" disabled={!input.trim() || isLoading} aria-label="Send message">
           <Send />
