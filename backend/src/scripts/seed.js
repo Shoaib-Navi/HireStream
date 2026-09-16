@@ -17,13 +17,14 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { connectDB, disconnectDB } from "../config/db.js";
 import { env } from "../config/env.js";
-import { APPLICATION_STATUS, DATA_SOURCES, ROLES } from "../constants/index.js";
+import { APPLICATION_STATUS, DATA_SOURCES, NOTIFICATION_TYPES, ROLES } from "../constants/index.js";
 import { runMigrations } from "../migrations/runner.js";
 import { allModels } from "../models.js";
 import { Application } from "../modules/applications/application.model.js";
 import { hashPassword } from "../modules/auth/auth.service.js";
 import { Company } from "../modules/companies/company.model.js";
 import { Job } from "../modules/jobs/job.model.js";
+import { Notification } from "../modules/notifications/notification.model.js";
 import { SavedJob } from "../modules/savedJobs/savedJob.model.js";
 import { CandidateProfile } from "../modules/users/candidateProfile.model.js";
 import { User } from "../modules/users/user.model.js";
@@ -260,13 +261,14 @@ const run = async () => {
     }),
   );
 
+  const seededApplications = [];
   for (const { candidate, job, status } of applicationPlan) {
     const history = [{ status: APPLICATION_STATUS.APPLIED, changedBy: candidate._id }];
     if (status !== APPLICATION_STATUS.APPLIED) {
       history.push({ status, changedBy: job.postedBy, note: "Thanks for applying — we've moved your application forward." });
     }
 
-    await Application.findOneAndUpdate(
+    const application = await Application.findOneAndUpdate(
       { job: job._id, candidate: candidate._id },
       {
         $set: {
@@ -279,6 +281,36 @@ const run = async () => {
       },
       { upsert: true, new: true, setDefaultsOnInsert: true },
     );
+    seededApplications.push({ application, candidate, job, status });
+  }
+
+  // Give the notification bell something to show, matched on the link so re-seeding is safe
+  for (const { application, candidate, job, status } of seededApplications.slice(0, 8)) {
+    const recruiterLink = `/recruiter/applications/${application._id}`;
+    await Notification.findOneAndUpdate(
+      { user: job.postedBy, link: recruiterLink, type: NOTIFICATION_TYPES.APPLICATION_RECEIVED },
+      {
+        $set: {
+          title: `New applicant for ${job.title}`,
+          body: `${candidate.fullName} applied.`,
+        },
+      },
+      { upsert: true, new: true, setDefaultsOnInsert: true },
+    );
+
+    if (status !== APPLICATION_STATUS.APPLIED) {
+      const candidateLink = `/dashboard/applications/${application._id}`;
+      await Notification.findOneAndUpdate(
+        { user: candidate._id, link: candidateLink, type: NOTIFICATION_TYPES.APPLICATION_STATUS },
+        {
+          $set: {
+            title: `Your application for ${job.title} moved to ${status}`,
+            body: "Open the application to see the full history.",
+          },
+        },
+        { upsert: true, new: true, setDefaultsOnInsert: true },
+      );
+    }
   }
 
   for (const [index, candidate] of candidates.entries()) {
@@ -299,11 +331,12 @@ const run = async () => {
     await Job.updateOne({ _id }, { applicationCount: count }, { timestamps: false });
   }
 
-  const [publicJobCount, syntheticJobCount, applicationCount, savedCount] = await Promise.all([
+  const [publicJobCount, syntheticJobCount, applicationCount, savedCount, notificationCount] = await Promise.all([
     Job.countDocuments({ source: DATA_SOURCES.PUBLIC_SOURCE }),
     Job.countDocuments({ source: DATA_SOURCES.SYNTHETIC }),
     Application.countDocuments(),
     SavedJob.countDocuments(),
+    Notification.countDocuments(),
   ]);
 
   console.log("");
@@ -312,6 +345,7 @@ const run = async () => {
   console.log(`Jobs          ${syntheticJobCount} SYNTHETIC + ${publicJobCount} PUBLIC_SOURCE`);
   console.log(`Applications  ${applicationCount}`);
   console.log(`Saved jobs    ${savedCount}`);
+  console.log(`Notifications ${notificationCount}`);
   if (publicData.fetchedAt) {
     console.log(`\nPublic postings fetched ${publicData.fetchedAt} from ${publicData.provider}.`);
   }
