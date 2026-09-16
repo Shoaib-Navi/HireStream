@@ -36,7 +36,7 @@ const AdminOverviewPage = () => {
 
   return (
     <div className="space-y-6">
-      <PageHeader title="Overview" description="Everything happening across HireStream." />
+      <PageHeader eyebrow="Admin" title="Overview" description="Everything happening across HireStream." />
 
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
         <StatCard
