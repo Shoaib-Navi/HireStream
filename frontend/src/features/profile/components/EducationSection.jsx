@@ -1,4 +1,4 @@
-import FormField from "@/components/common/FormField";
+import FormField, { FIELD_LABEL } from "@/components/common/FormField";
 import LoadingButton from "@/components/common/LoadingButton";
 import { Button } from "@/components/ui/button";
 import { DialogFooter } from "@/components/ui/dialog";
@@ -28,23 +28,23 @@ const EducationForm = ({ initialValues, errors, saving, onSubmit, onCancel }) =>
   return (
     <form onSubmit={handleSubmit} className="space-y-4" noValidate>
       <div className="grid gap-4 sm:grid-cols-2">
-        <FormField label="Institution" htmlFor="edu-institution" error={errors.institution} required className="sm:col-span-2">
-          <Input id="edu-institution" name="institution" maxLength={150} value={values.institution} onChange={handleChange} aria-invalid={Boolean(errors.institution)} />
+        <FormField labelClassName={FIELD_LABEL} label="Institution" htmlFor="edu-institution" error={errors.institution} required className="sm:col-span-2">
+          <Input variant="underline" id="edu-institution" name="institution" maxLength={150} value={values.institution} onChange={handleChange} aria-invalid={Boolean(errors.institution)} />
         </FormField>
-        <FormField label="Degree" htmlFor="edu-degree" error={errors.degree} required>
-          <Input id="edu-degree" name="degree" maxLength={100} placeholder="e.g. B.Tech" value={values.degree} onChange={handleChange} aria-invalid={Boolean(errors.degree)} />
+        <FormField labelClassName={FIELD_LABEL} label="Degree" htmlFor="edu-degree" error={errors.degree} required>
+          <Input variant="underline" id="edu-degree" name="degree" maxLength={100} placeholder="e.g. B.Tech" value={values.degree} onChange={handleChange} aria-invalid={Boolean(errors.degree)} />
         </FormField>
-        <FormField label="Field of study" htmlFor="edu-field" error={errors.fieldOfStudy}>
-          <Input id="edu-field" name="fieldOfStudy" maxLength={100} placeholder="e.g. Computer Science" value={values.fieldOfStudy} onChange={handleChange} />
+        <FormField labelClassName={FIELD_LABEL} label="Field of study" htmlFor="edu-field" error={errors.fieldOfStudy}>
+          <Input variant="underline" id="edu-field" name="fieldOfStudy" maxLength={100} placeholder="e.g. Computer Science" value={values.fieldOfStudy} onChange={handleChange} />
         </FormField>
-        <FormField label="Start year" htmlFor="edu-start" error={errors.startYear}>
-          <Input id="edu-start" name="startYear" type="number" min={1950} max={2100} value={values.startYear} onChange={handleChange} />
+        <FormField labelClassName={FIELD_LABEL} label="Start year" htmlFor="edu-start" error={errors.startYear}>
+          <Input variant="underline" id="edu-start" name="startYear" type="number" min={1950} max={2100} value={values.startYear} onChange={handleChange} />
         </FormField>
-        <FormField label="End year" htmlFor="edu-end" error={errors.endYear}>
-          <Input id="edu-end" name="endYear" type="number" min={1950} max={2100} value={values.endYear} onChange={handleChange} aria-invalid={Boolean(errors.endYear)} />
+        <FormField labelClassName={FIELD_LABEL} label="End year" htmlFor="edu-end" error={errors.endYear}>
+          <Input variant="underline" id="edu-end" name="endYear" type="number" min={1950} max={2100} value={values.endYear} onChange={handleChange} aria-invalid={Boolean(errors.endYear)} />
         </FormField>
-        <FormField label="Grade" htmlFor="edu-grade" error={errors.grade} hint="Optional, e.g. 8.4 CGPA">
-          <Input id="edu-grade" name="grade" maxLength={30} value={values.grade} onChange={handleChange} />
+        <FormField labelClassName={FIELD_LABEL} label="Grade" htmlFor="edu-grade" error={errors.grade} hint="Optional, e.g. 8.4 CGPA">
+          <Input variant="underline" id="edu-grade" name="grade" maxLength={30} value={values.grade} onChange={handleChange} />
         </FormField>
       </div>
       <DialogFooter>
