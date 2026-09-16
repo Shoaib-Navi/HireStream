@@ -50,6 +50,9 @@ const DAY = 24 * 60 * 60 * 1000;
 // clearly synthetic account holds them. Its jobs stay marked PUBLIC_SOURCE.
 const BOARD_DESK = { fullName: "Job Board Desk", email: "boarddesk@hirestream.dev", phone: "+91 90000 00000" };
 
+// Local dev needs an admin to open the admin panel; `npm run create-admin` is for real deployments
+const ADMIN = { fullName: "Site Admin", email: "admin@hirestream.dev", phone: "+91 90000 00009" };
+
 const assertLocalDatabase = () => {
   if (env.isProduction) {
     throw new Error("Refusing to seed a production database");
@@ -116,6 +119,14 @@ const run = async () => {
   const boardDesk = await upsertUser({
     ...BOARD_DESK,
     role: ROLES.RECRUITER,
+    password,
+    emailVerifiedAt: new Date(),
+    source: DATA_SOURCES.SYNTHETIC,
+  });
+
+  const admin = await upsertUser({
+    ...ADMIN,
+    role: ROLES.ADMIN,
     password,
     emailVerifiedAt: new Date(),
     source: DATA_SOURCES.SYNTHETIC,
@@ -340,7 +351,7 @@ const run = async () => {
   ]);
 
   console.log("");
-  console.log(`Users         ${recruiters.length + candidates.length + 1} (all SYNTHETIC)`);
+  console.log(`Users         ${recruiters.length + candidates.length + 2} (all SYNTHETIC)`);
   console.log(`Companies     ${syntheticCompanies.length} SYNTHETIC + ${publicCompaniesByToken.size} PUBLIC_SOURCE`);
   console.log(`Jobs          ${syntheticJobCount} SYNTHETIC + ${publicJobCount} PUBLIC_SOURCE`);
   console.log(`Applications  ${applicationCount}`);
@@ -351,6 +362,7 @@ const run = async () => {
   }
   console.log(`\nLog in with any seeded email and the password "${SYNTHETIC_PASSWORD}",`);
   console.log(`for example ${RECRUITERS[0].email} (recruiter) or ${CANDIDATES[0].email} (job seeker).`);
+  console.log(`The admin panel is at /admin, signed in as ${admin.email}.`);
 };
 
 try {
