@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { toast } from "sonner";
+import DatePicker from "@/components/common/DatePicker";
 import FormField, { FIELD_LABEL } from "@/components/common/FormField";
 import LineListInput from "@/components/common/LineListInput";
 import LoadingButton from "@/components/common/LoadingButton";
@@ -118,7 +119,14 @@ const JobForm = ({ companies, initialValues, isEditing = false, onSubmit }) => {
             {textInput("openings", { type: "number", min: 1, max: 1000 })}
           </FormField>
           <FormField labelClassName={FIELD_LABEL} label="Application deadline" htmlFor="deadline" error={errors.deadline} hint="Optional">
-            {textInput("deadline", { type: "date", min: todayInputValue() })}
+            <DatePicker
+              id="deadline"
+              value={values.deadline}
+              onChange={(next) => setField("deadline", next)}
+              min={todayInputValue()}
+              placeholder="No deadline"
+              invalid={Boolean(errors.deadline)}
+            />
           </FormField>
         </div>
       </SectionCard>
