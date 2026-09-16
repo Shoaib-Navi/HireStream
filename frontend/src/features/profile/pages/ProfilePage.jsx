@@ -30,7 +30,7 @@ const ProfilePage = () => {
 
   return (
     <div className="space-y-6">
-      <PageHeader title="Profile" description="Recruiters see this profile when you apply to their jobs." />
+      <PageHeader eyebrow="Dashboard" title="Profile" description="Recruiters see this profile when you apply to their jobs." />
       <ProfileCompletion profile={profile} />
       <ProfileBasicsForm profile={profile} />
       <ResumeCard profile={profile} />

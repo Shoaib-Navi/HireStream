@@ -86,8 +86,7 @@ const MyApplicationsPage = () => {
 
   return (
     <div className="space-y-6">
-      <PageHeader
-        title="Applications"
+      <PageHeader eyebrow="Dashboard" title="Applications"
         description="Follow every job you've applied to."
         actions={
           <Select value={status} onValueChange={changeStatus}>

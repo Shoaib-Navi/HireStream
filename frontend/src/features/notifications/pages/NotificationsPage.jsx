@@ -59,8 +59,7 @@ const NotificationsPage = () => {
 
   return (
     <div className="space-y-6">
-      <PageHeader
-        title="Notifications"
+      <PageHeader eyebrow="Dashboard" title="Notifications"
         description="Updates about applications and hiring activity."
         actions={
           unreadCount > 0 && (

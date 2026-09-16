@@ -52,7 +52,7 @@ const RecruiterOverviewPage = () => {
   if (overview.companyCount === 0) {
     return (
       <div className="space-y-6">
-        <PageHeader title="Overview" description="How your hiring is going." />
+        <PageHeader eyebrow="Hiring" title="Overview" description="How your hiring is going." />
         <EmptyState
           icon={Building2}
           title="Welcome! Start by registering your company"
