@@ -1,7 +1,7 @@
 import { ArrowRight } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import { toast } from "sonner";
-import FormField from "@/components/common/FormField";
+import FormField, { FIELD_LABEL } from "@/components/common/FormField";
 import LoadingButton from "@/components/common/LoadingButton";
 import PasswordInput from "@/components/common/PasswordInput";
 import ScrambleText from "@/components/common/ScrambleText";
@@ -10,8 +10,6 @@ import { useDocumentTitle } from "@/hooks/useDocumentTitle";
 import { useFormState } from "@/hooks/useFormState";
 import { getErrorMessage } from "@/lib/errors";
 import { useLoginMutation } from "../api";
-
-const FIELD_LABEL = "type-label text-muted-foreground";
 
 // After a successful login, AuthLayout redirects to where the user came from or their dashboard
 const LoginPage = () => {
