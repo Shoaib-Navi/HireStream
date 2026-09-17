@@ -16,7 +16,7 @@ const CompanyCard = ({ company }) => {
         <div className="min-w-0 flex-1">
           <h3 className="type-h4 flex items-center gap-1.5 text-foreground">
             <span className="truncate">{company.name}</span>
-            {company.isVerified && <BadgeCheck className="size-4 shrink-0 text-primary" aria-label="Verified company" />}
+            {company.isVerified && <BadgeCheck className="size-4 shrink-0 text-success" aria-label="Verified company" />}
           </h3>
           <p className="type-caption text-muted-foreground">{details || "Add details so candidates get to know you"}</p>
         </div>

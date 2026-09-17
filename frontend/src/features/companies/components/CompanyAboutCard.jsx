@@ -19,7 +19,7 @@ const CompanyAboutCard = ({ company }) => {
         <CompanyLogo company={company} />
         <p className="type-h4 flex min-w-0 items-center gap-1.5 text-foreground">
           <span className="truncate">{company.name}</span>
-          {company.isVerified && <BadgeCheck className="size-4 shrink-0 text-primary" aria-label="Verified company" />}
+          {company.isVerified && <BadgeCheck className="size-4 shrink-0 text-success" aria-label="Verified company" />}
         </p>
       </div>
       {facts.length > 0 && (

@@ -4,6 +4,7 @@ import { toast } from "sonner";
 import FormField, { FIELD_LABEL } from "@/components/common/FormField";
 import LoadingButton from "@/components/common/LoadingButton";
 import ScrambleText from "@/components/common/ScrambleText";
+import StatusIcon from "@/components/common/StatusIcon";
 import { Input } from "@/components/ui/input";
 import { useDocumentTitle } from "@/hooks/useDocumentTitle";
 import { useFormState } from "@/hooks/useFormState";
@@ -38,7 +39,7 @@ const ForgotPasswordPage = () => {
     return (
       <div className="max-w-3xl space-y-10">
         <header className="space-y-6">
-          <MailCheck className="size-8 text-primary" aria-hidden="true" />
+          <StatusIcon tone="success" icon={MailCheck} />
           <h1 className="type-display">Check your email.</h1>
           <p className="type-body-lg max-w-xl text-muted-foreground">
             If an account exists for <span className="text-foreground">{values.email}</span>, we&apos;ve sent a link to

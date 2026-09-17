@@ -51,7 +51,7 @@ const ApplyDialog = ({ job, open, onOpenChange }) => {
     if (!profile?.resume?.url) {
       return (
         <div className="rounded-xl border border-dashed p-6 text-center">
-          <FileText className="mx-auto size-8 text-primary" aria-hidden="true" />
+          <FileText className="mx-auto size-8 text-muted-foreground" aria-hidden="true" />
           <p className="type-h4 mt-3 text-foreground">Upload your resume first</p>
           <p className="type-body mt-1 text-muted-foreground">Your resume is attached to every application you send.</p>
           <Button asChild className="mt-4">
@@ -64,7 +64,7 @@ const ApplyDialog = ({ job, open, onOpenChange }) => {
     return (
       <form onSubmit={handleSubmit} className="space-y-4">
         <div className="flex items-center gap-3 rounded-lg border bg-surface p-3">
-          <FileText className="size-5 shrink-0 text-primary" aria-hidden="true" />
+          <FileText className="size-5 shrink-0 text-muted-foreground" aria-hidden="true" />
           <div className="min-w-0">
             <p className="type-body truncate font-medium text-foreground">{profile.resume.originalName}</p>
             <p className="type-caption text-muted-foreground">Attached resume</p>
