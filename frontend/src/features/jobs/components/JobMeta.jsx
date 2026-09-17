@@ -1,23 +1,33 @@
-import { Briefcase, Clock, MapPin, Wallet } from "lucide-react";
+import { BarChart3, Briefcase, Building2, IndianRupee, Laptop, MapPin, Wifi } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
 import { EMPLOYMENT_TYPES, labelFor, WORK_MODES } from "@/lib/constants";
 import { formatExperience, formatSalary } from "@/lib/format";
 import { cn } from "@/lib/utils";
 
-// Location, job type, experience and salary of a job, as an icon list
+const WORK_MODE_ICONS = { remote: Wifi, hybrid: Laptop, onsite: Building2 };
+
+// The facts of a job as a row of solid chips. Icons are monochrome and take the chip's
+// foreground, so the row inverts correctly inside the dark hero without extra colour.
 const JobMeta = ({ job, className }) => {
+  const hasSalary = job.salary?.min != null || job.salary?.max != null;
+
   const items = [
-    { icon: MapPin, label: `${job.location} · ${labelFor(WORK_MODES, job.workMode)}` },
     { icon: Briefcase, label: labelFor(EMPLOYMENT_TYPES, job.employmentType) },
-    { icon: Clock, label: formatExperience(job.experience) },
-    { icon: Wallet, label: formatSalary(job.salary) },
-  ];
+    { icon: WORK_MODE_ICONS[job.workMode] ?? Building2, label: labelFor(WORK_MODES, job.workMode) },
+    { icon: MapPin, label: job.location },
+    { icon: BarChart3, label: formatExperience(job.experience) },
+    // A job with no published range would otherwise read "Not disclosed" as a tag
+    ...(hasSalary ? [{ icon: IndianRupee, label: formatSalary(job.salary) }] : []),
+  ].filter((item) => item.label);
 
   return (
-    <ul className={cn("type-caption flex flex-wrap gap-x-4 gap-y-1.5 text-muted-foreground", className)}>
-      {items.map(({ icon: Icon, label }, index) => (
-        <li key={index} className="inline-flex items-center gap-1.5">
-          <Icon className="size-3.5 shrink-0" aria-hidden="true" />
-          {label}
+    <ul className={cn("flex flex-wrap gap-2", className)}>
+      {items.map(({ icon: Icon, label }) => (
+        <li key={label}>
+          <Badge>
+            <Icon aria-hidden="true" />
+            {label}
+          </Badge>
         </li>
       ))}
     </ul>
