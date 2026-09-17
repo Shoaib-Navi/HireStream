@@ -1,18 +1,11 @@
 import { cn } from "@/lib/utils";
 
-// The same semantic set the badges use: neutral by default, and a tone only when
-// the number means something (in progress, healthy, needs attention).
-const TONES = {
-  neutral: "bg-muted text-foreground",
-  info: "bg-info-soft text-info",
-  success: "bg-success-soft text-success",
-  warning: "bg-warning-soft text-warning",
-};
-
-const StatCard = ({ label, value, icon: Icon, hint, tone = "neutral", className }) => (
+// Every card gets the same neutral icon container. Colour is reserved for things that
+// report a status, such as the badges, so a number never implies good or bad on its own.
+const StatCard = ({ label, value, icon: Icon, hint, className }) => (
   <div className={cn("flex items-start gap-4 rounded-xl border bg-card p-5 shadow-card", className)}>
     {Icon && (
-      <div className={cn("flex size-10 shrink-0 items-center justify-center rounded-lg", TONES[tone])}>
+      <div className="flex size-10 shrink-0 items-center justify-center rounded-md border bg-surface text-foreground">
         <Icon className="size-5" aria-hidden="true" />
       </div>
     )}
