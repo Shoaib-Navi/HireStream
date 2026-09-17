@@ -8,7 +8,7 @@ const STATUS_TONES = {
   error: { icon: OctagonAlert, chip: "bg-danger-soft text-destructive" },
   warning: { icon: AlertTriangle, chip: "bg-warning-soft text-warning" },
   info: { icon: Info, chip: "bg-info-soft text-info" },
-  progress: { icon: Loader2, chip: "bg-primary-soft text-primary", spin: true },
+  progress: { icon: Loader2, chip: "bg-info-soft text-info", spin: true },
   pending: { icon: Clock, chip: "bg-muted text-muted-foreground" },
   neutral: { icon: Inbox, chip: "border bg-surface text-foreground" },
 };

@@ -19,7 +19,7 @@ const Toaster = ({
         info: <Info className="size-4 text-info" />,
         warning: <AlertTriangle className="size-4 text-warning" />,
         error: <OctagonAlert className="size-4 text-destructive" />,
-        loading: <Loader2 className="size-4 animate-spin text-primary" />,
+        loading: <Loader2 className="size-4 animate-spin text-info" />,
       }}
       toastOptions={{
         classNames: {
