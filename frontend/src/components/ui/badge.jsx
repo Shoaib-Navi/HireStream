@@ -19,12 +19,10 @@ const badgeVariants = cva(
           "text-foreground [a&]:hover:bg-accent [a&]:hover:text-accent-foreground",
         // soft tones for statuses and tags
         neutral: "border-transparent bg-muted text-muted-foreground",
-        brand: "border-transparent bg-primary-soft text-foreground",
         info: "border-transparent bg-info-soft text-info",
         success: "border-transparent bg-success-soft text-success",
         warning: "border-transparent bg-warning-soft text-warning",
         danger: "border-transparent bg-danger-soft text-destructive",
-        highlight: "border-transparent bg-highlight-soft text-brand-700 dark:text-brand-300",
       },
     },
     defaultVariants: {

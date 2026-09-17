@@ -54,9 +54,9 @@ export const JOB_STATUS_META = {
 
 export const APPLICATION_STATUS_META = {
   applied: { label: "Applied", tone: "info" },
-  shortlisted: { label: "Shortlisted", tone: "brand" },
+  shortlisted: { label: "Shortlisted", tone: "info" },
   interview: { label: "Interview", tone: "warning" },
-  offered: { label: "Offered", tone: "highlight" },
+  offered: { label: "Offered", tone: "warning" },
   hired: { label: "Hired", tone: "success" },
   rejected: { label: "Rejected", tone: "danger" },
   withdrawn: { label: "Withdrawn", tone: "neutral" },
@@ -78,10 +78,12 @@ export const COMPANY_STATUS_META = {
   suspended: { label: "Suspended", tone: "danger" },
 };
 
+// Roles label who someone is rather than a status, so they stay neutral;
+// admin is the one worth picking out, and uses the informational tone.
 export const ROLE_META = {
-  candidate: { label: "Job seeker", tone: "info" },
-  recruiter: { label: "Recruiter", tone: "brand" },
-  admin: { label: "Admin", tone: "highlight" },
+  candidate: { label: "Job seeker", tone: "neutral" },
+  recruiter: { label: "Recruiter", tone: "neutral" },
+  admin: { label: "Admin", tone: "info" },
 };
 
 export const MAX_UPLOAD_MB = 5;
