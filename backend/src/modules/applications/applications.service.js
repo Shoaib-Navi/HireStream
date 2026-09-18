@@ -1,4 +1,4 @@
-import { APPLICATION_STATUS, COMPANY_STATUS, ROLES, WITHDRAWABLE_STATUSES } from "../../constants/index.js";
+import { APPLICATION_STATUS, COMPANY_STATUS, DUPLICATE_KEY_ERROR, ROLES, WITHDRAWABLE_STATUSES } from "../../constants/index.js";
 import { ApiError } from "../../utils/ApiError.js";
 import { paginationMeta, toPagination } from "../../utils/pagination.js";
 import { Job } from "../jobs/job.model.js";
@@ -8,8 +8,6 @@ import { CandidateProfile } from "../users/candidateProfile.model.js";
 import { User } from "../users/user.model.js";
 import { Application } from "./application.model.js";
 import { notifyApplicationReceived, notifyApplicationWithdrawn, notifyStatusChanged } from "./applications.notifications.js";
-
-const DUPLICATE_KEY_ERROR = 11000;
 
 const CANDIDATE_CARD_FIELDS = "fullName email phone avatar";
 const PROFILE_SUMMARY_FIELDS = "user headline location skills experienceYears links";
