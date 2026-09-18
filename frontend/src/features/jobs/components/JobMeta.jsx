@@ -6,8 +6,8 @@ import { cn } from "@/lib/utils";
 
 const WORK_MODE_ICONS = { remote: Wifi, hybrid: Laptop, onsite: Building2 };
 
-// The facts of a job as a row of solid chips. Icons are monochrome and take the chip's
-// foreground, so the row inverts correctly inside the dark hero without extra colour.
+// The facts of a job as a row of soft chips, the same weight as the skill tags used
+// elsewhere. Icons take the chip's foreground, so the row still reads on the dark hero.
 const JobMeta = ({ job, className }) => {
   const hasSalary = job.salary?.min != null || job.salary?.max != null;
 
@@ -24,7 +24,7 @@ const JobMeta = ({ job, className }) => {
     <ul className={cn("flex flex-wrap gap-2", className)}>
       {items.map(({ icon: Icon, label }) => (
         <li key={label}>
-          <Badge>
+          <Badge variant="neutral">
             <Icon aria-hidden="true" />
             {label}
           </Badge>
