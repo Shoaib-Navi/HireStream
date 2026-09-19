@@ -25,7 +25,7 @@ export const env = {
   isProduction,
   isVercel,
   isTest: process.env.NODE_ENV === "test",
-  port: Number(process.env.PORT) || 8000,
+  port: Number(process.env.PORT) || 8010,
   mongoUri: process.env.MONGO_URI,
   jwtSecret,
   appUrl,
