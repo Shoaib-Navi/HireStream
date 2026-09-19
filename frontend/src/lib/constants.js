@@ -47,21 +47,22 @@ export const EXPERIENCE_FILTERS = [
 
 // tone = Badge variant used to display the status
 export const JOB_STATUS_META = {
-  draft: { label: "Draft", tone: "neutral" },
-  open: { label: "Open", tone: "success" },
-  closed: { label: "Closed", tone: "danger" },
+  draft: { label: "Draft", tone: "status-muted" },
+  open: { label: "Open", tone: "status-quiet" },
+  closed: { label: "Closed", tone: "status-muted" },
 };
 
-// Application statuses use the bold filled palette. The four listed colours are exact;
-// applied, interview and withdrawn reuse existing tokens for their semantic role.
+// Statuses read as monochrome chips: quiet for settled/advanced, muted for in-flight,
+// and the dark tone reserved for rejected alone. Applied and interview are not in the
+// palette, so they take the in-flight tone rather than a colour of their own.
 export const APPLICATION_STATUS_META = {
-  applied: { label: "Applied", tone: "status-applied" },
-  shortlisted: { label: "Shortlisted", tone: "status-shortlisted" },
-  interview: { label: "Interview", tone: "status-interview" },
-  offered: { label: "Offered", tone: "status-offered" },
-  hired: { label: "Hired", tone: "status-hired" },
-  rejected: { label: "Rejected", tone: "status-rejected" },
-  withdrawn: { label: "Withdrawn", tone: "status-withdrawn" },
+  applied: { label: "Applied", tone: "status-muted" },
+  shortlisted: { label: "Shortlisted", tone: "status-quiet" },
+  interview: { label: "Interview", tone: "status-muted" },
+  offered: { label: "Offered", tone: "status-muted" },
+  hired: { label: "Hired", tone: "status-quiet" },
+  rejected: { label: "Rejected", tone: "status-strong" },
+  withdrawn: { label: "Withdrawn", tone: "status-muted" },
 };
 
 // Statuses a recruiter can move an application to, in pipeline order
@@ -71,13 +72,13 @@ export const RECRUITER_STATUSES = ["shortlisted", "interview", "offered", "hired
 export const WITHDRAWABLE_STATUSES = ["applied", "shortlisted", "interview", "offered"];
 
 export const USER_STATUS_META = {
-  active: { label: "Active", tone: "success" },
-  suspended: { label: "Suspended", tone: "danger" },
+  active: { label: "Active", tone: "status-quiet" },
+  suspended: { label: "Suspended", tone: "status-muted" },
 };
 
 export const COMPANY_STATUS_META = {
-  active: { label: "Active", tone: "success" },
-  suspended: { label: "Suspended", tone: "danger" },
+  active: { label: "Active", tone: "status-quiet" },
+  suspended: { label: "Suspended", tone: "status-muted" },
 };
 
 // Roles label who someone is rather than a status, so they stay neutral;

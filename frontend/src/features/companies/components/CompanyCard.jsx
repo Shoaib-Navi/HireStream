@@ -1,7 +1,7 @@
 import { BadgeCheck, Pencil, Plus } from "lucide-react";
 import { Link } from "react-router-dom";
 import CompanyLogo from "@/components/common/CompanyLogo";
-import { Badge } from "@/components/ui/badge";
+import StatusBadge from "@/components/common/StatusBadge";
 import { Button } from "@/components/ui/button";
 import { pluralize } from "@/lib/format";
 
@@ -20,7 +20,7 @@ const CompanyCard = ({ company }) => {
           </h3>
           <p className="type-caption text-muted-foreground">{details || "Add details so candidates get to know you"}</p>
         </div>
-        {company.status === "suspended" && <Badge variant="danger">Suspended</Badge>}
+        {company.status === "suspended" && <StatusBadge status={company.status} type="company" />}
       </div>
 
       <p className="type-body mt-4 text-muted-foreground">{pluralize(company.openJobCount ?? 0, "open job")}</p>

@@ -21,16 +21,11 @@ const badgeVariants = cva(
         neutral: "border-transparent bg-muted text-muted-foreground",
         info: "border-transparent bg-info-soft text-info",
         success: "border-transparent bg-success-soft text-success",
-        warning: "border-transparent bg-warning-soft text-warning",
-        danger: "border-transparent bg-danger-soft text-destructive",
-        // Application statuses: solid fill, white label, no icon, no outline
-        "status-hired": "border-transparent bg-status-hired text-white",
-        "status-offered": "border-transparent bg-status-offered text-white",
-        "status-rejected": "border-transparent bg-status-rejected text-white",
-        "status-shortlisted": "border-transparent bg-status-shortlisted text-white",
-        "status-applied": "border-transparent bg-info text-white",
-        "status-interview": "border-transparent bg-warning text-white",
-        "status-withdrawn": "border-transparent bg-muted-foreground text-white",
+        // Statuses: monochrome, text only. Three shared tones rather than one per
+        // status, so a new status reuses a tone instead of adding a colour.
+        "status-quiet": "border-status-line bg-status-quiet text-status-quiet-ink",
+        "status-muted": "border-status-line bg-status-muted text-status-muted-ink",
+        "status-strong": "border-status-strong bg-status-strong text-status-strong-ink",
       },
     },
     defaultVariants: {
