@@ -44,7 +44,7 @@ const TagInput = ({ id, value = [], onChange, placeholder, maxItems = 30, invali
       )}
     >
       {value.map((tag) => (
-        <Badge key={tag} variant="brand" className="gap-1 pr-1">
+        <Badge key={tag} variant="neutral" className="gap-1 pr-1">
           {tag}
           <button
             type="button"

@@ -3,7 +3,7 @@ import { getInitials } from "@/lib/format";
 import { cn } from "@/lib/utils";
 
 const SIZES = {
-  xs: "size-7 text-[0.625rem]",
+  xs: "size-7 text-xs",
   sm: "size-9 text-xs",
   md: "size-12 text-sm",
   lg: "size-16 text-lg",
@@ -19,7 +19,7 @@ const ImageWithFallback = ({ src, name, size = "md", shape = "rounded", classNam
   return (
     <div
       className={cn(
-        "flex shrink-0 items-center justify-center overflow-hidden font-display font-bold",
+        "flex shrink-0 items-center justify-center overflow-hidden font-display font-semibold",
         shape === "circle" ? "rounded-full" : "rounded-xl",
         SIZES[size],
         className,

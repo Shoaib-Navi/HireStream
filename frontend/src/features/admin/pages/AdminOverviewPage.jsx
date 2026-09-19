@@ -36,7 +36,7 @@ const AdminOverviewPage = () => {
 
   return (
     <div className="space-y-6">
-      <PageHeader title="Overview" description="Everything happening across HireStream." />
+      <PageHeader eyebrow="Admin" title="Overview" description="Everything happening across HireStream." />
 
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
         <StatCard
@@ -49,11 +49,10 @@ const AdminOverviewPage = () => {
           label="Companies"
           value={formatNumber(companies.total)}
           icon={Building2}
-          tone="info"
           hint={`${companies.unverified} awaiting verification`}
         />
-        <StatCard label="Jobs" value={formatNumber(jobs.total)} icon={Briefcase} tone="warning" hint={`${jobs.byStatus.open} open`} />
-        <StatCard label="Applications" value={formatNumber(applications.total)} icon={FileText} tone="success" />
+        <StatCard label="Jobs" value={formatNumber(jobs.total)} icon={Briefcase} hint={`${jobs.byStatus.open} open`} />
+        <StatCard label="Applications" value={formatNumber(applications.total)} icon={FileText} />
       </div>
 
       <div className="grid gap-6 lg:grid-cols-2">

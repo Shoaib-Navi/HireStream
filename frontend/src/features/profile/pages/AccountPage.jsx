@@ -48,7 +48,7 @@ const AccountPage = () => {
 
   return (
     <div className="space-y-6">
-      <PageHeader title="Account" description="Your personal details, password and profile photo." />
+      <PageHeader eyebrow="Dashboard" title="Account" description="Your personal details, password and profile photo." />
 
       <EmailVerificationNotice />
 

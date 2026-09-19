@@ -106,8 +106,7 @@ const RecruiterJobsPage = () => {
 
   return (
     <div className="space-y-6">
-      <PageHeader
-        title="Jobs"
+      <PageHeader eyebrow="Hiring" title="Jobs"
         description="Manage your job posts and review applicants."
         actions={
           <Button asChild>

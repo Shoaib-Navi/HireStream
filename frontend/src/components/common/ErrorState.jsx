@@ -1,20 +1,23 @@
-import { AlertTriangle, RotateCw } from "lucide-react";
+import { RotateCw } from "lucide-react";
+import StatusIcon from "@/components/common/StatusIcon";
 import { Button } from "@/components/ui/button";
 import { getErrorMessage } from "@/lib/errors";
 import { cn } from "@/lib/utils";
 
+// Same frame as EmptyState, so a failure and an empty list feel like the same system
 const ErrorState = ({ title = "Couldn't load this", error, onRetry, className }) => (
   <div
     role="alert"
-    className={cn("flex flex-col items-center justify-center rounded-xl border bg-card px-6 py-14 text-center", className)}
+    className={cn(
+      "flex flex-col items-center justify-center rounded-xl border bg-card px-6 py-16 text-center",
+      className,
+    )}
   >
-    <div className="mb-4 flex size-12 items-center justify-center rounded-full bg-danger-soft text-destructive">
-      <AlertTriangle className="size-6" aria-hidden="true" />
-    </div>
-    <h3 className="type-h4 text-foreground">{title}</h3>
-    <p className="type-body mt-1 max-w-sm text-muted-foreground">{getErrorMessage(error)}</p>
+    <StatusIcon tone="error" className="mb-5" />
+    <h3 className="type-h3 text-foreground">{title}</h3>
+    <p className="type-body mt-2 max-w-sm text-muted-foreground">{getErrorMessage(error)}</p>
     {onRetry && (
-      <Button variant="outline" className="mt-5" onClick={onRetry}>
+      <Button variant="outline" className="mt-6" onClick={onRetry}>
         <RotateCw /> Try again
       </Button>
     )}

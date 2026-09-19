@@ -109,7 +109,7 @@ const AdminUsersPage = () => {
 
   return (
     <div className="space-y-6">
-      <PageHeader title="Users" description="Everyone with a HireStream account." />
+      <PageHeader eyebrow="Admin" title="Users" description="Everyone with a HireStream account." />
 
       <div className="flex flex-col gap-3 sm:flex-row">
         <AdminSearch value={filters.q} onChange={(q) => update({ q })} placeholder="Search by name or email" />

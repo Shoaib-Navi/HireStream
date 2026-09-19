@@ -9,8 +9,11 @@ const STATUS_META = {
   role: ROLE_META,
 };
 
+// The one place a status is turned into a tag. Colour comes from the meta tables, so a
+// component cannot define its own status styling.
 const StatusBadge = ({ status, type = "application", className }) => {
   const meta = STATUS_META[type]?.[status] ?? { label: status, tone: "neutral" };
+
   return (
     <Badge variant={meta.tone} className={className}>
       {meta.label}

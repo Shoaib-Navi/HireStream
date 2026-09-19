@@ -20,7 +20,7 @@ import { cn } from "@/lib/utils";
 
 const linkClassName = ({ isActive }) =>
   cn(
-    "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-foreground/80 transition-colors hover:bg-muted",
+    "type-label flex items-center gap-3 rounded-lg px-3 py-2.5 text-foreground/80 transition-colors hover:bg-muted",
     isActive && "bg-primary-soft text-primary",
   );
 

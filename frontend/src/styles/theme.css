@@ -58,6 +58,13 @@
   /* Motion */
   --ease-out-soft: cubic-bezier(0.22, 1, 0.36, 1);
   --animate-fade-up: fade-up 0.6s var(--ease-out-soft) both;
+  --animate-shimmer: shimmer 1.5s linear infinite;
+
+  @keyframes shimmer {
+    100% {
+      transform: translateX(100%);
+    }
+  }
 
   @keyframes fade-up {
     from {
@@ -107,6 +114,13 @@
   --color-warning: var(--warning);
   --color-warning-soft: var(--warning-soft);
   --color-info: var(--info);
+  --color-status-quiet: var(--status-quiet);
+  --color-status-quiet-ink: var(--status-quiet-ink);
+  --color-status-muted: var(--status-muted);
+  --color-status-muted-ink: var(--status-muted-ink);
+  --color-status-strong: var(--status-strong);
+  --color-status-strong-ink: var(--status-strong-ink);
+  --color-status-line: var(--status-line);
   --color-info-soft: var(--info-soft);
   --color-border: var(--border);
   --color-input: var(--input);
@@ -159,6 +173,16 @@
   --warning: oklch(0.52 0.12 65);
   --warning-soft: oklch(0.972 0.045 85);
   --info: oklch(0.52 0.12 255);
+
+  /* Status chips: monochrome, exact values, identical in light and dark */
+  --status-quiet: #F3F4F6;
+  --status-quiet-ink: #374151;
+  --status-muted: #E5E7EB;
+  --status-muted-ink: #4B5563;
+  --status-strong: #272B30;
+  --status-strong-ink: #FFFFFF;
+  --status-line: #D1D5DB;
+
   --info-soft: oklch(0.965 0.025 255);
 
   --border: var(--color-ink-200);

@@ -86,8 +86,7 @@ const MyApplicationsPage = () => {
 
   return (
     <div className="space-y-6">
-      <PageHeader
-        title="Applications"
+      <PageHeader eyebrow="Dashboard" title="Applications"
         description="Follow every job you've applied to."
         actions={
           <Select value={status} onValueChange={changeStatus}>
@@ -106,8 +105,8 @@ const MyApplicationsPage = () => {
       />
 
       {profile && !profile.resume?.url && (
-        <div className="flex flex-col gap-3 rounded-xl border border-primary/30 bg-primary-soft p-4 sm:flex-row sm:items-center">
-          <Upload className="size-5 shrink-0 text-primary" aria-hidden="true" />
+        <div className="flex flex-col gap-3 rounded-xl border border-warning/30 bg-warning-soft p-4 sm:flex-row sm:items-center">
+          <Upload className="size-5 shrink-0 text-warning" aria-hidden="true" />
           <p className="type-body flex-1 text-foreground">Upload your resume so you can apply to jobs in one click.</p>
           <Button asChild size="sm">
             <Link to="/dashboard/profile#resume">Upload resume</Link>

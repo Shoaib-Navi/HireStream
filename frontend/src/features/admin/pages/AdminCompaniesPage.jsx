@@ -133,7 +133,7 @@ const AdminCompaniesPage = () => {
 
   return (
     <div className="space-y-6">
-      <PageHeader title="Companies" description="Verify real companies and suspend the ones that break the rules." />
+      <PageHeader eyebrow="Admin" title="Companies" description="Verify real companies and suspend the ones that break the rules." />
 
       <div className="flex flex-col gap-3 sm:flex-row">
         <AdminSearch value={filters.q} onChange={(q) => update({ q })} placeholder="Search companies" />

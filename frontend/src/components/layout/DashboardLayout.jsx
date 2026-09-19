@@ -23,7 +23,7 @@ const DashboardLayout = () => {
                 to={to}
                 className={({ isActive }) =>
                   cn(
-                    "flex items-center gap-3 rounded-md px-3 py-2.5 text-sm font-medium text-muted-foreground transition-colors hover:bg-card hover:text-foreground",
+                    "type-label flex items-center gap-3 rounded-md px-3 py-2.5 text-muted-foreground transition-colors hover:bg-card hover:text-foreground",
                     isActive && "bg-primary text-primary-foreground hover:bg-primary hover:text-primary-foreground",
                   )
                 }
@@ -42,7 +42,7 @@ const DashboardLayout = () => {
                 to={to}
                 className={({ isActive }) =>
                   cn(
-                    "flex shrink-0 items-center gap-2 rounded-md border bg-card px-3.5 py-2 text-sm font-medium text-muted-foreground",
+                    "type-label flex shrink-0 items-center gap-2 rounded-md border bg-card px-3.5 py-2 text-muted-foreground",
                     isActive && "border-primary bg-primary text-primary-foreground",
                   )
                 }
