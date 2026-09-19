@@ -68,7 +68,8 @@ const CompaniesDirectoryPage = () => {
                   </p>
                 </div>
               </div>
-              {company.description && <p className="type-body line-clamp-2 text-muted-foreground">{company.description}</p>}
+              {/* the two clamped lines stay reserved even when a company has no description */}
+              <p className="type-body line-clamp-2 min-h-12 text-muted-foreground">{company.description}</p>
               <p className="type-label mt-auto text-foreground">{pluralize(company.openJobCount, "open job")}</p>
             </Link>
           </li>

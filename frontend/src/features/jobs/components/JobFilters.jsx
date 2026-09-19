@@ -47,7 +47,9 @@ const SelectFilter = ({ label, value, options, anyLabel, onChange }) => (
 // The heading is desktop-only: the mobile sheet already carries its own "Filters" title.
 const JobFilters = ({ filters, onChange, onClear, activeCount = 0, idPrefix = "filters" }) => (
   <div className="space-y-7">
-    <div className={cn("flex items-center justify-between gap-2", activeCount === 0 && "hidden lg:flex")}>
+    {/* the row keeps its height whether or not anything is active, so ticking the first
+        filter does not push the sections below it down */}
+    <div className="flex min-h-8 items-center justify-between gap-2">
       <div className="flex items-center gap-2">
         <p className="type-label hidden text-foreground lg:block">Filters</p>
         {activeCount > 0 && <Badge variant="count">{activeCount}</Badge>}

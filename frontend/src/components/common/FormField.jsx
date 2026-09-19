@@ -18,13 +18,14 @@ const FormField = ({ label, htmlFor, error, hint, required, className, labelClas
       </Label>
     )}
     {children}
-    {error ? (
-      <p className="type-caption text-destructive" role="alert">
-        {error}
-      </p>
-    ) : (
-      hint && <p className="type-caption text-muted-foreground">{hint}</p>
-    )}
+    {/* the message keeps its line whether or not there is one, so validation does not
+        push the rest of the form down */}
+    <p
+      className={cn("type-caption min-h-[1.219rem]", error ? "text-destructive" : "text-muted-foreground")}
+      role={error ? "alert" : undefined}
+    >
+      {error || hint}
+    </p>
   </div>
 );
 
