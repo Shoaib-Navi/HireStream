@@ -85,7 +85,13 @@ const JobsPage = () => {
       <div className="page-container grid gap-10 py-12 lg:grid-cols-[15rem_1fr] lg:gap-14">
         <aside className="hidden lg:block" aria-label="Filters">
           <div className="sticky top-24 border-t pt-6">
-            <JobFilters filters={filters} onChange={updateFilters} onClear={clearFilters} idPrefix="desktop" />
+            <JobFilters
+              filters={filters}
+              onChange={updateFilters}
+              onClear={clearFilters}
+              activeCount={activeFilterCount}
+              idPrefix="desktop"
+            />
           </div>
         </aside>
 
@@ -99,7 +105,7 @@ const JobsPage = () => {
                 <SheetTrigger asChild>
                   <Button variant="outline" size="sm" className="lg:hidden">
                     <SlidersHorizontal /> Filters
-                    {activeFilterCount > 0 && <Badge variant="neutral">{activeFilterCount}</Badge>}
+                    {activeFilterCount > 0 && <Badge variant="count">{activeFilterCount}</Badge>}
                   </Button>
                 </SheetTrigger>
                 <SheetContent side="left" className="overflow-y-auto">
@@ -108,7 +114,13 @@ const JobsPage = () => {
                     <SheetDescription>Narrow down the results.</SheetDescription>
                   </SheetHeader>
                   <div className="px-4 pb-6">
-                    <JobFilters filters={filters} onChange={updateFilters} onClear={clearFilters} idPrefix="mobile" />
+                    <JobFilters
+                      filters={filters}
+                      onChange={updateFilters}
+                      onClear={clearFilters}
+                      activeCount={activeFilterCount}
+                      idPrefix="mobile"
+                    />
                   </div>
                 </SheetContent>
               </Sheet>
