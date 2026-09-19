@@ -114,6 +114,10 @@
   --color-warning: var(--warning);
   --color-warning-soft: var(--warning-soft);
   --color-info: var(--info);
+  --color-status-hired: var(--status-hired);
+  --color-status-offered: var(--status-offered);
+  --color-status-rejected: var(--status-rejected);
+  --color-status-shortlisted: var(--status-shortlisted);
   --color-info-soft: var(--info-soft);
   --color-border: var(--border);
   --color-input: var(--input);
@@ -166,6 +170,13 @@
   --warning: oklch(0.52 0.12 65);
   --warning-soft: oklch(0.972 0.045 85);
   --info: oklch(0.52 0.12 255);
+
+  /* Application status palette: exact values, identical in light and dark */
+  --status-hired: #16A34A;
+  --status-offered: #F97316;
+  --status-rejected: #EF4444;
+  --status-shortlisted: #7C3AED;
+
   --info-soft: oklch(0.965 0.025 255);
 
   --border: var(--color-ink-200);

@@ -23,6 +23,14 @@ const badgeVariants = cva(
         success: "border-transparent bg-success-soft text-success",
         warning: "border-transparent bg-warning-soft text-warning",
         danger: "border-transparent bg-danger-soft text-destructive",
+        // Application statuses: solid fill, white label, no icon, no outline
+        "status-hired": "border-transparent bg-status-hired text-white",
+        "status-offered": "border-transparent bg-status-offered text-white",
+        "status-rejected": "border-transparent bg-status-rejected text-white",
+        "status-shortlisted": "border-transparent bg-status-shortlisted text-white",
+        "status-applied": "border-transparent bg-info text-white",
+        "status-interview": "border-transparent bg-warning text-white",
+        "status-withdrawn": "border-transparent bg-muted-foreground text-white",
       },
     },
     defaultVariants: {

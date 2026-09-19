@@ -52,14 +52,16 @@ export const JOB_STATUS_META = {
   closed: { label: "Closed", tone: "danger" },
 };
 
+// Application statuses use the bold filled palette. The four listed colours are exact;
+// applied, interview and withdrawn reuse existing tokens for their semantic role.
 export const APPLICATION_STATUS_META = {
-  applied: { label: "Applied", tone: "info" },
-  shortlisted: { label: "Shortlisted", tone: "info" },
-  interview: { label: "Interview", tone: "warning" },
-  offered: { label: "Offered", tone: "warning" },
-  hired: { label: "Hired", tone: "success" },
-  rejected: { label: "Rejected", tone: "danger" },
-  withdrawn: { label: "Withdrawn", tone: "neutral" },
+  applied: { label: "Applied", tone: "status-applied" },
+  shortlisted: { label: "Shortlisted", tone: "status-shortlisted" },
+  interview: { label: "Interview", tone: "status-interview" },
+  offered: { label: "Offered", tone: "status-offered" },
+  hired: { label: "Hired", tone: "status-hired" },
+  rejected: { label: "Rejected", tone: "status-rejected" },
+  withdrawn: { label: "Withdrawn", tone: "status-withdrawn" },
 };
 
 // Statuses a recruiter can move an application to, in pipeline order
