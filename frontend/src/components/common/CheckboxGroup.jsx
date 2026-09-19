@@ -3,7 +3,7 @@ import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
 
 // Multi-select list of checkboxes. value is the array of selected option values.
-// rowClassName and labelClassName let a caller restyle the rows without changing this default.
+// The legend, row and label class props let a caller restyle the list without changing this default.
 const CheckboxGroup = ({
   legend,
   options,
@@ -12,11 +12,12 @@ const CheckboxGroup = ({
   idPrefix,
   className,
   optionsClassName,
+  legendClassName,
   rowClassName,
   labelClassName,
 }) => (
   <fieldset className={cn("space-y-3", className)}>
-    {legend && <legend className="type-overline mb-3 text-muted-foreground">{legend}</legend>}
+    {legend && <legend className={cn("type-overline mb-3 text-muted-foreground", legendClassName)}>{legend}</legend>}
     <div className={cn("space-y-2.5", optionsClassName)}>
       {options.map((option) => {
         const id = `${idPrefix}-${option.value}`;
