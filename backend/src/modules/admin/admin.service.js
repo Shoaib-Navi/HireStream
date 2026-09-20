@@ -15,7 +15,6 @@ const countsByKey = (rows) => Object.fromEntries(rows.map((row) => [row._id, row
 const groupCount = (model, field, match = {}) =>
   model.aggregate([{ $match: match }, { $group: { _id: `$${field}`, count: { $sum: 1 } } }]);
 
-// Zero-filled counts, so the dashboard shows every status even before it's used
 const withDefaults = (values, counts) =>
   Object.fromEntries(values.map((value) => [value, counts[value] ?? 0]));
 
@@ -78,7 +77,6 @@ export const listUsers = async (query) => {
   return { users, meta: paginationMeta({ page, limit }, total) };
 };
 
-// Suspending signs the user out everywhere by invalidating their sessions
 export const updateUserStatus = async (adminId, userId, status) => {
   if (adminId === userId) {
     throw ApiError.badRequest("You can't change your own status");
