@@ -72,6 +72,12 @@ const jobSchema = new mongoose.Schema(
       min: 0,
     },
     closedAt: { type: Date },
+    // Copied from the company and kept in sync when an admin suspends or restores it,
+    // so public listings can hide a suspended company's jobs without a lookup
+    companyActive: {
+      type: Boolean,
+      default: true,
+    },
     // Set only on seeded development data: PUBLIC_SOURCE (fetched from a company's public
     // job board) or SYNTHETIC (written for demos). Jobs posted through the app stay unmarked.
     source: {
@@ -91,6 +97,11 @@ const jobSchema = new mongoose.Schema(
 jobSchema.index({ status: 1, createdAt: -1 });
 jobSchema.index({ company: 1, status: 1 });
 jobSchema.index({ postedBy: 1, createdAt: -1 });
+// Keyword search, ranked so a match in the title counts most and one in the description least
+jobSchema.index(
+  { title: "text", skills: "text", description: "text" },
+  { name: "job_search", weights: { title: 10, skills: 5, description: 1 } },
+);
 // One row per posting per source, so re-seeding can never duplicate a fetched job
 jobSchema.index(
   { source: 1, externalId: 1 },
