@@ -1,7 +1,8 @@
-import { JOB_STATUS, ROLES } from "../../constants/index.js";
+import { ROLES } from "../../constants/index.js";
 import { generateText } from "../../services/gemini.js";
 import { ApiError } from "../../utils/ApiError.js";
 import { Job } from "../jobs/job.model.js";
+import { publicJobFilter } from "../jobs/jobs.service.js";
 import { CandidateProfile } from "../users/candidateProfile.model.js";
 import { User } from "../users/user.model.js";
 
@@ -44,7 +45,7 @@ Rules:
 export const chatWithAssistant = async ({ userId, messages }) => {
   const [user, jobs] = await Promise.all([
     userId ? User.findById(userId).select("fullName role").lean() : null,
-    Job.find({ status: JOB_STATUS.OPEN })
+    Job.find(publicJobFilter())
       .select("title location salary employmentType workMode company")
       .populate({ path: "company", select: "name" })
       .sort({ createdAt: -1 })

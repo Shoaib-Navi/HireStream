@@ -25,7 +25,9 @@ export const COMPANY_SIZES = ["1-10", "11-50", "51-200", "201-500", "501-1000", 
   label: `${size} employees`,
 }));
 
+// The first option is the default. Without a search keyword, relevance lists the newest jobs first.
 export const JOB_SORT_OPTIONS = [
+  { value: "relevance", label: "Most relevant" },
   { value: "newest", label: "Newest first" },
   { value: "salary", label: "Highest salary" },
 ];

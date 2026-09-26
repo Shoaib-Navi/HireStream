@@ -1,4 +1,4 @@
-import { APPLICATION_STATUS, JOB_STATUS, ROLES, USER_STATUS } from "../../constants/index.js";
+import { APPLICATION_STATUS, COMPANY_STATUS, JOB_STATUS, ROLES, USER_STATUS } from "../../constants/index.js";
 import { ApiError } from "../../utils/ApiError.js";
 import { escapeRegex } from "../../utils/escapeRegex.js";
 import { paginationMeta, toPagination } from "../../utils/pagination.js";
@@ -137,6 +137,9 @@ export const updateCompany = async (companyId, updates) => {
   });
   if (!company) {
     throw ApiError.notFound("Company not found");
+  }
+  if (updates.status) {
+    await Job.updateMany({ company: company._id }, { companyActive: updates.status === COMPANY_STATUS.ACTIVE });
   }
   return company;
 };
