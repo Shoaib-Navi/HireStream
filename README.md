@@ -13,9 +13,9 @@ applied to hired.
 
 ## Features
 
-- **Job seekers:** job search with URL-based filters (work mode, job type, experience, salary), saved jobs, one-click
-  apply with resume and cover letter, application tracking with status history, a profile match score on every job, and
-  a profile with experience, education, links and preferences
+- **Job seekers:** ranked keyword job search with URL-based filters (work mode, job type, experience, salary), saved
+  jobs, one-click apply with resume and cover letter, application tracking with status history, a profile match score
+  on every job, and a profile with experience, education, links and preferences
 - **Recruiters:** companies with logos, job posts (publish, edit, close, reopen or save as draft), applicant review with
   profile summaries and match scores, private team notes, a hiring pipeline with a message to the candidate at each
   step, drafted job descriptions, and a hiring overview dashboard
@@ -31,7 +31,8 @@ applied to hired.
 - Passwords hashed with bcrypt and never returned; Helmet headers
 - Emailed links (verification, password reset) are single-use, expire, and are stored only as SHA-256 hashes
 - Resetting or changing a password signs out every other session; suspending a user signs them out everywhere
-- Rate limits on login, signup, emailed links, password checks and assistant requests
+- Rate limits on login, signup, emailed links, password checks and assistant requests, counted in MongoDB so
+  every serverless instance shares them
 - Upload type and size limits (5 MB); the Gemini API key never reaches the browser
 
 ## Project structure
