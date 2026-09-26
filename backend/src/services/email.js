@@ -3,6 +3,10 @@ import { env } from "../config/env.js";
 
 let transporter = null;
 
+// Emails are sent while the request waits, so a stalled mail server must fail fast
+// instead of holding the request open (nodemailer's own defaults run to minutes)
+const SMTP_TIMEOUTS = { connectionTimeout: 10_000, greetingTimeout: 10_000, socketTimeout: 15_000 };
+
 // Emails "sent" while running tests, so tests can read links and tokens
 export const testOutbox = [];
 
@@ -15,6 +19,7 @@ const getTransporter = () => {
     port,
     secure,
     ...(user && { auth: { user, pass } }),
+    ...SMTP_TIMEOUTS,
   });
   return transporter;
 };
