@@ -3,6 +3,7 @@ import { Link, useParams } from "react-router-dom";
 import CompanyLogo from "@/components/common/CompanyLogo";
 import DetailSection from "@/components/common/DetailSection";
 import EmptyState from "@/components/common/EmptyState";
+import NoIndex from "@/components/common/NoIndex";
 import ErrorState from "@/components/common/ErrorState";
 import { PageLoader } from "@/components/common/Spinner";
 import SourceBadge from "@/components/common/SourceBadge";
@@ -15,6 +16,7 @@ import { useDocumentTitle } from "@/hooks/useDocumentTitle";
 import { formatRelativeTime } from "@/lib/format";
 import { useGetJobQuery } from "../api";
 import JobMeta from "../components/JobMeta";
+import JobPostingSchema from "../components/JobPostingSchema";
 
 const NumberedList = ({ items }) => (
   <ul className="space-y-3">
@@ -38,9 +40,11 @@ const JobDetailsPage = () => {
   if (isLoading) return <PageLoader />;
 
   if (isError) {
+    const notFound = error?.status === 404 || error?.status === 400;
     return (
       <div className="page-container py-16">
-        {error?.status === 404 || error?.status === 400 ? (
+        {notFound && <NoIndex />}
+        {notFound ? (
           <EmptyState
             icon={SearchX}
             title="Job not found"
@@ -60,6 +64,7 @@ const JobDetailsPage = () => {
 
   return (
     <>
+      <JobPostingSchema job={job} />
       <section className="dark rounded-b-section bg-background text-foreground">
         <div className="page-container pt-8 pb-14 sm:pb-20">
           <Link to="/jobs" className="type-label inline-flex items-center gap-1.5 text-muted-foreground transition-colors hover:text-foreground">
