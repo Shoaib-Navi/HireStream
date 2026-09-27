@@ -9,3 +9,5 @@ Disallow: /login
 Disallow: /register
 Disallow: /reset-password
 Disallow: /verify-email
+
+Sitemap: https://hirestream-frontend-liard.vercel.app/sitemap.xml

@@ -1,6 +1,7 @@
 import { Compass } from "lucide-react";
 import { Link } from "react-router-dom";
 import EmptyState from "@/components/common/EmptyState";
+import NoIndex from "@/components/common/NoIndex";
 import { Button } from "@/components/ui/button";
 import { useDocumentTitle } from "@/hooks/useDocumentTitle";
 
@@ -9,6 +10,7 @@ const NotFoundPage = () => {
 
   return (
     <div className="page-container py-20">
+      <NoIndex />
       <EmptyState
         icon={Compass}
         title="Page not found"
