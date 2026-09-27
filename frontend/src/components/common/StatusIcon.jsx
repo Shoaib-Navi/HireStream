@@ -14,7 +14,6 @@ const STATUS_TONES = {
 };
 
 const SIZES = {
-  xs: { box: "size-8 rounded-md", icon: "size-4" },
   sm: { box: "size-9 rounded-md", icon: "size-4" },
   md: { box: "size-12 rounded-md", icon: "size-5" },
   lg: { box: "size-14 rounded-lg", icon: "size-6" },
