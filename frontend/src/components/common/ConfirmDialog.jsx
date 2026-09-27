@@ -8,6 +8,7 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import LoadingButton from "./LoadingButton";
+import StatusIcon from "./StatusIcon";
 
 // The confirm button stays in the dialog until onConfirm finishes, so async actions can show progress
 const ConfirmDialog = ({
@@ -22,9 +23,12 @@ const ConfirmDialog = ({
 }) => (
   <AlertDialog open={open} onOpenChange={onOpenChange}>
     <AlertDialogContent>
-      <AlertDialogHeader>
-        <AlertDialogTitle>{title}</AlertDialogTitle>
-        {description && <AlertDialogDescription>{description}</AlertDialogDescription>}
+      <AlertDialogHeader className="flex-row items-start gap-4">
+        <StatusIcon tone={destructive ? "error" : "warning"} size="sm" />
+        <div className="min-w-0 space-y-1.5 pt-1.5">
+          <AlertDialogTitle>{title}</AlertDialogTitle>
+          {description && <AlertDialogDescription>{description}</AlertDialogDescription>}
+        </div>
       </AlertDialogHeader>
       <AlertDialogFooter>
         <AlertDialogCancel disabled={loading}>Cancel</AlertDialogCancel>
