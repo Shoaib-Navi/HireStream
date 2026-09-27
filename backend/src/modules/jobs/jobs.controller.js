@@ -6,6 +6,11 @@ export const listPublic = async (req, res) => {
   sendSuccess(res, { data: { jobs }, meta });
 };
 
+export const listSimilar = async (req, res) => {
+  const jobs = await jobsService.listSimilarJobs(req.params.id, req.user);
+  sendSuccess(res, { data: { jobs } });
+};
+
 export const getOne = async (req, res) => {
   const job = await jobsService.getJobDetails(req.params.id, req.user);
   sendSuccess(res, { data: { job } });

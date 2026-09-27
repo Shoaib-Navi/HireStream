@@ -8,6 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
+import CreateAlertButton from "@/features/jobAlerts/components/CreateAlertButton";
 import { useDocumentTitle } from "@/hooks/useDocumentTitle";
 import { JOB_SORT_OPTIONS } from "@/lib/constants";
 import { pluralize } from "@/lib/format";
@@ -125,6 +126,7 @@ const JobsPage = () => {
                 </SheetContent>
               </Sheet>
 
+              <CreateAlertButton filters={filters} />
               <Select value={filters.sort} onValueChange={(sort) => updateFilters({ sort })}>
                 <SelectTrigger size="sm" aria-label="Sort jobs">
                   <SelectValue />
