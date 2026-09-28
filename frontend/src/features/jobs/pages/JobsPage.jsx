@@ -101,7 +101,7 @@ const JobsPage = () => {
             <p className="type-label text-muted-foreground" aria-live="polite">
               {isLoading ? "Searching…" : `${pluralize(meta?.total ?? 0, "job")} found`}
             </p>
-            <div className="flex items-center gap-2">
+            <div className="flex flex-wrap items-center gap-2">
               <Sheet open={filtersOpen} onOpenChange={setFiltersOpen}>
                 <SheetTrigger asChild>
                   <Button variant="outline" size="sm" className="lg:hidden">
