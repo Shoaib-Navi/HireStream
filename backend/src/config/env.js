@@ -39,6 +39,8 @@ export const env = {
     .map((url) => url.trim())
     .filter(Boolean),
   requireEmailVerification: toBoolean(process.env.REQUIRE_EMAIL_VERIFICATION),
+  // Vercel Cron sends it as a bearer token; scheduled endpoints stay closed without it
+  cronSecret: process.env.CRON_SECRET,
   cloudinary: {
     cloudName: process.env.CLOUD_NAME,
     apiKey: process.env.API_KEY,

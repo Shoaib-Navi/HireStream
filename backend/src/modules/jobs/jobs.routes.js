@@ -26,5 +26,6 @@ router.patch("/:id/status", recruiterOnly, validate({ params: idParams, body: jo
 router.delete("/:id", recruiterOnly, validate({ params: idParams }), jobsController.remove);
 
 router.get("/:id", validate({ params: idParams }), optionalAuth, jobsController.getOne);
+router.get("/:id/similar", validate({ params: idParams }), optionalAuth, jobsController.listSimilar);
 
 export default router;

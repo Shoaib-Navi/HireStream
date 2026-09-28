@@ -17,6 +17,7 @@ import { formatRelativeTime } from "@/lib/format";
 import { useGetJobQuery } from "../api";
 import JobMeta from "../components/JobMeta";
 import JobPostingSchema from "../components/JobPostingSchema";
+import SimilarJobs from "../components/SimilarJobs";
 
 const NumberedList = ({ items }) => (
   <ul className="space-y-3">
@@ -134,6 +135,8 @@ const JobDetailsPage = () => {
           <CompanyAboutCard company={job.company} />
         </aside>
       </div>
+
+      <SimilarJobs jobId={job._id} />
     </>
   );
 };

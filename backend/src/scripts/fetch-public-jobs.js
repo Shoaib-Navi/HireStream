@@ -43,11 +43,13 @@ const MAX_LOCATION = 100;
 
 const ENTITIES = { "&amp;": "&", "&lt;": "<", "&gt;": ">", "&quot;": '"', "&#39;": "'", "&nbsp;": " ", "&#x27;": "'" };
 
-// Greenhouse returns the description as escaped HTML; keep a short plain-text excerpt
+const decodeEntities = (value) => value.replace(/&(amp|lt|gt|quot|nbsp|#39|#x27);/g, (entity) => ENTITIES[entity]);
+
+// Greenhouse returns the description as escaped HTML; keep a short plain-text excerpt.
+// Decoding once turns it back into HTML, and again after the tags are gone decodes the
+// text's own entities, so "&amp;nbsp;" ends up as a space rather than a literal "&nbsp;".
 const toExcerpt = (html = "") => {
-  const text = html
-    .replace(/&(amp|lt|gt|quot|nbsp|#39|#x27);/g, (entity) => ENTITIES[entity] ?? entity)
-    .replace(/<[^>]+>/g, " ")
+  const text = decodeEntities(decodeEntities(html).replace(/<[^>]+>/g, " "))
     .replace(/\s+/g, " ")
     .trim();
   return text.length > MAX_DESCRIPTION ? `${text.slice(0, MAX_DESCRIPTION).trimEnd()}…` : text;

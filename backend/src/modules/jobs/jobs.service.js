@@ -55,20 +55,38 @@ const assertActiveOwnedCompany = async (recruiterId, companyId) => {
   }
 };
 
-export const listPublicJobs = async (query, viewer) => {
-  const { q, location, employmentType, workMode, experience, salaryMin, company, sort } = query;
-  const { page, limit, skip } = toPagination(query);
-
+// Search criteria shared by the job board and job alerts, as one MongoDB filter over public jobs
+export const jobSearchFilter = ({ q, location, employmentType, workMode, experience, salaryMin, company }) => {
   const conditions = [publicJobFilter()];
   if (company) conditions.push({ company });
   if (q) conditions.push({ $text: { $search: q } });
   if (location) conditions.push({ location: new RegExp(escapeRegex(location), "i") });
   if (employmentType?.length) conditions.push({ employmentType: { $in: employmentType } });
   if (workMode?.length) conditions.push({ workMode: { $in: workMode } });
-  if (experience !== undefined) conditions.push({ "experience.min": { $lte: experience } });
-  if (salaryMin !== undefined) conditions.push({ "salary.max": { $gte: salaryMin } });
+  if (experience !== undefined && experience !== null) conditions.push({ "experience.min": { $lte: experience } });
+  if (salaryMin !== undefined && salaryMin !== null) conditions.push({ "salary.max": { $gte: salaryMin } });
+  return { $and: conditions };
+};
 
-  const filter = { $and: conditions };
+// Adds what the viewer sees on each card: whether they saved it and how well it matches their profile
+const toJobCards = async (jobs, viewer) => {
+  const [savedIds, profile] = await Promise.all([
+    savedJobIdsFor(viewer, jobs.map((job) => job._id)),
+    matchProfileFor(viewer),
+  ]);
+
+  return jobs.map((job) => ({
+    ...toJobCard(job),
+    isSaved: savedIds.has(job._id.toString()),
+    match: calculateMatch(job, profile),
+  }));
+};
+
+export const listPublicJobs = async (query, viewer) => {
+  const { q, sort } = query;
+  const { page, limit, skip } = toPagination(query);
+
+  const filter = jobSearchFilter(query);
   // Relevance needs a keyword to rank by; without one it falls back to newest
   const rankByRelevance = q && sort === "relevance";
   const sortBy = {
@@ -88,19 +106,32 @@ export const listPublicJobs = async (query, viewer) => {
     Job.countDocuments(filter),
   ]);
 
-  const [savedIds, profile] = await Promise.all([
-    savedJobIdsFor(viewer, jobs.map((job) => job._id)),
-    matchProfileFor(viewer),
-  ]);
+  return { jobs: await toJobCards(jobs, viewer), meta: paginationMeta({ page, limit }, total) };
+};
 
-  return {
-    jobs: jobs.map((job) => ({
-      ...toJobCard(job),
-      isSaved: savedIds.has(job._id.toString()),
-      match: calculateMatch(job, profile),
-    })),
-    meta: paginationMeta({ page, limit }, total),
-  };
+const SIMILAR_JOBS_LIMIT = 4;
+
+// Open jobs that share the most words with this job's title and skills, best match first.
+// Works for closed jobs too, where pointing to similar open roles helps most.
+export const listSimilarJobs = async (jobId, viewer) => {
+  const job = await Job.findOne({ _id: jobId, status: { $ne: JOB_STATUS.DRAFT } }).select("title skills").lean();
+  if (!job) {
+    throw ApiError.notFound("Job not found");
+  }
+
+  const terms = [job.title, ...(job.skills ?? [])].join(" ");
+  const relevance = { $meta: "textScore" };
+  const jobs = await Job.find(
+    { $and: [publicJobFilter(), { _id: { $ne: job._id } }, { $text: { $search: terms } }] },
+    { relevance },
+  )
+    .select("-requirements -responsibilities")
+    .sort({ relevance, createdAt: -1 })
+    .limit(SIMILAR_JOBS_LIMIT)
+    .populate({ path: "company", select: CARD_COMPANY_FIELDS })
+    .lean();
+
+  return toJobCards(jobs, viewer);
 };
 
 export const getJobDetails = async (jobId, viewer) => {

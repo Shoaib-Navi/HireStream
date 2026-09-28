@@ -24,6 +24,11 @@ export const jobsApi = baseApi.injectEndpoints({
       transformResponse: (response) => response.data.job,
       providesTags: (result, error, id) => [{ type: "Job", id }],
     }),
+    getSimilarJobs: build.query({
+      query: (id) => ({ url: `/jobs/${id}/similar` }),
+      transformResponse: (response) => response.data.jobs,
+      providesTags: (result = []) => result.map((job) => ({ type: "Job", id: job._id })),
+    }),
     getRecruiterJobs: build.query({
       query: (params) => ({ url: "/jobs/mine", params }),
       transformResponse: unwrapWithMeta,
@@ -54,6 +59,7 @@ export const jobsApi = baseApi.injectEndpoints({
 export const {
   useGetJobsQuery,
   useGetJobQuery,
+  useGetSimilarJobsQuery,
   useGetRecruiterJobsQuery,
   useCreateJobMutation,
   useUpdateJobMutation,
