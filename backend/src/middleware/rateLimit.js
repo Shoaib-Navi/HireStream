@@ -25,6 +25,7 @@ export const apiLimiter = createLimiter({
   message: "Too many requests. Please try again later.",
 });
 
+// Only failed attempts count, so real users are not locked out after logging in normally
 export const loginLimiter = createLimiter({
   store: new MongoRateLimitStore("login"),
   windowMs: FIFTEEN_MINUTES,
@@ -40,6 +41,7 @@ export const registerLimiter = createLimiter({
   message: "Too many accounts created from this network. Please try again later.",
 });
 
+// Emails sent on request (verification links, password resets)
 export const emailLimiter = createLimiter({
   store: new MongoRateLimitStore("email"),
   windowMs: ONE_HOUR,
@@ -47,6 +49,7 @@ export const emailLimiter = createLimiter({
   message: "Too many emails requested. Please try again later.",
 });
 
+// Token and password checks; only failed attempts count
 export const accountSecurityLimiter = createLimiter({
   store: new MongoRateLimitStore("account-security"),
   windowMs: FIFTEEN_MINUTES,
