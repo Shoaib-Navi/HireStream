@@ -119,7 +119,8 @@ export const listSimilarJobs = async (jobId, viewer) => {
     throw ApiError.notFound("Job not found");
   }
 
-  const terms = [job.title, ...(job.skills ?? [])].join(" ");
+  // Quotes and minus signs would turn words into required phrases or exclusions, so they become spaces
+  const terms = [job.title, ...(job.skills ?? [])].join(" ").replace(/["-]/g, " ");
   const relevance = { $meta: "textScore" };
   const jobs = await Job.find(
     { $and: [publicJobFilter(), { _id: { $ne: job._id } }, { $text: { $search: terms } }] },
@@ -196,6 +197,10 @@ export const updateJobStatus = async (recruiterId, jobId, status) => {
   }
   if (status === JOB_STATUS.DRAFT && job.applicationCount > 0) {
     throw ApiError.badRequest("Jobs with applicants can't go back to draft. Close the job instead.");
+  }
+  // Opening a job posts it, which a suspended company can't do
+  if (status === JOB_STATUS.OPEN) {
+    await assertActiveOwnedCompany(recruiterId, job.company);
   }
 
   // Only a draft's first publication counts; reopening a closed job doesn't make it new again
