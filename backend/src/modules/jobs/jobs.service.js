@@ -168,7 +168,8 @@ export const getJobDetails = async (jobId, viewer) => {
 
 export const createJob = async (recruiterId, { companyId, ...fields }) => {
   await assertActiveOwnedCompany(recruiterId, companyId);
-  return Job.create({ ...fields, company: companyId, postedBy: recruiterId });
+  const publishedAt = fields.status === JOB_STATUS.DRAFT ? undefined : new Date();
+  return Job.create({ ...fields, company: companyId, postedBy: recruiterId, publishedAt });
 };
 
 export const updateJob = async (recruiterId, jobId, { companyId, ...updates }) => {
@@ -197,6 +198,10 @@ export const updateJobStatus = async (recruiterId, jobId, status) => {
     throw ApiError.badRequest("Jobs with applicants can't go back to draft. Close the job instead.");
   }
 
+  // Only a draft's first publication counts; reopening a closed job doesn't make it new again
+  if (status === JOB_STATUS.OPEN && job.status === JOB_STATUS.DRAFT && !job.publishedAt) {
+    job.publishedAt = new Date();
+  }
   job.status = status;
   job.closedAt = status === JOB_STATUS.CLOSED ? new Date() : undefined;
   await job.save();

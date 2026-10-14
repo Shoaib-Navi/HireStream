@@ -121,11 +121,14 @@ export const deleteAlert = async (userId, alertId) => {
 const runAlert = async (alert, now) => {
   try {
     const { $and: conditions } = jobSearchFilter(alert.criteria ?? {});
-    const filter = { $and: [...conditions, { createdAt: { $gt: alert.lastCheckedAt, $lte: now } }] };
+    // New means published since the last check; older jobs without publishedAt use createdAt
+    const period = { $gt: alert.lastCheckedAt, $lte: now };
+    const published = { $or: [{ publishedAt: period }, { publishedAt: null, createdAt: period }] };
+    const filter = { $and: [...conditions, published] };
     const [jobs, total] = await Promise.all([
       Job.find(filter)
         .select("title location workMode salary company")
-        .sort({ createdAt: -1 })
+        .sort({ publishedAt: -1, createdAt: -1 })
         .limit(JOBS_PER_EMAIL)
         .populate({ path: "company", select: CARD_COMPANY_FIELDS })
         .lean(),

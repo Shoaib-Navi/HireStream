@@ -4,9 +4,15 @@ import request from "supertest";
 import { API, signUp, startTestServer, validJob } from "./helpers/testServer.js";
 
 const CRON_SECRET = "test-cron-secret";
+const HOUR = 60 * 60 * 1000;
+const DAY = 24 * HOUR;
+const ago = (ms) => new Date(Date.now() - ms);
+// createdAt is immutable, so moving it back in time has to be allowed explicitly
+const BACKDATE = { timestamps: false, overwriteImmutable: true };
 
 let app;
 let stop;
+let Job;
 let JobAlert;
 let User;
 let testOutbox;
@@ -22,6 +28,7 @@ const postJob = async (overrides) =>
 before(async () => {
   process.env.CRON_SECRET = CRON_SECRET;
   ({ app, stop } = await startTestServer());
+  ({ Job } = await import("../src/modules/jobs/job.model.js"));
   ({ JobAlert } = await import("../src/modules/jobAlerts/jobAlert.model.js"));
   ({ User } = await import("../src/modules/users/user.model.js"));
   ({ testOutbox } = await import("../src/services/email.js"));
@@ -159,6 +166,80 @@ describe("sending job alerts", () => {
     testOutbox.length = 0;
     assert.deepEqual((await dispatch()).body.data, { checked: 1, sent: 0 });
     assert.equal(testOutbox.length, 0);
+  });
+
+  test("a draft counts as new when it's published, not when it was written", async () => {
+    await JobAlert.deleteMany({});
+    const candidate = await signUp(app);
+    await candidate.agent.post(`${API}/job-alerts`).send({ criteria: { q: "elixir" } });
+
+    // written well before the alert's last check, published after it
+    const draft = await postJob({ title: "Elixir Engineer", skills: ["Elixir"], status: "draft" });
+    await Job.updateOne({ _id: draft._id }, { createdAt: ago(5 * DAY) }, BACKDATE);
+    await JobAlert.updateMany({}, { lastCheckedAt: ago(2 * DAY) });
+    const statusUrl = `${API}/jobs/${draft._id}/status`;
+    assert.equal((await recruiter.agent.patch(statusUrl).send({ status: "open" })).status, 200);
+
+    testOutbox.length = 0;
+    assert.deepEqual((await dispatch()).body.data, { checked: 1, sent: 1 });
+    assert.ok(testOutbox[0].text.includes("Elixir Engineer"));
+
+    // closing and reopening keeps the first publication date, so it isn't sent again
+    const { publishedAt } = await Job.findById(draft._id).lean();
+    await recruiter.agent.patch(statusUrl).send({ status: "closed" });
+    await recruiter.agent.patch(statusUrl).send({ status: "open" });
+    assert.deepEqual((await Job.findById(draft._id).lean()).publishedAt, publishedAt);
+  });
+
+  test("jobs saved before publication dates existed fall back to when they were created", async () => {
+    await JobAlert.deleteMany({});
+    const candidate = await signUp(app);
+    await candidate.agent.post(`${API}/job-alerts`).send({ criteria: { q: "fortran" } });
+
+    const recent = await postJob({ title: "Fortran Developer", skills: ["Fortran"] });
+    const old = await postJob({ title: "Fortran Maintainer", skills: ["Fortran"] });
+    await Job.updateOne({ _id: recent._id }, { $unset: { publishedAt: 1 } });
+    await Job.updateOne({ _id: old._id }, { $unset: { publishedAt: 1 }, createdAt: ago(5 * DAY) }, BACKDATE);
+    await JobAlert.updateMany({}, { lastCheckedAt: ago(2 * DAY) });
+
+    testOutbox.length = 0;
+    assert.deepEqual((await dispatch()).body.data, { checked: 1, sent: 1 });
+    assert.ok(testOutbox[0].text.includes("Fortran Developer"));
+    assert.ok(!testOutbox[0].text.includes("Fortran Maintainer"));
+  });
+
+  test("a job published exactly at the last check was covered by that check", async () => {
+    await JobAlert.deleteMany({});
+    const candidate = await signUp(app);
+    const { alert } = (await candidate.agent.post(`${API}/job-alerts`).send({ criteria: { q: "erlang" } })).body.data;
+
+    const lastCheckedAt = ago(2 * DAY);
+    const covered = await postJob({ title: "Erlang Engineer", skills: ["Erlang"] });
+    const fresh = await postJob({ title: "Erlang Developer", skills: ["Erlang"] });
+    await Job.updateOne({ _id: covered._id }, { publishedAt: lastCheckedAt });
+    await Job.updateOne({ _id: fresh._id }, { publishedAt: new Date(lastCheckedAt.getTime() + 1) });
+    await JobAlert.updateOne({ _id: alert._id }, { lastCheckedAt });
+
+    testOutbox.length = 0;
+    assert.deepEqual((await dispatch()).body.data, { checked: 1, sent: 1 });
+    assert.equal(testOutbox[0].subject, '1 new job for "erlang"');
+    assert.ok(testOutbox[0].text.includes("Erlang Developer"));
+  });
+
+  test("alerts fall due a little under a day or a week after the last check", async () => {
+    await JobAlert.deleteMany({});
+    const candidate = await signUp(app);
+    const create = async (criteria, frequency) =>
+      (await candidate.agent.post(`${API}/job-alerts`).send({ criteria, frequency })).body.data.alert._id;
+    const daily = await create({ q: "ada" }, "daily");
+    const weekly = await create({ q: "pascal" }, "weekly");
+    const checkedAgo = (id, ms) => JobAlert.updateOne({ _id: id }, { lastCheckedAt: ago(ms) });
+
+    await Promise.all([checkedAgo(daily, 19 * HOUR), checkedAgo(weekly, 6 * DAY + 19 * HOUR)]);
+    assert.deepEqual((await dispatch()).body.data, { checked: 0, sent: 0 });
+
+    await Promise.all([checkedAgo(daily, 21 * HOUR), checkedAgo(weekly, 6 * DAY + 21 * HOUR)]);
+    assert.deepEqual((await dispatch()).body.data, { checked: 2, sent: 0 });
   });
 });
 

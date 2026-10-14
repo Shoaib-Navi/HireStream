@@ -90,6 +90,9 @@ const jobSchema = new mongoose.Schema(
     externalId: { type: String, trim: true },
     // When the posting went live at its source; app-posted jobs use createdAt instead
     postedAt: { type: Date },
+    // When the job first went live here, so a draft published later counts as new from then.
+    // Jobs saved before this field existed have none and fall back to createdAt.
+    publishedAt: { type: Date },
   },
   { timestamps: true },
 );
