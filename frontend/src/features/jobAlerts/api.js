@@ -1,6 +1,6 @@
 import { baseApi } from "@/services/api";
 
-export const jobAlertsApi = baseApi.injectEndpoints({
+const jobAlertsApi = baseApi.injectEndpoints({
   endpoints: (build) => ({
     getJobAlerts: build.query({
       query: () => ({ url: "/job-alerts" }),

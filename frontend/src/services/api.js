@@ -3,7 +3,7 @@ import axios from "axios";
 import { API_BASE_URL } from "@/config/env";
 import { sessionExpired } from "@/features/auth/authActions";
 
-export const httpClient = axios.create({
+const httpClient = axios.create({
   baseURL: API_BASE_URL,
   withCredentials: true,
   // ?workMode=remote&workMode=hybrid (the API also accepts comma-separated values)

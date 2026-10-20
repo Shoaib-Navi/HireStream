@@ -1,6 +1,6 @@
 import { baseApi, unwrapData } from "@/services/api";
 
-export const dashboardApi = baseApi.injectEndpoints({
+const dashboardApi = baseApi.injectEndpoints({
   endpoints: (build) => ({
     getRecruiterOverview: build.query({
       query: () => ({ url: "/dashboard/recruiter" }),

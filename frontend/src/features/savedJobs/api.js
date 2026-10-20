@@ -3,7 +3,7 @@ import { baseApi, unwrapWithMeta } from "@/services/api";
 // Saving changes the job's isSaved flag, so the job lists and details that show it refetch
 const savedJobTags = (jobId) => ["SavedJobs", { type: "Job", id: jobId }];
 
-export const savedJobsApi = baseApi.injectEndpoints({
+const savedJobsApi = baseApi.injectEndpoints({
   endpoints: (build) => ({
     getSavedJobs: build.query({
       query: (params) => ({ url: "/saved-jobs", params }),

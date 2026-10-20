@@ -22,7 +22,7 @@ const updateStoredUser = async (_, { dispatch, queryFulfilled }) => {
   }
 };
 
-export const profileApi = baseApi.injectEndpoints({
+const profileApi = baseApi.injectEndpoints({
   endpoints: (build) => ({
     getMyProfile: build.query({
       query: () => ({ url: "/users/me/profile" }),

@@ -70,7 +70,7 @@ const JobCard = ({ job, className }) => (
 
 // Mirrors the card's blocks so the list does not resize when the jobs arrive:
 // 36px logo, a 27.5px heading, two lines of summary, then the two chip rows.
-export const JobCardSkeleton = () => (
+const JobCardSkeleton = () => (
   <div className="flex flex-col gap-5 rounded-xl border bg-card p-6" aria-hidden="true">
     <div className="flex items-start gap-3">
       <Skeleton className="size-9 rounded-xl" />

@@ -37,7 +37,7 @@ const normalizeCriteria = ({ q, location, employmentType, workMode, experience, 
 const criteriaKey = (criteria) => JSON.stringify(criteria).toLowerCase();
 
 // e.g. "react" in Bangalore · Remote, Hybrid · Full-time · ₹6 LPA+
-export const describeCriteria = ({ q, location, employmentType, workMode, experience, salaryMin }) =>
+const describeCriteria = ({ q, location, employmentType, workMode, experience, salaryMin }) =>
   [
     `${q ? `"${q}"` : "All jobs"}${location ? ` in ${location}` : ""}`,
     workMode?.length && workMode.map((mode) => WORK_MODE_LABELS[mode]).join(", "),
@@ -49,7 +49,7 @@ export const describeCriteria = ({ q, location, employmentType, workMode, experi
     .join(" · ");
 
 // The job board search for these criteria, newest first
-export const criteriaLink = (criteria) => {
+const criteriaLink = (criteria) => {
   const params = new URLSearchParams();
   for (const [key, value] of Object.entries(criteria)) {
     if (value === undefined || value === null || value === "" || value?.length === 0) continue;

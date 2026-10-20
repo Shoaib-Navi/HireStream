@@ -1,6 +1,6 @@
 import { baseApi, unwrapWithMeta } from "@/services/api";
 
-export const adminApi = baseApi.injectEndpoints({
+const adminApi = baseApi.injectEndpoints({
   endpoints: (build) => ({
     getAdminOverview: build.query({
       query: () => ({ url: "/admin/overview" }),
