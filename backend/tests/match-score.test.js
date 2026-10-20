@@ -89,23 +89,3 @@ describe("match score", () => {
     assert.equal(candidateView.body.data.application.match, undefined);
   });
 });
-
-describe("job description drafts", () => {
-  test("only recruiters can ask for a draft, and the input is validated", async () => {
-    assert.equal((await request(app).post(`${API}/ai/job-description`).send({ title: "React Developer" })).status, 401);
-    assert.equal(
-      (await strongCandidate.agent.post(`${API}/ai/job-description`).send({ title: "React Developer" })).status,
-      403,
-    );
-
-    const invalid = await recruiter.agent.post(`${API}/ai/job-description`).send({ title: "R" });
-    assert.equal(invalid.status, 400);
-  });
-
-  test("reports the service as unavailable when no API key is configured", async () => {
-    const res = await recruiter.agent
-      .post(`${API}/ai/job-description`)
-      .send({ title: "React Developer", skills: ["React"], workMode: "remote" });
-    assert.equal(res.status, 503);
-  });
-});

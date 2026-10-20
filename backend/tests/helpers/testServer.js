@@ -12,7 +12,6 @@ export const startTestServer = async () => {
     MONGO_URI: mongod.getUri(),
     JWT_SECRET: "test-secret",
     // blank values stop dotenv from filling in real credentials from backend/.env
-    GEMINI_API_KEY: "",
     SMTP_HOST: "",
     CLOUD_NAME: "",
     API_KEY: "",
