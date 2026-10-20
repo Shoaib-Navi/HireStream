@@ -170,4 +170,33 @@ describe("managing jobs", () => {
     const missing = await admin.agent.delete(`${API}/admin/jobs/${admin.user._id}`);
     assert.equal(missing.status, 404);
   });
+  test("jobs with applicants can't go back to draft, and opening a draft dates it", async () => {
+    const toDraft = await admin.agent.patch(`${API}/admin/jobs/${openJobId}/status`).send({ status: "draft" });
+    assert.equal(toDraft.status, 400);
+
+    const draft = (await recruiter.agent.post(`${API}/jobs`).send(validJob(companyId, { status: "draft" }))).body.data.job;
+    assert.equal(draft.publishedAt, undefined);
+    const opened = await admin.agent.patch(`${API}/admin/jobs/${draft._id}/status`).send({ status: "open" });
+    assert.ok(opened.body.data.job.publishedAt);
+  });
+
+  test("a suspended recruiter's jobs stay hidden until the recruiter is restored", async () => {
+    const owner = await signUp(app, { role: "recruiter" });
+    const company = (await owner.agent.post(`${API}/companies`).send({ name: "Quiet Foundry" })).body.data.company;
+    const job = (await owner.agent.post(`${API}/jobs`).send(validJob(company._id, { title: "Foundry Lead" }))).body.data.job;
+    const onBoard = async () => (await request(app).get(`${API}/jobs?q=foundry`)).body.meta.total;
+
+    await admin.agent.patch(`${API}/admin/users/${owner.user._id}/status`).send({ status: "suspended" });
+    assert.equal(await onBoard(), 0);
+    assert.equal((await request(app).get(`${API}/jobs/${job._id}`)).status, 404);
+    assert.equal((await candidate.agent.post(`${API}/jobs/${job._id}/applications`).send({})).status, 404);
+
+    // restoring the company alone doesn't bring back a suspended recruiter's jobs
+    await admin.agent.patch(`${API}/admin/companies/${company._id}`).send({ status: "suspended" });
+    await admin.agent.patch(`${API}/admin/companies/${company._id}`).send({ status: "active" });
+    assert.equal(await onBoard(), 0);
+
+    await admin.agent.patch(`${API}/admin/users/${owner.user._id}/status`).send({ status: "active" });
+    assert.equal(await onBoard(), 1);
+  });
 });

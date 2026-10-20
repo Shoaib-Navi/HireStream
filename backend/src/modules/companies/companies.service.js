@@ -1,10 +1,11 @@
-import { COMPANY_STATUS, JOB_STATUS } from "../../constants/index.js";
+import { COMPANY_STATUS } from "../../constants/index.js";
 import { deleteFile, uploadFile } from "../../services/storage.js";
 import { ApiError } from "../../utils/ApiError.js";
 import { escapeRegex } from "../../utils/escapeRegex.js";
 import { paginationMeta, toPagination } from "../../utils/pagination.js";
 import { generateUniqueSlug } from "../../utils/slugify.js";
 import { Job } from "../jobs/job.model.js";
+import { publicJobFilter } from "../jobs/jobs.service.js";
 import { Company } from "./company.model.js";
 
 const PUBLIC_COMPANY_FIELDS = "name slug description website location industry size foundedYear logo isVerified createdAt";
@@ -14,7 +15,7 @@ const withOpenJobCounts = async (companies) => {
   if (companies.length === 0) return companies;
 
   const counts = await Job.aggregate([
-    { $match: { company: { $in: companies.map((company) => company._id) }, status: JOB_STATUS.OPEN } },
+    { $match: { company: { $in: companies.map((company) => company._id) }, ...publicJobFilter() } },
     { $group: { _id: "$company", count: { $sum: 1 } } },
   ]);
   const countByCompany = new Map(counts.map((item) => [item._id.toString(), item.count]));

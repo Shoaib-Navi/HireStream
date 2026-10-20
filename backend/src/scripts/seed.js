@@ -199,6 +199,7 @@ const run = async () => {
         postedBy: company.owner,
         postedAt,
         createdAt: postedAt,
+        publishedAt: postedAt,
       }),
     );
   }
@@ -252,6 +253,7 @@ const run = async () => {
         postedBy: boardDesk._id,
         postedAt,
         createdAt: postedAt,
+        publishedAt: postedAt,
         sourceUrl: job.sourceUrl,
       }),
     );

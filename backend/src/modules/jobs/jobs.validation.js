@@ -36,9 +36,9 @@ const jobFields = {
   experience: experienceRange,
   salary: salaryRange,
   openings: z.coerce.number().int().min(1, "There must be at least 1 opening").max(1000),
-  deadline: z.coerce
-    .date()
-    .nullable()
+  // A date on its own means applications close at the end of that day, Indian time
+  deadline: z
+    .preprocess((value) => (/^\d{4}-\d{2}-\d{2}$/.test(value) ? `${value}T23:59:59.999+05:30` : value), z.coerce.date().nullable())
     .refine((date) => date === null || date > new Date(), { message: "Deadline must be in the future" }),
   companyId: objectId,
 };

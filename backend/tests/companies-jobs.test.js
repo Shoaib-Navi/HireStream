@@ -189,3 +189,27 @@ describe("jobs", () => {
     assert.equal(companies.body.data.companies[0].openJobCount, 1);
   });
 });
+
+describe("publication and deadlines", () => {
+  test("a draft published later is listed as the newest job", async () => {
+    const draft = (await recruiter.agent.post(`${API}/jobs`).send(validJob(companyId, { title: "Zig Draft", skills: ["Zig"], status: "draft" }))).body.data.job;
+    await recruiter.agent.post(`${API}/jobs`).send(validJob(companyId, { title: "Zig Live", skills: ["Zig"] }));
+    await recruiter.agent.patch(`${API}/jobs/${draft._id}/status`).send({ status: "open" });
+
+    const board = await request(app).get(`${API}/jobs?q=zig&sort=newest`);
+    assert.deepEqual(board.body.data.jobs.map((job) => job.title), ["Zig Draft", "Zig Live"]);
+    assert.ok(board.body.data.jobs[0].publishedAt);
+  });
+
+  test("a deadline date stays open until the end of that day in India", async () => {
+    const day = (offsetDays) => new Date(Date.now() + 5.5 * 60 * 60 * 1000 + offsetDays * 24 * 60 * 60 * 1000).toISOString().slice(0, 10);
+
+    const today = await recruiter.agent.post(`${API}/jobs`).send(validJob(companyId, { title: "Last Day Role", deadline: day(0) }));
+    assert.equal(today.status, 201);
+    assert.equal(today.body.data.job.deadline, new Date(`${day(0)}T23:59:59.999+05:30`).toISOString());
+    assert.equal((await request(app).get(`${API}/jobs?q=last day`)).body.meta.total, 1);
+
+    const yesterday = await recruiter.agent.post(`${API}/jobs`).send(validJob(companyId, { deadline: day(-1) }));
+    assert.equal(yesterday.status, 400);
+  });
+});

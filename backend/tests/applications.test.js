@@ -157,4 +157,32 @@ describe("applications", () => {
     const otherRecruiterView = await otherRecruiter.agent.get(`${API}/applications/${applicationId}`);
     assert.equal(otherRecruiterView.status, 404);
   });
+  test("a withdrawal and a recruiter's update at the same moment never overwrite each other", async () => {
+    const companyId = (await recruiter.agent.post(`${API}/companies`).send({ name: "Race Co" })).body.data.company._id;
+    for (let round = 0; round < 5; round += 1) {
+      const job = (await recruiter.agent.post(`${API}/jobs`).send(validJob(companyId, { title: `Race ${round}` }))).body.data.job;
+      const applied = await secondCandidate.agent.post(`${API}/jobs/${job._id}/applications`).send({});
+      const id = applied.body.data.application._id;
+
+      const [withdraw, shortlist] = await Promise.all([
+        secondCandidate.agent.patch(`${API}/applications/${id}/withdraw`),
+        recruiter.agent.patch(`${API}/applications/${id}/status`).send({ status: "shortlisted" }),
+      ]);
+      const { application } = (await recruiter.agent.get(`${API}/applications/${id}`)).body.data;
+      const history = application.statusHistory.map((entry) => entry.status);
+      // whichever came second either built on the first or was refused; the history always matches the status
+      assert.equal(history.at(-1), application.status);
+      assert.ok([withdraw.status, shortlist.status].every((status) => [200, 400, 409].includes(status)));
+    }
+  });
+
+  test("a job whose company no longer exists can't be applied to", async () => {
+    const { Company } = await import("../src/modules/companies/company.model.js");
+    const companyId = (await recruiter.agent.post(`${API}/companies`).send({ name: "Gone Co" })).body.data.company._id;
+    const job = (await recruiter.agent.post(`${API}/jobs`).send(validJob(companyId))).body.data.job;
+    await Company.deleteOne({ _id: companyId });
+
+    const apply = await candidate.agent.post(`${API}/jobs/${job._id}/applications`).send({});
+    assert.equal(apply.status, 404);
+  });
 });

@@ -32,9 +32,9 @@ const findRecruiterApplication = async (recruiterId, applicationId, select = "")
 
 export const applyToJob = async (candidateId, jobId, { coverLetter }) => {
   const job = await Job.findById(jobId)
-    .select("title status deadline company postedBy")
+    .select("title status deadline company companyActive postedBy")
     .populate({ path: "company", select: "status" });
-  if (!job || job.company?.status === COMPANY_STATUS.SUSPENDED) {
+  if (!job?.company || job.companyActive === false || job.company.status === COMPANY_STATUS.SUSPENDED) {
     throw ApiError.notFound("Job not found");
   }
   if (!isAcceptingApplications(job)) {
@@ -167,6 +167,8 @@ export const updateApplicationStatus = async (recruiterId, applicationId, { stat
   }
 
   if (application.status !== status) {
+    // Saved only if the status is still the one read above, so a withdrawal at the same moment isn't overwritten
+    application.$where = { status: application.status };
     application.status = status;
     application.statusHistory.push({ status, note, changedBy: recruiterId });
     await application.save();
@@ -209,6 +211,8 @@ export const withdrawApplication = async (candidateId, applicationId) => {
     throw ApiError.badRequest("This application can no longer be withdrawn");
   }
 
+  // Saved only if the status is still the one read above, so a recruiter's update at the same moment isn't lost
+  application.$where = { status: application.status };
   application.status = APPLICATION_STATUS.WITHDRAWN;
   application.statusHistory.push({ status: APPLICATION_STATUS.WITHDRAWN, changedBy: candidateId });
   await application.save();
