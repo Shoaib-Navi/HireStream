@@ -81,7 +81,7 @@ const AdminJobsPage = () => {
                         <ExternalLink className="size-3.5 text-muted-foreground" />
                       </Link>
                       <p className="type-caption truncate text-muted-foreground">
-                        {job.company?.name} · Posted {formatDate(job.createdAt)}
+                        {job.company?.name} · {job.publishedAt ? `Posted ${formatDate(job.publishedAt)}` : `Created ${formatDate(job.createdAt)}`}
                       </p>
                     </div>
                   </div>

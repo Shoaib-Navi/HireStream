@@ -42,12 +42,12 @@ export const jobsApi = baseApi.injectEndpoints({
     updateJob: build.mutation({
       query: ({ id, ...body }) => ({ url: `/jobs/${id}`, method: "PATCH", body }),
       transformResponse: (response) => response.data.job,
-      invalidatesTags: (result, error, { id }) => recruiterJobTags(id),
+      invalidatesTags: (result, error, { id }) => [...recruiterJobTags(id), "SavedJobs", "JobApplications"],
     }),
     updateJobStatus: build.mutation({
       query: ({ id, status }) => ({ url: `/jobs/${id}/status`, method: "PATCH", body: { status } }),
       transformResponse: (response) => response.data.job,
-      invalidatesTags: (result, error, { id }) => recruiterJobTags(id),
+      invalidatesTags: (result, error, { id }) => [...recruiterJobTags(id), "SavedJobs", "JobApplications"],
     }),
     deleteJob: build.mutation({
       query: (id) => ({ url: `/jobs/${id}`, method: "DELETE" }),

@@ -17,7 +17,13 @@ const EditJobPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const { data: job, isLoading: jobLoading, isError, error, refetch } = useGetJobQuery(id);
-  const { data: companies, isLoading: companiesLoading } = useGetMyCompaniesQuery();
+  const {
+    data: companies,
+    isLoading: companiesLoading,
+    isError: companiesFailed,
+    error: companiesError,
+    refetch: refetchCompanies,
+  } = useGetMyCompaniesQuery();
   const [updateJob] = useUpdateJobMutation();
 
   const handleSubmit = async (payload) => {
@@ -42,6 +48,7 @@ const EditJobPage = () => {
       );
     }
     if (isError) return <ErrorState error={error} onRetry={refetch} />;
+    if (companiesFailed) return <ErrorState error={companiesError} onRetry={refetchCompanies} />;
     return <JobForm key={job._id} companies={companies ?? []} initialValues={toJobFormValues(job)} isEditing onSubmit={handleSubmit} />;
   };
 

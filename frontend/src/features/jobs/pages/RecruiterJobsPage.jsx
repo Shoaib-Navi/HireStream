@@ -87,7 +87,7 @@ const RecruiterJobsPage = () => {
                 <StatusBadge type="job" status={job.status} />
               </div>
               <p className="type-caption text-muted-foreground">
-                {job.company?.name} · {job.location} · Posted {formatDate(job.createdAt)}
+                {job.company?.name} · {job.location} · {job.publishedAt ? `Posted ${formatDate(job.publishedAt)}` : `Created ${formatDate(job.createdAt)}`}
               </p>
             </div>
             <div className="flex items-center gap-2">

@@ -79,7 +79,7 @@ const JobDetailsPage = () => {
                 {job.company?.name}
                 {job.company?.isVerified && <BadgeCheck className="size-4" aria-label="Verified company" />}
               </Link>
-              <span className="type-caption text-muted-foreground">· Posted {formatRelativeTime(job.createdAt)}</span>
+              <span className="type-caption text-muted-foreground">· Posted {formatRelativeTime(job.publishedAt ?? job.createdAt)}</span>
               {job.status !== "open" && <StatusBadge type="job" status={job.status} />}
               <SourceBadge source={job.source} />
               {job.sourceUrl && (
