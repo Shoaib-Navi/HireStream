@@ -1,10 +1,11 @@
-import { ArrowLeft, ArrowRight, MailCheck } from "lucide-react";
-import { Link } from "react-router-dom";
+import { ArrowRight, MailCheck } from "lucide-react";
+
 import { toast } from "sonner";
 import FormField, { FIELD_LABEL } from "@/components/common/FormField";
 import LoadingButton from "@/components/common/LoadingButton";
 import ScrambleText from "@/components/common/ScrambleText";
 import StatusIcon from "@/components/common/StatusIcon";
+import BackLink from "@/components/common/BackLink";
 import { Input } from "@/components/ui/input";
 import { useDocumentTitle } from "@/hooks/useDocumentTitle";
 import { useFormState } from "@/hooks/useFormState";
@@ -27,12 +28,7 @@ const ForgotPasswordPage = () => {
   };
 
   const backToLogin = (
-    <Link
-      to="/login"
-      className="type-label inline-flex items-center gap-1.5 text-muted-foreground transition-colors hover:text-foreground"
-    >
-      <ArrowLeft className="size-3.5" /> Back to log in
-    </Link>
+    <BackLink to="/login">Back to log in</BackLink>
   );
 
   if (isSuccess) {

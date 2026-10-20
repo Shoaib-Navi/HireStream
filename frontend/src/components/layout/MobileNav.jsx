@@ -49,11 +49,8 @@ const MobileNav = () => {
       </SheetTrigger>
       <SheetContent side="right" className="w-80 gap-0 p-0">
         <SheetHeader className="border-b">
-          <SheetTitle asChild>
-            <div onClick={close}>
-              <Logo />
-            </div>
-          </SheetTitle>
+          <Logo onClick={close} />
+          <SheetTitle className="sr-only">Menu</SheetTitle>
           <SheetDescription className="sr-only">Site navigation</SheetDescription>
         </SheetHeader>
 
@@ -63,7 +60,7 @@ const MobileNav = () => {
               {label}
             </NavLink>
           ))}
-          {dashboardItems.length > 0 && <p className="type-overline mt-4 px-3 pb-1 text-muted-foreground">Dashboard</p>}
+          {dashboardItems.length > 0 && <p className="type-label mt-4 px-3 pb-1 text-muted-foreground">Dashboard</p>}
           {dashboardItems.map(({ label, to, icon: Icon }) => (
             <NavLink key={to} to={to} onClick={close} className={linkClassName}>
               <Icon className="size-4" /> {label}

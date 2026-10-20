@@ -19,6 +19,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { useGetMyProfileQuery } from "@/features/profile/api";
 import { getErrorMessage } from "@/lib/errors";
 import { useApplyToJobMutation } from "../api";
+import EmptyState from "@/components/common/EmptyState";
 
 const ApplyDialog = ({ job, open, onOpenChange }) => {
   const {
@@ -50,14 +51,17 @@ const ApplyDialog = ({ job, open, onOpenChange }) => {
 
     if (!profile?.resume?.url) {
       return (
-        <div className="rounded-xl border border-dashed p-6 text-center">
-          <FileText className="mx-auto size-8 text-muted-foreground" aria-hidden="true" />
-          <p className="type-h4 mt-3 text-foreground">Upload your resume first</p>
-          <p className="type-body mt-1 text-muted-foreground">Your resume is attached to every application you send.</p>
-          <Button asChild className="mt-4">
-            <Link to="/dashboard/profile#resume">Go to your profile</Link>
-          </Button>
-        </div>
+        <EmptyState
+          icon={FileText}
+          title="Upload your resume first"
+          description="Your resume is attached to every application you send."
+          className="py-8"
+          action={
+            <Button asChild>
+              <Link to="/dashboard/profile#resume">Go to your profile</Link>
+            </Button>
+          }
+        />
       );
     }
 

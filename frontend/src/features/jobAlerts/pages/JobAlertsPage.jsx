@@ -47,7 +47,7 @@ const AlertRow = ({ alert, onDelete }) => {
           disabled={isLoading}
           onValueChange={(frequency) => update({ frequency }, `You'll get this alert ${frequency}`)}
         >
-          <SelectTrigger size="sm" aria-label="How often">
+          <SelectTrigger size="sm" aria-label={`How often to send ${alert.summary}`}>
             <SelectValue />
           </SelectTrigger>
           <SelectContent align="end">
@@ -62,6 +62,7 @@ const AlertRow = ({ alert, onDelete }) => {
         <label htmlFor={switchId} className="type-caption flex h-8 items-center gap-2 px-2 text-muted-foreground">
           <Switch
             id={switchId}
+            aria-label={`Alert active: ${alert.summary}`}
             checked={alert.isActive}
             disabled={isLoading}
             onCheckedChange={(isActive) => update({ isActive }, isActive ? "Alert resumed" : "Alert paused")}
@@ -76,7 +77,7 @@ const AlertRow = ({ alert, onDelete }) => {
           variant="ghost"
           size="icon-sm"
           className="text-muted-foreground hover:text-destructive"
-          aria-label="Delete alert"
+          aria-label={`Delete alert ${alert.summary}`}
           onClick={() => onDelete(alert)}
         >
           <Trash2 />

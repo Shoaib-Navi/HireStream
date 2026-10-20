@@ -9,7 +9,7 @@ import Pagination from "@/components/common/Pagination";
 import { PageLoader } from "@/components/common/Spinner";
 import StatusBadge from "@/components/common/StatusBadge";
 import { Button } from "@/components/ui/button";
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useGetMyCompaniesQuery } from "@/features/companies/api";
 import { useDocumentTitle } from "@/hooks/useDocumentTitle";
 import { formatDate, pluralize } from "@/lib/format";
@@ -106,7 +106,9 @@ const RecruiterJobsPage = () => {
 
   return (
     <div className="space-y-6">
-      <PageHeader eyebrow="Hiring" title="Jobs"
+      <PageHeader
+        eyebrow="Hiring"
+        title="Jobs"
         description="Manage your job posts and review applicants."
         actions={
           <Button asChild>
@@ -125,9 +127,8 @@ const RecruiterJobsPage = () => {
             </TabsTrigger>
           ))}
         </TabsList>
+        <TabsContent value={status}>{renderJobs()}</TabsContent>
       </Tabs>
-
-      {renderJobs()}
 
       <Pagination page={page} totalPages={data?.meta?.totalPages} onPageChange={setPage} />
     </div>

@@ -2,7 +2,6 @@ import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { cn } from "@/lib/utils";
 
-// How well a candidate's profile fits a job: skills carry the most weight, then experience and location
 const toneFor = (score) => (score >= 75 ? "success" : score >= 50 ? "warning" : "neutral");
 
 const MatchScore = ({ match, className }) =>

@@ -27,7 +27,9 @@ const AdminJobsPage = () => {
   useDocumentTitle("Jobs");
   const { filters, update, setPage, params } = useAdminFilters({ status: "" });
   const { data, isLoading, isFetching, isError, error, refetch } = useGetAdminJobsQuery(params);
-  const [updateJobStatus, { isLoading: updating }] = useUpdateAdminJobStatusMutation();
+  const [updateJobStatus, { isLoading: updating, originalArgs }] = useUpdateAdminJobStatusMutation();
+  // only the row being changed waits for the request
+  const isUpdating = (job) => updating && originalArgs?.id === job._id;
   const [deleteJob, { isLoading: deleting }] = useDeleteAdminJobMutation();
   const [jobToDelete, setJobToDelete] = useState(null);
 
@@ -97,11 +99,11 @@ const AdminJobsPage = () => {
                 <TableCell className="text-right">
                   <div className="flex justify-end gap-2">
                     {job.status === "closed" ? (
-                      <Button variant="outline" size="sm" disabled={updating} onClick={() => changeStatus(job, "open")}>
+                      <Button variant="outline" size="sm" disabled={isUpdating(job)} onClick={() => changeStatus(job, "open")}>
                         Reopen
                       </Button>
                     ) : (
-                      <Button variant="outline" size="sm" disabled={updating} onClick={() => changeStatus(job, "closed")}>
+                      <Button variant="outline" size="sm" disabled={isUpdating(job)} onClick={() => changeStatus(job, "closed")}>
                         Close
                       </Button>
                     )}

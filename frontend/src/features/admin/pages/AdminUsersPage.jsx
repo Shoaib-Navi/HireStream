@@ -27,7 +27,9 @@ const AdminUsersPage = () => {
   const { user: currentUser } = useAuth();
   const { filters, update, setPage, params } = useAdminFilters({ role: "", status: "" });
   const { data, isLoading, isFetching, isError, error, refetch } = useGetAdminUsersQuery(params);
-  const [updateStatus, { isLoading: updating }] = useUpdateUserStatusMutation();
+  const [updateStatus, { isLoading: updating, originalArgs }] = useUpdateUserStatusMutation();
+  // only the row being changed waits for the request
+  const isUpdating = (user) => updating && originalArgs?.id === user._id;
   const [userToSuspend, setUserToSuspend] = useState(null);
 
   const users = data?.users ?? [];
@@ -89,7 +91,7 @@ const AdminUsersPage = () => {
                     {isSelf || isAdmin ? (
                       <span className="type-caption text-muted-foreground">—</span>
                     ) : user.status === "suspended" ? (
-                      <Button variant="outline" size="sm" disabled={updating} onClick={() => changeStatus(user, "active")}>
+                      <Button variant="outline" size="sm" disabled={isUpdating(user)} onClick={() => changeStatus(user, "active")}>
                         Reactivate
                       </Button>
                     ) : (

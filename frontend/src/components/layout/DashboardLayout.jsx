@@ -5,7 +5,7 @@ import { useAuth } from "@/features/auth/hooks/useAuth";
 import { cn } from "@/lib/utils";
 import Navbar from "./Navbar";
 
-// Candidate and recruiter areas: role-specific sidebar (tabs on small screens) next to the page
+// Candidate, recruiter and admin areas: role-specific sidebar (tabs on small screens) next to the page
 const DashboardLayout = () => {
   const { user } = useAuth();
   const items = DASHBOARD_NAV[user?.role] ?? [];

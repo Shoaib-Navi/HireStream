@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { ArrowLeft, ExternalLink, FileText, SearchX } from "lucide-react";
+import { ExternalLink, FileText, SearchX } from "lucide-react";
 import { Link, useParams } from "react-router-dom";
 import { toast } from "sonner";
 import CompanyLogo from "@/components/common/CompanyLogo";
@@ -10,11 +10,12 @@ import PageHeader from "@/components/common/PageHeader";
 import SectionCard from "@/components/common/SectionCard";
 import { PageLoader } from "@/components/common/Spinner";
 import StatusBadge from "@/components/common/StatusBadge";
+import BackLink from "@/components/common/BackLink";
 import { Button } from "@/components/ui/button";
 import JobMeta from "@/features/jobs/components/JobMeta";
 import { useDocumentTitle } from "@/hooks/useDocumentTitle";
 import { WITHDRAWABLE_STATUSES } from "@/lib/constants";
-import { getErrorMessage } from "@/lib/errors";
+import { getErrorMessage, isNotFound } from "@/lib/errors";
 import { formatDate } from "@/lib/format";
 import { useGetApplicationQuery, useWithdrawApplicationMutation } from "../api";
 import StatusTimeline from "../components/StatusTimeline";
@@ -38,7 +39,7 @@ const ApplicationDetailPage = () => {
 
   if (isLoading) return <PageLoader />;
   if (isError) {
-    return error?.status === 404 || error?.status === 400 ? (
+    return isNotFound(error) ? (
       <EmptyState
         icon={SearchX}
         title="Application not found"
@@ -58,12 +59,7 @@ const ApplicationDetailPage = () => {
 
   return (
     <div className="space-y-6">
-      <Link
-        to="/dashboard/applications"
-        className="type-label inline-flex items-center gap-1.5 text-muted-foreground transition-colors hover:text-foreground"
-      >
-        <ArrowLeft className="size-3.5" /> Applications
-      </Link>
+      <BackLink to="/dashboard/applications">Applications</BackLink>
 
       <PageHeader
         title={job?.title ?? "Job no longer available"}

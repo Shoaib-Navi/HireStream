@@ -24,9 +24,10 @@ const LogoMark = ({ className }) => (
   </svg>
 );
 
-const Logo = ({ to = "/", className, showText = true }) => (
+const Logo = ({ to = "/", className, showText = true, onClick }) => (
   <Link
     to={to}
+    onClick={onClick}
     aria-label="HireStream home"
     className={cn("inline-flex items-center gap-2 font-display text-xl font-medium tracking-[-0.04em] text-foreground", className)}
   >

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { BadgeCheck, Building2, Search } from "lucide-react";
+import { Building2, Search } from "lucide-react";
 import { Link, useSearchParams } from "react-router-dom";
 import CompanyLogo from "@/components/common/CompanyLogo";
 import EmptyState from "@/components/common/EmptyState";
@@ -7,6 +7,7 @@ import ErrorState from "@/components/common/ErrorState";
 import Pagination from "@/components/common/Pagination";
 import ScrambleText from "@/components/common/ScrambleText";
 import { PageLoader } from "@/components/common/Spinner";
+import VerifiedMark from "@/components/common/VerifiedMark";
 import { Input } from "@/components/ui/input";
 import { useDebounce } from "@/hooks/useDebounce";
 import { useDocumentTitle } from "@/hooks/useDocumentTitle";
@@ -61,7 +62,7 @@ const CompaniesDirectoryPage = () => {
                 <div className="min-w-0">
                   <p className="type-h4 flex items-center gap-1.5 text-foreground">
                     <span className="truncate">{company.name}</span>
-                    {company.isVerified && <BadgeCheck className="size-4 shrink-0" aria-label="Verified company" />}
+                    {company.isVerified && <VerifiedMark />}
                   </p>
                   <p className="type-caption truncate text-muted-foreground">
                     {[company.industry, company.location].filter(Boolean).join(" · ")}
@@ -84,7 +85,7 @@ const CompaniesDirectoryPage = () => {
         <div className="page-container pt-14 pb-14 sm:pt-20 sm:pb-20">
           <ScrambleText text="Companies" className="type-label block text-muted-foreground" />
           <h1 className="type-h1 mt-5 max-w-3xl">Companies hiring on HireStream.</h1>
-          <label className="mt-10 flex max-w-xl items-center gap-2.5 rounded-lg border bg-card px-4">
+          <label className="mt-10 flex max-w-xl items-center gap-2.5 rounded-lg border bg-card px-4 transition-colors focus-within:border-foreground/30">
             <Search className="size-4 shrink-0 text-muted-foreground" aria-hidden="true" />
             <span className="sr-only">Search companies</span>
             <Input

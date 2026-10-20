@@ -12,11 +12,10 @@ import { Textarea } from "@/components/ui/textarea";
 import { useFormState } from "@/hooks/useFormState";
 import { EMPLOYMENT_TYPES, WORK_MODES } from "@/lib/constants";
 import { getErrorMessage } from "@/lib/errors";
+import { toDateInputValue } from "@/lib/format";
 import { EMPTY_JOB_FORM, toJobFormError, toJobPayload } from "../utils/jobForm";
 
 const EDIT = "edit";
-
-const todayInputValue = () => new Date().toISOString().slice(0, 10);
 
 const SelectField = ({ id, label, value, options, onChange, error, placeholder }) => (
   <FormField labelClassName={FIELD_LABEL} label={label} htmlFor={id} error={error} required>
@@ -113,7 +112,7 @@ const JobForm = ({ companies, initialValues, isEditing = false, onSubmit }) => {
               id="deadline"
               value={values.deadline}
               onChange={(next) => setField("deadline", next)}
-              min={todayInputValue()}
+              min={toDateInputValue(new Date())}
               placeholder="No deadline"
               invalid={Boolean(errors.deadline)}
             />

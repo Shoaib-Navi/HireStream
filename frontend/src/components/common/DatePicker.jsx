@@ -2,7 +2,7 @@ import { useState } from "react";
 import { CalendarDays } from "lucide-react";
 import Calendar from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { formatDate } from "@/lib/format";
+import { formatDate, toDateInputValue } from "@/lib/format";
 import { cn } from "@/lib/utils";
 
 // Reads and writes the same "YYYY-MM-DD" string a date input would, so forms keep their shape.
@@ -12,9 +12,6 @@ const toDate = (value) => {
   const [year, month, day] = String(value).slice(0, 10).split("-").map(Number);
   return Number.isFinite(year) && Number.isFinite(month) && Number.isFinite(day) ? new Date(year, month - 1, day) : null;
 };
-
-const toValue = (date) =>
-  `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
 
 // Opens in the popover the rest of the app uses, so it shares the same motion
 const DatePicker = ({ id, value, onChange, min, max, placeholder = "Pick a date", disabled, invalid, className }) => {
@@ -49,7 +46,7 @@ const DatePicker = ({ id, value, onChange, min, max, placeholder = "Pick a date"
           min={toDate(min)}
           max={toDate(max)}
           onSelect={(date) => {
-            onChange(toValue(date));
+            onChange(toDateInputValue(date));
             setOpen(false);
           }}
         />

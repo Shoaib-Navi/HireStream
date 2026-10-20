@@ -25,7 +25,7 @@ const Section = ({ children }) => <div className={SECTION}>{children}</div>;
 
 const SelectFilter = ({ label, value, options, anyLabel, onChange }) => (
   <div className="space-y-3">
-    <p className="type-overline text-muted-foreground">{label}</p>
+    <p className="type-label text-muted-foreground">{label}</p>
     <Select value={value || ANY} onValueChange={(next) => onChange(next === ANY ? "" : next)}>
       {/* a chosen value darkens the border, so a set filter reads as set without opening it */}
       <SelectTrigger className={cn(SELECT_TRIGGER, value && "border-foreground/30")} aria-label={label}>

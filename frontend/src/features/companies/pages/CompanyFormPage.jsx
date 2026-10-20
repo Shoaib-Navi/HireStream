@@ -1,4 +1,4 @@
-import { ArrowLeft, SearchX } from "lucide-react";
+import { SearchX } from "lucide-react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { toast } from "sonner";
 import CompanyLogo from "@/components/common/CompanyLogo";
@@ -8,9 +8,10 @@ import FileUpload from "@/components/common/FileUpload";
 import PageHeader from "@/components/common/PageHeader";
 import SectionCard from "@/components/common/SectionCard";
 import { PageLoader } from "@/components/common/Spinner";
+import BackLink from "@/components/common/BackLink";
 import { Button } from "@/components/ui/button";
 import { useDocumentTitle } from "@/hooks/useDocumentTitle";
-import { getErrorMessage } from "@/lib/errors";
+import { getErrorMessage, isNotFound } from "@/lib/errors";
 import {
   useCreateCompanyMutation,
   useGetMyCompanyQuery,
@@ -57,7 +58,7 @@ const CompanyFormPage = () => {
     }
     if (isLoading) return <PageLoader />;
     if (isError) {
-      return error?.status === 404 || error?.status === 400 ? (
+      return isNotFound(error) ? (
         <EmptyState
           icon={SearchX}
           title="Company not found"
@@ -91,9 +92,7 @@ const CompanyFormPage = () => {
 
   return (
     <div className="space-y-6">
-      <Link to="/recruiter/companies" className="type-caption inline-flex items-center gap-1 text-muted-foreground hover:text-foreground">
-        <ArrowLeft className="size-4" /> Companies
-      </Link>
+      <BackLink to="/recruiter/companies">Companies</BackLink>
       <PageHeader
         title={isEdit ? (company?.name ?? "Edit company") : "Register a company"}
         description={isEdit ? "Keep your company details up to date." : "Tell candidates who they'll be working for."}

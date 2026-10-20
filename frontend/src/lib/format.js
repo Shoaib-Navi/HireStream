@@ -4,6 +4,10 @@ const dateFormatter = new Intl.DateTimeFormat("en-IN", { day: "numeric", month: 
 const relativeFormatter = new Intl.RelativeTimeFormat("en", { numeric: "auto" });
 const numberFormatter = new Intl.NumberFormat("en-IN", { maximumFractionDigits: 1 });
 
+// The "YYYY-MM-DD" a date input uses, in local time (toISOString would give the UTC date)
+export const toDateInputValue = (date) =>
+  `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
+
 export const formatDate = (value) => (value ? dateFormatter.format(new Date(value)) : "");
 
 const monthYearFormatter = new Intl.DateTimeFormat("en-IN", { month: "short", year: "numeric" });

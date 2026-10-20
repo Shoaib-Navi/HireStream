@@ -41,7 +41,9 @@ const CompaniesPage = () => {
 
   return (
     <div className="space-y-6">
-      <PageHeader eyebrow="Hiring" title="Companies"
+      <PageHeader
+        eyebrow="Hiring"
+        title="Companies"
         description="The companies you post jobs for."
         actions={
           <Button asChild>

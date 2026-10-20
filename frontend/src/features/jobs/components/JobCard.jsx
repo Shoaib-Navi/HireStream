@@ -1,9 +1,10 @@
-import { BadgeCheck } from "lucide-react";
+
 import { Link } from "react-router-dom";
 import CompanyLogo from "@/components/common/CompanyLogo";
 import MatchScore from "@/components/common/MatchScore";
 import SourceBadge from "@/components/common/SourceBadge";
 import StatusBadge from "@/components/common/StatusBadge";
+import VerifiedMark from "@/components/common/VerifiedMark";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import SaveJobButton from "@/features/savedJobs/components/SaveJobButton";
@@ -23,7 +24,7 @@ const CHIP_ROW = "min-h-[1.625rem]";
 const JobCard = ({ job, className }) => (
   <article
     className={cn(
-      "group @container relative flex min-w-0 flex-col gap-5 rounded-xl border bg-card p-6 transition-colors hover:border-foreground/30",
+      "group @container relative flex min-w-0 flex-col gap-5 rounded-xl border bg-card p-6 transition-colors hover:border-foreground/30 has-[a:focus-visible]:ring-[3px] has-[a:focus-visible]:ring-ring/50",
       className,
     )}
   >
@@ -32,7 +33,7 @@ const JobCard = ({ job, className }) => (
       <div className="min-w-0 flex-1">
         <p className="type-caption flex items-center gap-1 text-muted-foreground">
           <span className="truncate">{job.company?.name}</span>
-          {job.company?.isVerified && <BadgeCheck className="size-3.5 shrink-0 text-foreground" aria-label="Verified company" />}
+          {job.company?.isVerified && <VerifiedMark className="size-3.5" />}
         </p>
         <p className="type-caption text-muted-foreground">{formatRelativeTime(job.publishedAt ?? job.createdAt)}</p>
       </div>
@@ -68,8 +69,7 @@ const JobCard = ({ job, className }) => (
   </article>
 );
 
-// Mirrors the card's blocks so the list does not resize when the jobs arrive:
-// 36px logo, a 27.5px heading, two lines of summary, then the two chip rows.
+// Mirrors the card's blocks so the list does not resize when the jobs arrive
 const JobCardSkeleton = () => (
   <div className="flex flex-col gap-5 rounded-xl border bg-card p-6" aria-hidden="true">
     <div className="flex items-start gap-3">
@@ -83,8 +83,8 @@ const JobCardSkeleton = () => (
       <Skeleton className="h-[1.719rem] w-2/3" />
       <Skeleton className="h-12 w-full" />
     </div>
-    <Skeleton className="h-[1.625rem] w-3/4" />
-    <Skeleton className="h-[1.625rem] w-1/2" />
+    <Skeleton className={cn(CHIP_ROW, "w-3/4")} />
+    <Skeleton className={cn(CHIP_ROW, "w-1/2")} />
   </div>
 );
 

@@ -1,4 +1,4 @@
-import { LayoutDashboard, LogOut } from "lucide-react";
+import { LogOut } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import StatusBadge from "@/components/common/StatusBadge";
@@ -10,7 +10,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { DASHBOARD_NAV, getDashboardHome } from "@/config/navigation";
+import { DASHBOARD_NAV } from "@/config/navigation";
 import { useLogoutMutation } from "@/features/auth/api";
 import { useAuth } from "@/features/auth/hooks/useAuth";
 
@@ -47,16 +47,11 @@ const UserMenu = () => {
         </div>
 
         <div className="flex items-center justify-between gap-2 px-4 py-3">
-          <span className="type-overline text-muted-foreground">Signed in as</span>
+          <span className="type-label text-muted-foreground">Signed in as</span>
           <StatusBadge type="role" status={user.role} />
         </div>
 
         <div className="border-t p-1.5">
-          <DropdownMenuItem asChild className={ITEM}>
-            <Link to={getDashboardHome(user.role)}>
-              <LayoutDashboard /> Dashboard
-            </Link>
-          </DropdownMenuItem>
           {(DASHBOARD_NAV[user.role] ?? []).map(({ label, to, icon: Icon }) => (
             <DropdownMenuItem key={to} asChild className={ITEM}>
               <Link to={to}>
