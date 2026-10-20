@@ -1,6 +1,7 @@
 import { COMPANY_STATUS } from "../../constants/index.js";
 import { deleteFile, uploadFile } from "../../services/storage.js";
 import { ApiError } from "../../utils/ApiError.js";
+import { countBy } from "../../utils/countBy.js";
 import { escapeRegex } from "../../utils/escapeRegex.js";
 import { paginationMeta, toPagination } from "../../utils/pagination.js";
 import { generateUniqueSlug } from "../../utils/slugify.js";
@@ -14,16 +15,11 @@ const PUBLIC_COMPANY_FIELDS = "name slug description website location industry s
 const withOpenJobCounts = async (companies) => {
   if (companies.length === 0) return companies;
 
-  const counts = await Job.aggregate([
-    { $match: { company: { $in: companies.map((company) => company._id) }, ...publicJobFilter() } },
-    { $group: { _id: "$company", count: { $sum: 1 } } },
-  ]);
-  const countByCompany = new Map(counts.map((item) => [item._id.toString(), item.count]));
-
-  return companies.map((company) => ({
-    ...company,
-    openJobCount: countByCompany.get(company._id.toString()) ?? 0,
-  }));
+  const counts = await countBy(Job, "company", {
+    company: { $in: companies.map((company) => company._id) },
+    ...publicJobFilter(),
+  });
+  return companies.map((company) => ({ ...company, openJobCount: counts[company._id.toString()] ?? 0 }));
 };
 
 // Other recruiters' companies also return 404, so company ids can't be probed

@@ -1,4 +1,5 @@
 import { JOB_STATUS } from "../../constants/index.js";
+import { countBy, sumCounts } from "../../utils/countBy.js";
 import { Application } from "../applications/application.model.js";
 import { Company } from "../companies/company.model.js";
 import { Job } from "../jobs/job.model.js";
@@ -18,7 +19,7 @@ export const getRecruiterOverview = async (recruiterId) => {
   const jobIds = jobs.map((job) => job._id);
 
   const [statusCounts, recentApplications] = await Promise.all([
-    Application.aggregate([{ $match: { job: { $in: jobIds } } }, { $group: { _id: "$status", count: { $sum: 1 } } }]),
+    countBy(Application, "status", { job: { $in: jobIds } }),
     Application.find({ job: { $in: jobIds } })
       .sort({ createdAt: -1 })
       .limit(RECENT_APPLICATIONS)
@@ -31,14 +32,12 @@ export const getRecruiterOverview = async (recruiterId) => {
   const jobCounts = Object.fromEntries(Object.values(JOB_STATUS).map((status) => [status, 0]));
   for (const job of jobs) jobCounts[job.status] += 1;
 
-  const byStatus = Object.fromEntries(statusCounts.map((item) => [item._id, item.count]));
-
   return {
     companyCount,
     jobs: jobCounts,
     applications: {
-      total: statusCounts.reduce((sum, item) => sum + item.count, 0),
-      byStatus,
+      total: sumCounts(statusCounts),
+      byStatus: statusCounts,
     },
     recentApplications,
     topJobs: jobs
