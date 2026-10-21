@@ -36,6 +36,10 @@ const EditJobPage = lazyPage(() => import("@/features/jobs/pages/EditJobPage"));
 const RecruiterApplicationPage = lazyPage(() => import("@/features/applications/pages/RecruiterApplicationPage"));
 const CompaniesPage = lazyPage(() => import("@/features/companies/pages/CompaniesPage"));
 const CompanyFormPage = lazyPage(() => import("@/features/companies/pages/CompanyFormPage"));
+const AdminOverviewPage = lazyPage(() => import("@/features/admin/pages/AdminOverviewPage"));
+const AdminUsersPage = lazyPage(() => import("@/features/admin/pages/AdminUsersPage"));
+const AdminCompaniesPage = lazyPage(() => import("@/features/admin/pages/AdminCompaniesPage"));
+const AdminJobsPage = lazyPage(() => import("@/features/admin/pages/AdminJobsPage"));
 
 export const router = createBrowserRouter([
   {
@@ -103,12 +107,29 @@ export const router = createBrowserRouter([
           },
         ],
       },
+      {
+        element: <RequireAuth roles={[ROLES.ADMIN]} />,
+        children: [
+          {
+            path: "/admin",
+            element: <DashboardLayout />,
+            children: [
+              { index: true, element: <Navigate to="overview" replace /> },
+              { path: "overview", lazy: AdminOverviewPage },
+              { path: "users", lazy: AdminUsersPage },
+              { path: "companies", lazy: AdminCompaniesPage },
+              { path: "jobs", lazy: AdminJobsPage },
+              { path: "notifications", lazy: NotificationsPage },
+              { path: "account", lazy: AccountPage },
+            ],
+          },
+        ],
+      },
       // Links from the previous version of the site
       { path: "/browse", element: <Navigate to="/jobs" replace /> },
       { path: "/description/:id", element: <LegacyJobRedirect /> },
       { path: "/signup", element: <Navigate to="/register" replace /> },
       { path: "/profile", element: <Navigate to="/dashboard/profile" replace /> },
-      { path: "/admin/*", element: <Navigate to="/recruiter" replace /> },
       {
         element: <SiteLayout />,
         children: [{ path: "*", element: <NotFoundPage /> }],

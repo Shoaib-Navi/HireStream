@@ -56,6 +56,10 @@ export const baseApi = createApi({
     "SavedJobs",
     "RecruiterOverview",
     "Notifications",
+    "AdminOverview",
+    "AdminUsers",
+    "AdminCompanies",
+    "AdminJobs",
   ],
   endpoints: () => ({}),
 });

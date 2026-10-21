@@ -68,6 +68,22 @@ export const RECRUITER_STATUSES = ["shortlisted", "interview", "offered", "hired
 // A candidate can withdraw while the application is still in progress
 export const WITHDRAWABLE_STATUSES = ["applied", "shortlisted", "interview", "offered"];
 
+export const USER_STATUS_META = {
+  active: { label: "Active", tone: "success" },
+  suspended: { label: "Suspended", tone: "danger" },
+};
+
+export const COMPANY_STATUS_META = {
+  active: { label: "Active", tone: "success" },
+  suspended: { label: "Suspended", tone: "danger" },
+};
+
+export const ROLE_META = {
+  candidate: { label: "Job seeker", tone: "info" },
+  recruiter: { label: "Recruiter", tone: "brand" },
+  admin: { label: "Admin", tone: "highlight" },
+};
+
 export const MAX_UPLOAD_MB = 5;
 
 export const labelFor = (options, value) => options.find((option) => option.value === value)?.label ?? value;
