@@ -12,6 +12,7 @@ import { useFormState } from "@/hooks/useFormState";
 import { EMPLOYMENT_TYPES, WORK_MODES } from "@/lib/constants";
 import { getErrorMessage } from "@/lib/errors";
 import { EMPTY_JOB_FORM, toJobFormError, toJobPayload } from "../utils/jobForm";
+import DescriptionDraftButton from "./DescriptionDraftButton";
 
 const EDIT = "edit";
 
@@ -37,7 +38,7 @@ const SelectField = ({ id, label, value, options, onChange, error, placeholder }
 // Used to post a new job (publish or save as draft) and to edit an existing one.
 // onSubmit(payload) should return a promise that rejects with the API error.
 const JobForm = ({ companies, initialValues, isEditing = false, onSubmit }) => {
-  const { values, errors, handleChange, setField, setServerErrors } = useFormState({
+  const { values, errors, handleChange, setField, setValues, setServerErrors } = useFormState({
     ...EMPTY_JOB_FORM,
     ...initialValues,
   });
@@ -55,6 +56,15 @@ const JobForm = ({ companies, initialValues, isEditing = false, onSubmit }) => {
       setSubmitting(null);
     }
   };
+
+  // A draft only fills fields the recruiter hasn't written yet content for; everything stays editable
+  const applyDraft = (draft) =>
+    setValues((current) => ({
+      ...current,
+      description: draft.description || current.description,
+      responsibilities: draft.responsibilities.length > 0 ? draft.responsibilities : current.responsibilities,
+      requirements: draft.requirements.length > 0 ? draft.requirements : current.requirements,
+    }));
 
   const textInput = (name, props = {}) => (
     <Input id={name} name={name} value={values[name]} onChange={handleChange} aria-invalid={Boolean(errors[name])} {...props} />
@@ -130,7 +140,11 @@ const JobForm = ({ companies, initialValues, isEditing = false, onSubmit }) => {
         </div>
       </SectionCard>
 
-      <SectionCard title="Description" description="Help candidates understand the role and whether they're a fit.">
+      <SectionCard
+        title="Description"
+        description="Help candidates understand the role and whether they're a fit."
+        action={<DescriptionDraftButton values={values} onDraft={applyDraft} />}
+      >
         <div className="grid gap-5">
           <FormField label="About the role" htmlFor="description" error={errors.description} hint="At least 30 characters." required>
             <Textarea

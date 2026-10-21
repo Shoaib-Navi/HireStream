@@ -5,8 +5,10 @@ import { paginationMeta, toPagination } from "../../utils/pagination.js";
 import { Application } from "../applications/application.model.js";
 import { Company } from "../companies/company.model.js";
 import { SavedJob } from "../savedJobs/savedJob.model.js";
+import { CandidateProfile } from "../users/candidateProfile.model.js";
 import { CARD_COMPANY_FIELDS, toJobCard } from "./job.presenter.js";
 import { Job } from "./job.model.js";
+import { calculateMatch } from "./matchScore.js";
 
 const DETAIL_COMPANY_FIELDS = "name slug logo location industry size website description isVerified status";
 
@@ -19,6 +21,12 @@ const savedJobIdsFor = async (viewer, jobIds) => {
   const saved = await SavedJob.find({ user: viewer.id, job: { $in: jobIds } }).select("job").lean();
   return new Set(saved.map((item) => item.job.toString()));
 };
+
+// Profile fields used to score how well a job matches the viewer (null for guests and recruiters)
+const matchProfileFor = async (viewer) =>
+  viewer?.role === ROLES.CANDIDATE
+    ? CandidateProfile.findOne({ user: viewer.id }).select("skills experienceYears location preferences").lean()
+    : null;
 
 // Other recruiters' jobs also return 404, so job ids can't be probed
 const findOwnedJob = async (recruiterId, jobId) => {
@@ -75,10 +83,17 @@ export const listPublicJobs = async (query, viewer) => {
     Job.countDocuments(filter),
   ]);
 
-  const savedIds = await savedJobIdsFor(viewer, jobs.map((job) => job._id));
+  const [savedIds, profile] = await Promise.all([
+    savedJobIdsFor(viewer, jobs.map((job) => job._id)),
+    matchProfileFor(viewer),
+  ]);
 
   return {
-    jobs: jobs.map((job) => ({ ...toJobCard(job), isSaved: savedIds.has(job._id.toString()) })),
+    jobs: jobs.map((job) => ({
+      ...toJobCard(job),
+      isSaved: savedIds.has(job._id.toString()),
+      match: calculateMatch(job, profile),
+    })),
     meta: paginationMeta({ page, limit }, total),
   };
 };
@@ -96,18 +111,20 @@ export const getJobDetails = async (jobId, viewer) => {
     throw ApiError.notFound("Job not found");
   }
 
-  const [hasApplied, isSaved] =
+  const [hasApplied, isSaved, profile] =
     viewer?.role === ROLES.CANDIDATE
       ? await Promise.all([
           Application.exists({ job: job._id, candidate: viewer.id }),
           SavedJob.exists({ job: job._id, user: viewer.id }),
+          matchProfileFor(viewer),
         ])
-      : [false, false];
+      : [false, false, null];
 
   return {
     ...job,
     hasApplied: Boolean(hasApplied),
     isSaved: Boolean(isSaved),
+    match: calculateMatch(job, profile),
     isOwner,
     isAcceptingApplications: isAcceptingApplications(job),
   };

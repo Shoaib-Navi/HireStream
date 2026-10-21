@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { CheckCircle2 } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
+import { MatchBreakdown } from "@/components/common/MatchScore";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/features/auth/hooks/useAuth";
 import { formatDate, formatExperience, formatNumber, formatSalary } from "@/lib/format";
@@ -73,6 +74,11 @@ const ApplyCard = ({ job }) => {
           </div>
         ))}
       </dl>
+      {job.match && (
+        <div className="mt-6 border-t pt-6">
+          <MatchBreakdown match={job.match} />
+        </div>
+      )}
       <div className="mt-6 space-y-2">
         {renderAction()}
         {!job.isOwner && <SaveJobButton job={job} variant="full" />}

@@ -2,6 +2,7 @@ import { ArrowLeft, ExternalLink, FileText, Mail, Phone, SearchX } from "lucide-
 import { Link, useParams } from "react-router-dom";
 import EmptyState from "@/components/common/EmptyState";
 import ErrorState from "@/components/common/ErrorState";
+import { MatchBreakdown } from "@/components/common/MatchScore";
 import SectionCard from "@/components/common/SectionCard";
 import { PageLoader } from "@/components/common/Spinner";
 import StatusBadge from "@/components/common/StatusBadge";
@@ -161,6 +162,11 @@ const RecruiterApplicationPage = () => {
             {/* re-created after each change so the form starts from the saved status */}
             <StatusUpdateForm key={application.status} application={application} />
           </SectionCard>
+          {application.match && (
+            <SectionCard title="Profile match" description="Based on the job's skills, experience and location.">
+              <MatchBreakdown match={application.match} />
+            </SectionCard>
+          )}
           <SectionCard title="Progress">
             <StatusTimeline history={application.statusHistory} />
           </SectionCard>
