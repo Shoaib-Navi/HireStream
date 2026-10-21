@@ -17,7 +17,7 @@ createRoot(document.getElementById("root")).render(
           <RouterProvider router={router} />
         </PersistGate>
       </Provider>
-      <Toaster richColors closeButton position="top-right" />
+      <Toaster />
     </ThemeProvider>
   </StrictMode>,
 );
