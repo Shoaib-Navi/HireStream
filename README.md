@@ -1,88 +1,105 @@
-# 🚀 HireStream
+# HireStream
 
-HireStream is a full-stack MERN job portal that connects job seekers and recruiters on a single platform.
-Recruiters register companies, post jobs and review applicants; job seekers browse jobs, apply and track their applications.
+HireStream is a full-stack MERN job portal. Job seekers build one profile, search and filter jobs, apply in minutes and
+follow every application through the hiring pipeline. Recruiters register companies, post jobs and move applicants from
+applied to hired.
 
-## 🛠️ Tech Stack
+## Tech stack
 
-- **Frontend:** React 19, Vite, Tailwind CSS 4, shadcn/ui (Radix), Redux Toolkit, React Router, Axios
-- **Backend:** Node.js, Express 5, Mongoose (MongoDB), Zod validation, JWT auth in an httpOnly cookie
-- **Services:** Cloudinary (photos, logos, resumes), Google Gemini (chat assistant, called from the backend)
+- **Frontend:** React 19, Vite, Tailwind CSS 4, shadcn/ui (Radix), Redux Toolkit + RTK Query, React Router
+- **Backend:** Node.js, Express 5, MongoDB with Mongoose, Zod validation, JWT session in an httpOnly cookie
+- **Services:** Cloudinary (photos, logos, resumes), Google Gemini (career assistant, called from the backend)
+- **Testing:** Node test runner, Supertest and an in-memory MongoDB
 
-## ✨ Features
+## Features
 
-- Registration and login for two roles: job seeker (`student`) and `recruiter`
-- Public job listing, keyword search and job details (no account needed to browse)
-- Job seekers: apply to jobs, track application status, manage profile and resume
-- Recruiters: register and edit companies, post jobs, review applicants, accept or reject them
-- AI career assistant
+- **Job seekers:** job search with URL-based filters (work mode, job type, experience, salary), job details, one-click
+  apply with resume and cover letter, application tracking, profile with experience, education, links and preferences
+- **Recruiters:** companies with logos, job posts (publish or save as draft), applicant review with profile summaries,
+  hiring pipeline (shortlisted, interview, offered, hired, rejected) with status history
+- **Everyone:** light and dark themes, responsive layouts, AI career assistant
 
-## 🔒 Security
+## Security
 
-- Role checks **and** ownership checks on every recruiter endpoint (a recruiter can only see or change their own companies, jobs and applicants)
-- Request validation with Zod on all inputs (blocks NoSQL injection and bad data)
-- httpOnly auth cookie (`SameSite=None; Secure` in production), passwords hashed with bcrypt and never returned by the API
-- Helmet security headers, rate limiting (stricter on login, signup and chat), upload type and size limits (5 MB)
-- The Gemini API key stays on the server; the browser only talks to `/api/v1/chat`
+- Role and ownership checks on every recruiter and candidate endpoint
+- Zod validation of params, query and body (blocks NoSQL injection and invalid data)
+- httpOnly session cookie (`SameSite=None; Secure` in production); sessions are versioned so they can be revoked
+- Passwords hashed with bcrypt and never returned; Helmet headers; rate limits on login, signup and AI
+- Upload type and size limits (5 MB); the Gemini API key never reaches the browser
 
-## 🧱 Project Structure
+## Project structure
 
 ```
-HireStream/
-├── backend/
-│   ├── index.js          # entry: connects DB and listens locally; exported for Vercel
-│   ├── app.js            # Express app: security middleware, routes, error handling
-│   ├── config/env.js     # reads and checks environment variables
-│   ├── controller/       # request handlers
-│   ├── middleware/       # auth + roles, validation, uploads, rate limits, errors
-│   ├── models/           # Mongoose schemas
-│   ├── routes/           # URL → middleware → controller
-│   ├── validators/       # Zod schemas for request bodies and params
-│   └── utils/            # db connection, Cloudinary, cookies, ApiError
-└── frontend/
-    └── src/
-        ├── App.jsx       # routes, layouts and role-protected sections
-        ├── lib/api.js    # shared Axios client (base URL, cookies, 401 handling)
-        ├── hooks/        # data-fetching hooks
-        ├── redux/        # store (only the logged-in user is persisted)
-        └── components/   # pages, admin pages, shared layout, ui kit
+backend/
+├── index.js                  # entry: listens locally, exported for Vercel
+├── src/
+│   ├── app.js                # Express app: security middleware, routes, errors
+│   ├── routes.js             # mounts every module under /api/v1
+│   ├── config/               # environment variables, database connection
+│   ├── constants/            # roles, statuses, enums shared by the modules
+│   ├── middleware/           # auth + roles, validation, uploads, rate limits, errors
+│   ├── modules/<domain>/     # model, validation, service, controller, routes per domain
+│   ├── services/             # Cloudinary storage, Gemini client
+│   ├── migrations/           # versioned data migrations + runner
+│   └── scripts/              # migrate, seed
+└── tests/                    # API integration tests
+
+frontend/src/
+├── app/                      # store and router
+├── styles/theme.css          # design system: every color, font, size and radius
+├── components/ui/            # base UI primitives (shadcn)
+├── components/common/        # shared app components (page header, empty state, pagination…)
+├── components/layout/        # site, dashboard and auth layouts
+├── features/<domain>/        # api, components, hooks and pages per feature
+├── services/api.js           # RTK Query base API
+└── lib/                      # constants, formatting, helpers
 ```
 
-## ⚙️ Getting Started
+## Getting started
 
 Requires Node.js 22.12+ (or 20.19+) and a MongoDB database.
 
 ```bash
 # backend
 cd backend
-cp .env.example .env      # fill in MONGO_URI, SECRET_KEY, Cloudinary and Gemini keys
+cp .env.example .env       # set MONGO_URI and JWT_SECRET; Cloudinary and Gemini are optional
 npm install
-npm run dev               # http://localhost:8000
+npm run migrate            # creates indexes (and converts data from the first version of HireStream)
+npm run seed               # optional sample data for development
+npm run dev                # http://localhost:8000
 
 # frontend
 cd frontend
-cp .env.example .env      # VITE_API_URL=http://localhost:8000
+cp .env.example .env       # VITE_API_URL=http://localhost:8000
 npm install
-npm run dev               # http://localhost:5173
+npm run dev                # http://localhost:5173
 ```
 
-In production set `CLIENT_URL` on the backend to the deployed frontend origin (comma-separate multiple origins).
+Seeded accounts use the password `Password123`, for example `aarav@hirestream.dev` (job seeker) and
+`neha.recruiter@hirestream.dev` (recruiter).
 
-## 📡 API Overview
+## Scripts
 
-All routes are under `/api/v1`.
-
-| Method | Route | Access |
+| Where | Command | What it does |
 |---|---|---|
-| POST | `/user/register`, `/user/login`, `/user/logout` | Public |
-| GET | `/user/me` | Logged in |
-| POST | `/user/profile/update` | Logged in |
-| GET | `/job/get?keyword=`, `/job/get/:id` | Public |
-| POST | `/job/post` | Recruiter (own company) |
-| GET | `/job/getadminjobs` | Recruiter |
-| POST | `/company/register` · GET `/company/get`, `/company/get/:id` · PUT `/company/update/:id` | Recruiter (own companies) |
-| POST | `/application/apply/:id` · GET `/application/get` | Job seeker |
-| GET | `/application/:id/applicants` · POST `/application/status/:id/update` | Recruiter (own jobs) |
-| POST | `/chat` | Public (rate limited) |
+| backend | `npm test` | API integration tests against an in-memory MongoDB |
+| backend | `npm run migrate` | Runs pending migrations and syncs indexes (back up production data first) |
+| backend | `npm run seed -- --reset` | Replaces development data with sample data (refuses to run in production) |
+| frontend | `npm run lint` | ESLint |
+| frontend | `npm run build` | Production build |
 
-Errors always have the shape `{ "success": false, "message": "...", "errors"?: [...] }`.
+## API overview
+
+All routes are under `/api/v1`. Responses look like `{ success, message?, data?, meta? }`; errors look like
+`{ success: false, message, errors? }`.
+
+| Area | Endpoints |
+|---|---|
+| Auth | `POST /auth/register`, `POST /auth/login`, `POST /auth/logout`, `GET /auth/me` |
+| Account | `PATCH /users/me`, `PUT /users/me/avatar` |
+| Candidate profile | `GET/PATCH /users/me/profile`, `PUT/DELETE /users/me/resume` |
+| Jobs | `GET /jobs` (public search), `GET /jobs/:id`, `POST /jobs`, `GET /jobs/mine` |
+| Applications | `POST/GET /jobs/:jobId/applications`, `GET /applications/mine`, `GET /applications/:id`, `PATCH /applications/:id/status` |
+| Companies | `GET /companies/mine`, `GET /companies/mine/:id`, `POST /companies`, `PATCH /companies/:id`, `PUT /companies/:id/logo` |
+| AI | `POST /ai/chat` |
+| Health | `GET /health` |

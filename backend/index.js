@@ -1,6 +1,6 @@
-import app from "./app.js";
-import { env } from "./config/env.js";
-import connectDB from "./utils/db.js";
+import app from "./src/app.js";
+import { connectDB } from "./src/config/db.js";
+import { env } from "./src/config/env.js";
 
 // On Vercel the exported app runs as a serverless function, so only listen when running locally.
 if (!env.isVercel) {
