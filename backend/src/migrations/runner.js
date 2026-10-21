@@ -4,7 +4,6 @@ import { migrations } from "./index.js";
 
 const MIGRATIONS_COLLECTION = "migrations";
 
-// Runs pending migrations, then makes the database indexes match the schemas
 export const runMigrations = async ({ log = console.log } = {}) => {
   const db = mongoose.connection.db;
   const history = db.collection(MIGRATIONS_COLLECTION);
@@ -21,7 +20,6 @@ export const runMigrations = async ({ log = console.log } = {}) => {
     log(`✓ ${migration.name}`);
   }
 
-  // Creates indexes defined in the schemas and drops indexes that no longer exist in them
   for (const model of allModels) {
     await model.syncIndexes();
   }

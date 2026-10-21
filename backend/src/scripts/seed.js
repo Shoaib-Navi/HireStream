@@ -29,6 +29,7 @@ import { SavedJob } from "../modules/savedJobs/savedJob.model.js";
 import { CandidateProfile } from "../modules/users/candidateProfile.model.js";
 import { User } from "../modules/users/user.model.js";
 import { slugify } from "../utils/slugify.js";
+import { PUBLIC_COMPANY_PROFILES } from "../data/public-companies.js";
 import {
   CANDIDATES,
   COMPANIES,
@@ -205,12 +206,16 @@ const run = async () => {
   // ── Public-source companies and jobs ──────────────────────────────────────
   const publicCompaniesByToken = new Map();
   for (const company of publicData.companies ?? []) {
+    // The board API publishes no company profile, so the text comes from
+    // src/data/public-companies.js, which says what the company is known to make and
+    // nothing specific enough to be a claim. A board with no entry there stays blank.
+    const profile = PUBLIC_COMPANY_PROFILES[company.boardToken] ?? {};
     const saved = await upsertCompany({
       name: company.name,
       slug: slugify(company.name),
-      // Left empty on purpose: the board API publishes no company profile, and inventing one
-      // would put made-up words in a real company's mouth
-      description: "",
+      description: profile.description ?? "",
+      industry: profile.industry ?? "",
+      // Still empty: the board publishes neither, and both would be a specific claim
       website: "",
       location: "",
       owner: boardDesk._id,

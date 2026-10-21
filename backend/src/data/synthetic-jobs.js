@@ -1,12 +1,3 @@
-// Invented companies, recruiters and job posts for local development.
-//
-// Nothing here describes a real employer or a real vacancy. Every record seeded from this file
-// is stored with source: "SYNTHETIC" so it can be told apart from postings fetched from public
-// job boards. Company names use the reserved example.com domain for the same reason.
-//
-// These carry Indian locations and salaries in LPA, which is what the app's salary filters and
-// formatting expect, so the job board has something realistic to search and sort.
-
 export const SYNTHETIC_PASSWORD = "Password123";
 
 export const RECRUITERS = [

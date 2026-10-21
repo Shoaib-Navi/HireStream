@@ -14,6 +14,12 @@ import JobMeta from "./JobMeta";
 
 const MAX_SKILLS = 4;
 
+// Every card is the same height whatever the job is missing: the summary keeps its two
+// clamped lines and the chip rows keep one row, so a job with no summary or no skills
+// leaves a gap instead of pulling the cards below it upwards.
+const SUMMARY_LINES = "min-h-12";
+const CHIP_ROW = "min-h-[1.625rem]";
+
 const JobCard = ({ job, className }) => (
   <article
     className={cn(
@@ -43,36 +49,39 @@ const JobCard = ({ job, className }) => (
           {job.title}
         </Link>
       </h3>
-      {job.summary && <p className="type-body line-clamp-2 text-muted-foreground">{job.summary}</p>}
+      <p className={cn("type-body line-clamp-2 text-muted-foreground", SUMMARY_LINES)}>{job.summary}</p>
     </div>
 
-    <JobMeta job={job} />
+    <JobMeta job={job} className={CHIP_ROW} />
 
-    {job.skills?.length > 0 && (
-      <div className="mt-auto flex flex-wrap gap-1.5">
-        {job.skills.slice(0, MAX_SKILLS).map((skill) => (
-          <Badge key={skill} variant="neutral">
-            {skill}
-          </Badge>
-        ))}
-        {job.skills.length > MAX_SKILLS && <Badge variant="neutral">+{job.skills.length - MAX_SKILLS}</Badge>}
-      </div>
-    )}
+    <div className={cn("mt-auto flex flex-wrap gap-1.5", CHIP_ROW)}>
+      {job.skills?.slice(0, MAX_SKILLS).map((skill) => (
+        <Badge key={skill} variant="neutral">
+          {skill}
+        </Badge>
+      ))}
+      {job.skills?.length > MAX_SKILLS && <Badge variant="neutral">+{job.skills.length - MAX_SKILLS}</Badge>}
+    </div>
   </article>
 );
 
+// Mirrors the card's blocks so the list does not resize when the jobs arrive:
+// 36px logo, a 27.5px heading, two lines of summary, then the two chip rows.
 export const JobCardSkeleton = () => (
   <div className="flex flex-col gap-5 rounded-xl border bg-card p-6" aria-hidden="true">
-    <div className="flex gap-3">
-      <Skeleton className="size-9 rounded-md" />
-      <div className="flex-1 space-y-2">
-        <Skeleton className="h-3 w-1/3" />
-        <Skeleton className="h-3 w-1/4" />
+    <div className="flex items-start gap-3">
+      <Skeleton className="size-9 rounded-xl" />
+      <div className="flex-1 space-y-1.5">
+        <Skeleton className="h-4 w-1/3" />
+        <Skeleton className="h-4 w-1/4" />
       </div>
     </div>
-    <Skeleton className="h-5 w-2/3" />
-    <Skeleton className="h-3 w-full" />
-    <Skeleton className="h-3 w-4/5" />
+    <div className="space-y-2">
+      <Skeleton className="h-[1.719rem] w-2/3" />
+      <Skeleton className="h-12 w-full" />
+    </div>
+    <Skeleton className="h-[1.625rem] w-3/4" />
+    <Skeleton className="h-[1.625rem] w-1/2" />
   </div>
 );
 

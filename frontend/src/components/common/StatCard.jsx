@@ -12,7 +12,9 @@ const StatCard = ({ label, value, icon: Icon, hint, className }) => (
     <div className="min-w-0">
       <p className="type-caption text-muted-foreground">{label}</p>
       <p className="type-h2 mt-0.5 text-foreground">{value}</p>
-      {hint && <p className="type-caption mt-1 text-muted-foreground">{hint}</p>}
+      {/* the hint keeps its line whether or not there is one, so the cards in a row
+          stay the same height */}
+      <p className="type-caption mt-1 min-h-[1.219rem] text-muted-foreground">{hint}</p>
     </div>
   </div>
 );

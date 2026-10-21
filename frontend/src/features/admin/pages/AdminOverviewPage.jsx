@@ -29,7 +29,16 @@ const AdminOverviewPage = () => {
   useDocumentTitle("Admin overview");
   const { data, isLoading, isError, error, refetch } = useGetAdminOverviewQuery();
 
-  if (isLoading) return <PageLoader />;
+  // The header stays put while the figures load, so opening this tab does not blank the
+  // page and then push the title back in
+  if (isLoading) {
+    return (
+      <div className="space-y-6">
+        <PageHeader eyebrow="Admin" title="Overview" description="Everything happening across HireStream." />
+        <PageLoader />
+      </div>
+    );
+  }
   if (isError) return <ErrorState title="Couldn't load the overview" error={error} onRetry={refetch} />;
 
   const { users, companies, jobs, applications, recentUsers, recentJobs } = data;

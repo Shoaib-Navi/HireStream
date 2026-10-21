@@ -14,8 +14,7 @@ export const notFound = (req, res) => {
   });
 };
 
-// Express 5 forwards errors thrown in async handlers here automatically.
-// eslint-disable-next-line no-unused-vars
+
 export const errorHandler = (err, req, res, next) => {
   let status = 500;
   let message = "Something went wrong. Please try again later.";

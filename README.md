@@ -74,11 +74,11 @@ npm install
 npm run migrate            # creates indexes (and converts data from the first version of HireStream)
 npm run seed               # optional sample data for development
 npm run create-admin -- "Admin Name" admin@example.com "Password123"   # optional admin account
-npm run dev                # http://localhost:8000
+npm run dev                # http://localhost:8010
 
 # frontend
 cd frontend
-cp .env.example .env       # VITE_API_URL=http://localhost:8000
+cp .env.example .env       # VITE_API_URL=http://localhost:8010
 npm install
 npm run dev                # http://localhost:5173
 ```

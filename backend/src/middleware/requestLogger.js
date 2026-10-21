@@ -1,7 +1,5 @@
 import { env } from "../config/env.js";
 
-// One line per API request: method, path, status and how long it took.
-// Silent during tests so the test output stays readable.
 export const requestLogger = (req, res, next) => {
   if (env.isTest) return next();
 

@@ -46,7 +46,16 @@ const RecruiterOverviewPage = () => {
     </Button>
   );
 
-  if (isLoading) return <PageLoader />;
+  // The header stays put while the figures load, so opening this tab does not blank the
+  // page and then push the title back in
+  if (isLoading) {
+    return (
+      <div className="space-y-6">
+        <PageHeader title="Overview" description="How your hiring is going." actions={postJobButton} />
+        <PageLoader />
+      </div>
+    );
+  }
   if (isError) return <ErrorState title="Couldn't load your overview" error={error} onRetry={refetch} />;
 
   if (overview.companyCount === 0) {

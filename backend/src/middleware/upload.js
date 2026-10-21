@@ -5,7 +5,6 @@ import { ApiError } from "../utils/ApiError.js";
 const IMAGE_TYPES = ["image/jpeg", "image/png", "image/webp", "image/gif"];
 const RESUME_TYPES = ["application/pdf"];
 
-// Single required file in the "file" field, kept in memory and passed to the storage service
 const createSingleUpload = (allowedTypes, typeErrorMessage) => {
   const upload = multer({
     storage: multer.memoryStorage(),

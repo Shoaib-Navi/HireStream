@@ -21,6 +21,8 @@ const badgeVariants = cva(
         neutral: "border-transparent bg-muted text-muted-foreground",
         info: "border-transparent bg-info-soft text-info",
         success: "border-transparent bg-success-soft text-success",
+        // Compact numeric count, e.g. how many filters are on
+        count: "border-transparent bg-highlight-soft px-1.5 py-0.5 tracking-normal text-foreground",
         // Statuses: monochrome, text only. Three shared tones rather than one per
         // status, so a new status reuses a tone instead of adding a colour.
         "status-quiet": "border-status-line bg-status-quiet text-status-quiet-ink",
