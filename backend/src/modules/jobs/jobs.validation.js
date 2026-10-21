@@ -73,7 +73,8 @@ export const listJobsQuerySchema = z.object({
   experience: z.coerce.number().min(0).max(60).optional(),
   salaryMin: z.coerce.number().min(0).max(10000).optional(),
   company: objectId.optional(),
-  sort: z.enum(["newest", "salary"]).default("newest"),
+  // relevance ranks keyword matches; without a keyword it lists the newest first
+  sort: z.enum(["relevance", "newest", "salary"]).default("relevance"),
   ...paginationShape,
 });
 

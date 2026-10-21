@@ -4,6 +4,7 @@ import { EMPLOYMENT_TYPES, JOB_SORT_OPTIONS, WORK_MODES } from "@/lib/constants"
 import { cleanParams } from "@/lib/query";
 
 const PAGE_SIZE = 12;
+const DEFAULT_SORT = JOB_SORT_OPTIONS[0].value;
 
 const readList = (searchParams, key, options) =>
   (searchParams.get(key) ?? "")
@@ -23,7 +24,7 @@ export const useJobFilters = () => {
       workMode: readList(searchParams, "workMode", WORK_MODES),
       experience: searchParams.get("experience") ?? "",
       salaryMin: searchParams.get("salaryMin") ?? "",
-      sort: JOB_SORT_OPTIONS.some((option) => option.value === sort) ? sort : "newest",
+      sort: JOB_SORT_OPTIONS.some((option) => option.value === sort) ? sort : DEFAULT_SORT,
       page: Math.max(1, Number.parseInt(searchParams.get("page"), 10) || 1),
     };
   }, [searchParams]);
@@ -35,7 +36,7 @@ export const useJobFilters = () => {
         const next = new URLSearchParams(previous);
         for (const [key, value] of Object.entries(changes)) {
           const serialized = Array.isArray(value) ? value.join(",") : String(value ?? "");
-          const isDefault = serialized === "" || (key === "sort" && serialized === "newest") || (key === "page" && serialized === "1");
+          const isDefault = serialized === "" || (key === "sort" && serialized === DEFAULT_SORT) || (key === "page" && serialized === "1");
           if (isDefault) next.delete(key);
           else next.set(key, serialized);
         }

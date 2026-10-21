@@ -9,12 +9,14 @@ let app;
 let stop;
 let db;
 let runMigrations;
+let migrations;
 
 const newId = () => new mongoose.Types.ObjectId();
 
 before(async () => {
   ({ app, stop } = await startTestServer());
   ({ runMigrations } = await import("../src/migrations/runner.js"));
+  ({ migrations } = await import("../src/migrations/index.js"));
   db = mongoose.connection.db;
 });
 
@@ -165,7 +167,7 @@ describe("migration 001 (v1 -> v2)", () => {
 
     // running again changes nothing
     await runMigrations({ log: () => {} });
-    assert.equal(await db.collection("migrations").countDocuments(), 1);
+    assert.equal(await db.collection("migrations").countDocuments(), migrations.length);
     assert.equal(await db.collection("applications").countDocuments(), 1);
   });
 
@@ -179,5 +181,30 @@ describe("migration 001 (v1 -> v2)", () => {
 
     await assert.rejects(runMigrations({ log: () => {} }), /letter case/);
     assert.equal(await db.collection("migrations").countDocuments(), 0);
+  });
+});
+
+describe("migration 002 (company suspension on jobs)", () => {
+  test("hides the jobs of suspended companies and marks the rest active", async () => {
+    await db.dropDatabase();
+    await db.collection("migrations").insertOne({ name: "001-v2-schema", appliedAt: new Date() });
+
+    const activeId = newId();
+    const suspendedId = newId();
+    await db.collection("companies").insertMany([
+      { _id: activeId, name: "Open Co", slug: "open-co", owner: newId(), status: "active" },
+      { _id: suspendedId, name: "Paused Co", slug: "paused-co", owner: newId(), status: "suspended" },
+    ]);
+    await db.collection("jobs").insertMany([
+      { title: "Visible", company: activeId },
+      { title: "Hidden", company: suspendedId },
+    ]);
+
+    await runMigrations({ log: () => {} });
+
+    const flags = Object.fromEntries(
+      (await db.collection("jobs").find().toArray()).map((job) => [job.title, job.companyActive]),
+    );
+    assert.deepEqual(flags, { Visible: true, Hidden: false });
   });
 });

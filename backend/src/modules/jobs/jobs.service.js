@@ -12,6 +12,14 @@ import { calculateMatch } from "./matchScore.js";
 
 const DETAIL_COMPANY_FIELDS = "name slug logo location industry size website description isVerified status";
 
+// Jobs anyone can see and apply to: open, before their deadline, from a company that isn't suspended
+export const publicJobFilter = () => ({
+  status: JOB_STATUS.OPEN,
+  // jobs saved before this flag existed have no value and count as active
+  companyActive: { $ne: false },
+  $or: [{ deadline: null }, { deadline: { $gte: new Date() } }],
+});
+
 export const isAcceptingApplications = (job) =>
   job.status === JOB_STATUS.OPEN && (!job.deadline || new Date(job.deadline) >= new Date());
 
@@ -51,18 +59,9 @@ export const listPublicJobs = async (query, viewer) => {
   const { q, location, employmentType, workMode, experience, salaryMin, company, sort } = query;
   const { page, limit, skip } = toPagination(query);
 
-  const suspendedCompanyIds = await Company.find({ status: COMPANY_STATUS.SUSPENDED }).distinct("_id");
-
-  const conditions = [
-    { status: JOB_STATUS.OPEN },
-    { $or: [{ deadline: null }, { deadline: { $gte: new Date() } }] },
-  ];
-  if (suspendedCompanyIds.length > 0) conditions.push({ company: { $nin: suspendedCompanyIds } });
+  const conditions = [publicJobFilter()];
   if (company) conditions.push({ company });
-  if (q) {
-    const pattern = new RegExp(escapeRegex(q), "i");
-    conditions.push({ $or: [{ title: pattern }, { skills: pattern }, { description: pattern }] });
-  }
+  if (q) conditions.push({ $text: { $search: q } });
   if (location) conditions.push({ location: new RegExp(escapeRegex(location), "i") });
   if (employmentType?.length) conditions.push({ employmentType: { $in: employmentType } });
   if (workMode?.length) conditions.push({ workMode: { $in: workMode } });
@@ -70,10 +69,16 @@ export const listPublicJobs = async (query, viewer) => {
   if (salaryMin !== undefined) conditions.push({ "salary.max": { $gte: salaryMin } });
 
   const filter = { $and: conditions };
-  const sortBy = sort === "salary" ? { "salary.max": -1, createdAt: -1 } : { createdAt: -1 };
+  // Relevance needs a keyword to rank by; without one it falls back to newest
+  const rankByRelevance = q && sort === "relevance";
+  const sortBy = {
+    ...(rankByRelevance && { relevance: { $meta: "textScore" } }),
+    ...(sort === "salary" && { "salary.max": -1 }),
+    createdAt: -1,
+  };
 
   const [jobs, total] = await Promise.all([
-    Job.find(filter)
+    Job.find(filter, rankByRelevance ? { relevance: { $meta: "textScore" } } : {})
       .select("-requirements -responsibilities")
       .sort(sortBy)
       .skip(skip)
@@ -141,6 +146,7 @@ export const updateJob = async (recruiterId, jobId, { companyId, ...updates }) =
   if (companyId && !job.company.equals(companyId)) {
     await assertActiveOwnedCompany(recruiterId, companyId);
     job.company = companyId;
+    job.companyActive = true;
     // applications keep a copy of the company for recruiter queries
     await Application.updateMany({ job: job._id }, { company: companyId });
   }

@@ -134,7 +134,11 @@ describe("managing companies", () => {
     const apply = await candidate.agent.post(`${API}/jobs/${openJobId}/applications`).send({});
     assert.equal(apply.status, 404);
 
+    // restoring the company brings its jobs back
     await admin.agent.patch(`${API}/admin/companies/${companyId}`).send({ status: "active" });
+    const restored = await request(app).get(`${API}/jobs?q=controls`);
+    assert.equal(restored.body.meta.total, 1);
+
     const empty = await admin.agent.patch(`${API}/admin/companies/${companyId}`).send({});
     assert.equal(empty.status, 400);
   });

@@ -141,6 +141,24 @@ describe("jobs", () => {
     assert.equal(invalid.status, 400);
   });
 
+  test("keyword search matches whole words and ranks title matches first", async () => {
+    // both jobs list React as a skill; only the older one has it in the title
+    const relevant = await request(app).get(`${API}/jobs?q=react`);
+    assert.deepEqual(
+      relevant.body.data.jobs.map((job) => job.title),
+      ["React Developer", "Remote Contract Designer"],
+    );
+    assert.ok(!("relevance" in relevant.body.data.jobs[0]));
+    assert.ok(!("companyActive" in relevant.body.data.jobs[0]));
+
+    const newest = await request(app).get(`${API}/jobs?q=react&sort=newest`);
+    assert.equal(newest.body.data.jobs[0].title, "Remote Contract Designer");
+
+    // stemming: a plural finds the singular
+    const plural = await request(app).get(`${API}/jobs?q=designers`);
+    assert.equal(plural.body.meta.total, 1);
+  });
+
   test("job details: public for open jobs, drafts only for the owner", async () => {
     const open = await request(app).get(`${API}/jobs/${jobId}`);
     assert.equal(open.status, 200);
