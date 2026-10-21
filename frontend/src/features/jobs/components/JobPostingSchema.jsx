@@ -67,7 +67,7 @@ const toJobPosting = (job) => ({
     "@type": "Organization",
     name: job.company.name,
     ...(job.company.website && { sameAs: job.company.website }),
-    ...(job.company.logo?.url && { logo: job.company.logo.url }),
+    ...(job.company.logo?.url && { logo: new URL(job.company.logo.url, window.location.origin).href }),
   },
   ...toLocation(job),
   ...toSalary(job),
