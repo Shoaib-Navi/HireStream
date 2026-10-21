@@ -7,6 +7,7 @@ import SectionCard from "@/components/common/SectionCard";
 import { PageLoader } from "@/components/common/Spinner";
 import StatusBadge from "@/components/common/StatusBadge";
 import UserAvatar from "@/components/common/UserAvatar";
+import { isNotFound } from "@/lib/errors";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { EducationEntry, ExperienceEntry } from "@/features/profile/components/ProfileEntries";
@@ -26,7 +27,7 @@ const RecruiterApplicationPage = () => {
 
   if (isLoading) return <PageLoader />;
   if (isError) {
-    return error?.status === 404 || error?.status === 400 ? (
+    return isNotFound(error) ? (
       <EmptyState
         icon={SearchX}
         title="Application not found"

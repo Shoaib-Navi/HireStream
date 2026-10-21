@@ -8,7 +8,7 @@ const companyTags = (id) => [
   { type: "Job", id: "LIST" },
 ];
 
-export const companiesApi = baseApi.injectEndpoints({
+const companiesApi = baseApi.injectEndpoints({
   endpoints: (build) => ({
     // Public directory and company pages
     getCompanies: build.query({

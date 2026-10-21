@@ -1,6 +1,7 @@
-import { BadgeCheck, Building2, ExternalLink, MapPin, Users } from "lucide-react";
+import { Building2, ExternalLink, MapPin, Users } from "lucide-react";
 import { Link } from "react-router-dom";
 import CompanyLogo from "@/components/common/CompanyLogo";
+import VerifiedMark from "@/components/common/VerifiedMark";
 
 // Company summary shown next to a job post
 const CompanyAboutCard = ({ company }) => {
@@ -14,12 +15,12 @@ const CompanyAboutCard = ({ company }) => {
 
   return (
     <div className="rounded-xl border bg-card p-6">
-      <p className="type-overline text-muted-foreground">About the company</p>
+      <p className="type-label text-muted-foreground">About the company</p>
       <div className="mt-4 flex items-center gap-3">
         <CompanyLogo company={company} />
         <p className="type-h4 flex min-w-0 items-center gap-1.5 text-foreground">
           <span className="truncate">{company.name}</span>
-          {company.isVerified && <BadgeCheck className="size-4 shrink-0 text-success" aria-label="Verified company" />}
+          {company.isVerified && <VerifiedMark />}
         </p>
       </div>
       {facts.length > 0 && (

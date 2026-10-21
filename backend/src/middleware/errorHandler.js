@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 import multer from "multer";
+import { DUPLICATE_KEY_ERROR } from "../constants/index.js";
 import { ApiError } from "../utils/ApiError.js";
 
 const DUPLICATE_KEY_MESSAGES = {
@@ -38,7 +39,7 @@ export const errorHandler = (err, req, res, next) => {
   } else if (err instanceof mongoose.Error.ValidationError) {
     status = 400;
     message = Object.values(err.errors).map((e) => e.message).join(", ");
-  } else if (err?.code === 11000) {
+  } else if (err?.code === DUPLICATE_KEY_ERROR) {
     status = 409;
     const field = Object.keys(err.keyPattern ?? {})[0];
     message = DUPLICATE_KEY_MESSAGES[field] ?? "A record with these details already exists";

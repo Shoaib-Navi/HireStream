@@ -1,10 +1,12 @@
-import { ArrowLeft, SearchX } from "lucide-react";
+import { SearchX } from "lucide-react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { toast } from "sonner";
 import EmptyState from "@/components/common/EmptyState";
 import ErrorState from "@/components/common/ErrorState";
 import PageHeader from "@/components/common/PageHeader";
 import { PageLoader } from "@/components/common/Spinner";
+import BackLink from "@/components/common/BackLink";
+import { isNotFound } from "@/lib/errors";
 import { Button } from "@/components/ui/button";
 import { useGetMyCompaniesQuery } from "@/features/companies/api";
 import { useDocumentTitle } from "@/hooks/useDocumentTitle";
@@ -34,7 +36,7 @@ const EditJobPage = () => {
 
   const renderContent = () => {
     if (jobLoading || companiesLoading) return <PageLoader />;
-    if ((isError && (error?.status === 404 || error?.status === 400)) || (job && !job.isOwner)) {
+    if ((isError && isNotFound(error)) || (job && !job.isOwner)) {
       return (
         <EmptyState
           icon={SearchX}
@@ -54,9 +56,7 @@ const EditJobPage = () => {
 
   return (
     <div className="space-y-6">
-      <Link to="/recruiter/jobs" className="type-label inline-flex items-center gap-1.5 text-muted-foreground transition-colors hover:text-foreground">
-        <ArrowLeft className="size-3.5" /> Your jobs
-      </Link>
+      <BackLink to="/recruiter/jobs">Your jobs</BackLink>
       <PageHeader title="Edit job" description={job?.title} />
       {renderContent()}
     </div>

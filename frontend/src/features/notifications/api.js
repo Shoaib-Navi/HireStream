@@ -2,7 +2,7 @@ import { baseApi, unwrapWithMeta } from "@/services/api";
 
 export const NOTIFICATIONS_POLL_MS = 60 * 1000;
 
-export const notificationsApi = baseApi.injectEndpoints({
+const notificationsApi = baseApi.injectEndpoints({
   endpoints: (build) => ({
     getNotifications: build.query({
       query: (params) => ({ url: "/notifications", params }),

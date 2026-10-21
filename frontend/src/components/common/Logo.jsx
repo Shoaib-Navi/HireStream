@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { cn } from "@/lib/utils";
 
 // Colors come from the theme, so the mark adapts to light and dark sections
-export const LogoMark = ({ className }) => (
+const LogoMark = ({ className }) => (
   <svg viewBox="0 0 32 32" aria-hidden="true" className={cn("size-7 shrink-0", className)}>
     <rect width="32" height="32" rx="7" className="fill-primary" />
     <path
@@ -24,9 +24,10 @@ export const LogoMark = ({ className }) => (
   </svg>
 );
 
-const Logo = ({ to = "/", className, showText = true }) => (
+const Logo = ({ to = "/", className, showText = true, onClick }) => (
   <Link
     to={to}
+    onClick={onClick}
     aria-label="HireStream home"
     className={cn("inline-flex items-center gap-2 font-display text-xl font-medium tracking-[-0.04em] text-foreground", className)}
   >

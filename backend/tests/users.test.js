@@ -1,6 +1,5 @@
 import assert from "node:assert/strict";
 import { after, before, describe, test } from "node:test";
-import request from "supertest";
 import { API, signUp, startTestServer } from "./helpers/testServer.js";
 
 let app;
@@ -93,22 +92,5 @@ describe("users", () => {
       .put(`${API}/users/me/avatar`)
       .attach("file", Buffer.from("fake image"), { filename: "me.png", contentType: "image/png" });
     assert.equal(noStorage.status, 503);
-  });
-});
-
-describe("ai", () => {
-  test("chat validates the conversation", async () => {
-    const empty = await request(app).post(`${API}/ai/chat`).send({ messages: [] });
-    assert.equal(empty.status, 400);
-
-    const endsWithAssistant = await request(app)
-      .post(`${API}/ai/chat`)
-      .send({ messages: [{ role: "assistant", content: "Hi" }] });
-    assert.equal(endsWithAssistant.status, 400);
-  });
-
-  test("chat reports when AI is not configured", async () => {
-    const res = await request(app).post(`${API}/ai/chat`).send({ messages: [{ role: "user", content: "Hi" }] });
-    assert.equal(res.status, 503);
   });
 });

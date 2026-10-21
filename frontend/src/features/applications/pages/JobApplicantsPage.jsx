@@ -1,11 +1,13 @@
 import { useState } from "react";
-import { ArrowLeft, Eye, SearchX, Users } from "lucide-react";
+import { Eye, SearchX, Users } from "lucide-react";
 import { Link, useParams } from "react-router-dom";
 import EmptyState from "@/components/common/EmptyState";
 import ErrorState from "@/components/common/ErrorState";
 import PageHeader from "@/components/common/PageHeader";
 import Pagination from "@/components/common/Pagination";
 import { PageLoader } from "@/components/common/Spinner";
+import BackLink from "@/components/common/BackLink";
+import { isNotFound } from "@/lib/errors";
 import { Button } from "@/components/ui/button";
 import { useDocumentTitle } from "@/hooks/useDocumentTitle";
 import { APPLICATION_STATUS_META } from "@/lib/constants";
@@ -44,7 +46,7 @@ const JobApplicantsPage = () => {
     setPage(1);
   };
 
-  if (isError && (error?.status === 404 || error?.status === 400)) {
+  if (isError && isNotFound(error)) {
     return (
       <EmptyState
         icon={SearchX}
@@ -82,9 +84,7 @@ const JobApplicantsPage = () => {
 
   return (
     <div className="space-y-6">
-      <Link to="/recruiter/jobs" className="type-caption inline-flex items-center gap-1 text-muted-foreground hover:text-foreground">
-        <ArrowLeft className="size-4" /> Your jobs
-      </Link>
+      <BackLink to="/recruiter/jobs">Your jobs</BackLink>
 
       <PageHeader
         title="Applicants"

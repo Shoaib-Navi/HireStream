@@ -1,6 +1,6 @@
 import { baseApi, unwrapWithMeta } from "@/services/api";
 
-export const applicationsApi = baseApi.injectEndpoints({
+const applicationsApi = baseApi.injectEndpoints({
   endpoints: (build) => ({
     applyToJob: build.mutation({
       query: ({ jobId, coverLetter }) => ({ url: `/jobs/${jobId}/applications`, method: "POST", body: { coverLetter } }),

@@ -46,22 +46,30 @@ const RecruiterOverviewPage = () => {
     </Button>
   );
 
-  // The header stays put while the figures load, so opening this tab does not blank the
-  // page and then push the title back in
-  if (isLoading) {
+  // The header stays put in every state, so opening this tab does not blank the page
+  // and then push the title back in
+  const header = (
+    <PageHeader
+      eyebrow="Hiring"
+      title="Overview"
+      description="How your hiring is going."
+      actions={overview?.companyCount === 0 ? undefined : postJobButton}
+    />
+  );
+
+  if (isLoading || isError) {
     return (
       <div className="space-y-6">
-        <PageHeader title="Overview" description="How your hiring is going." actions={postJobButton} />
-        <PageLoader />
+        {header}
+        {isLoading ? <PageLoader /> : <ErrorState title="Couldn't load your overview" error={error} onRetry={refetch} />}
       </div>
     );
   }
-  if (isError) return <ErrorState title="Couldn't load your overview" error={error} onRetry={refetch} />;
 
   if (overview.companyCount === 0) {
     return (
       <div className="space-y-6">
-        <PageHeader eyebrow="Hiring" title="Overview" description="How your hiring is going." />
+        {header}
         <EmptyState
           icon={Building2}
           title="Welcome! Start by registering your company"
@@ -80,7 +88,7 @@ const RecruiterOverviewPage = () => {
 
   return (
     <div className="space-y-6">
-      <PageHeader title="Overview" description="How your hiring is going." actions={postJobButton} />
+      {header}
 
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
         <StatCard label="Open jobs" value={formatNumber(jobs.open)} icon={Briefcase} hint={`${jobs.draft} drafts · ${jobs.closed} closed`} />

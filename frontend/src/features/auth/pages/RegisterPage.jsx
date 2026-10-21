@@ -69,16 +69,15 @@ const RegisterPage = () => {
 
       <form onSubmit={handleSubmit} className="max-w-3xl space-y-10" noValidate>
         <div className="space-y-4">
-          <p className="type-label text-muted-foreground">I am here to</p>
-          <div role="radiogroup" aria-label="Account type" className="flex flex-wrap gap-3">
+          <p id="account-type" className="type-label text-muted-foreground">I am here to</p>
+          <div role="group" aria-labelledby="account-type" className="flex flex-wrap gap-3">
             {ROLE_OPTIONS.map(({ value, label }) => {
               const selected = values.role === value;
               return (
                 <button
                   key={value}
                   type="button"
-                  role="radio"
-                  aria-checked={selected}
+                  aria-pressed={selected}
                   onClick={() => setField("role", value)}
                   className={cn(
                     "type-label rounded-md border px-5 py-3.5 transition-colors focus-visible:ring-[3px] focus-visible:ring-ring/50 focus-visible:outline-none",
@@ -98,7 +97,14 @@ const RegisterPage = () => {
           {textField("fullName", "Your name", { autoComplete: "name", maxLength: 100, placeholder: "Enter your name" })}
           {textField("email", "Your email", { type: "email", autoComplete: "email", placeholder: "Enter your email" })}
           {textField("phone", "Your phone", { type: "tel", autoComplete: "tel", placeholder: "+91 98765 43210" })}
-          <FormField label="Password" htmlFor="password" error={errors.password} labelClassName={FIELD_LABEL} required>
+          <FormField
+            label="Password"
+            htmlFor="password"
+            error={errors.password}
+            hint="At least 8 characters, with a letter and a number."
+            labelClassName={FIELD_LABEL}
+            required
+          >
             <PasswordInput
               variant="underline"
               id="password"
@@ -116,9 +122,6 @@ const RegisterPage = () => {
           <LoadingButton type="submit" size="xl" loading={isLoading}>
             Create account <ArrowRight />
           </LoadingButton>
-          <p className="type-label text-muted-foreground">
-            Your password needs a letter and a number.
-          </p>
         </div>
       </form>
 

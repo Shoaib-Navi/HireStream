@@ -11,7 +11,7 @@ const SMTP_TIMEOUTS = { connectionTimeout: 10_000, greetingTimeout: 10_000, sock
 // Setting testOutbox.failing makes sends fail as if the mail server were down.
 export const testOutbox = [];
 
-export const isEmailEnabled = () => Boolean(env.email.smtp.host);
+const isEmailEnabled = () => Boolean(env.email.smtp.host);
 
 const getTransporter = () => {
   const { host, port, secure, user, pass } = env.email.smtp;

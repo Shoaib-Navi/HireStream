@@ -17,7 +17,7 @@ const CheckboxGroup = ({
   labelClassName,
 }) => (
   <fieldset className={cn("space-y-3", className)}>
-    {legend && <legend className={cn("type-overline mb-3 text-muted-foreground", legendClassName)}>{legend}</legend>}
+    {legend && <legend className={cn("type-label mb-3 text-muted-foreground", legendClassName)}>{legend}</legend>}
     <div className={cn("space-y-2.5", optionsClassName)}>
       {options.map((option) => {
         const id = `${idPrefix}-${option.value}`;

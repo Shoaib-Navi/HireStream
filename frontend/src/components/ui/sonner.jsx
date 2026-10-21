@@ -4,7 +4,7 @@ import { Toaster as Sonner } from "sonner";
 
 // Toasts are fully styled here (unstyled mode) so they read like the rest of the app: a flat popover
 // card with a hairline border. Like most product UIs, confirmations are plain text; only problems
-// carry a small inline icon so they stand out. Top right, so they never sit under the assistant button.
+// carry a small inline icon so they stand out.
 const ICONS = {
   success: null,
   info: null,

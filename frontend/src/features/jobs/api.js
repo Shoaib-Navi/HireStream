@@ -9,7 +9,7 @@ const recruiterJobTags = (id) => [
   ...(id ? [{ type: "Job", id }] : []),
 ];
 
-export const jobsApi = baseApi.injectEndpoints({
+const jobsApi = baseApi.injectEndpoints({
   endpoints: (build) => ({
     getJobs: build.query({
       query: (params) => ({ url: "/jobs", params }),

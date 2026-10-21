@@ -8,7 +8,7 @@ applied to hired.
 
 - **Frontend:** React 19, Vite, Tailwind CSS 4, shadcn/ui (Radix), Redux Toolkit + RTK Query, React Router
 - **Backend:** Node.js, Express 5, MongoDB with Mongoose, Zod validation, JWT session in an httpOnly cookie
-- **Services:** Cloudinary (photos, logos, resumes), Google Gemini (career assistant, called from the backend)
+- **Services:** Cloudinary (photos, logos, resumes), SMTP email
 - **Testing:** Node test runner, Supertest and an in-memory MongoDB
 
 ## Features
@@ -19,10 +19,10 @@ applied to hired.
   profile with experience, education, links and preferences
 - **Recruiters:** companies with logos, job posts (publish, edit, close, reopen or save as draft), applicant review with
   profile summaries and match scores, private team notes, a hiring pipeline with a message to the candidate at each
-  step, drafted job descriptions, and a hiring overview dashboard
+  step, and a hiring overview dashboard
 - **Admins:** platform overview, user suspension, company verification and job moderation
 - **Everyone:** email verification, password reset and change, in-app notifications with email updates, light and dark
-  themes, responsive layouts, and a career assistant
+  themes and responsive layouts
 - **Search engines:** open jobs carry schema.org `JobPosting` data for Google for Jobs, a sitemap of public jobs and
   companies is served at `/sitemap.xml`, and "not found" pages are marked `noindex`
 
@@ -34,9 +34,10 @@ applied to hired.
 - Passwords hashed with bcrypt and never returned; Helmet headers
 - Emailed links (verification, password reset) are single-use, expire, and are stored only as SHA-256 hashes
 - Resetting or changing a password signs out every other session; suspending a user signs them out everywhere
-- Rate limits on login, signup, emailed links, password checks and assistant requests, counted in MongoDB so
-  every serverless instance shares them
-- Upload type and size limits (5 MB); the Gemini API key never reaches the browser
+- Rate limits on login, signup, emailed links and password checks, counted in MongoDB so every serverless
+  instance shares them
+- Requests that change data must come from the app's own origin, so other sites can't act with a visitor's cookie
+- Upload type and size limits (5 MB); resumes must be real PDFs
 
 ## Project structure
 
@@ -50,7 +51,7 @@ backend/
 │   ├── constants/            # roles, statuses, enums shared by the modules
 │   ├── middleware/           # auth + roles, validation, uploads, rate limits, errors
 │   ├── modules/<domain>/     # model, validation, service, controller, routes per domain
-│   ├── services/             # Cloudinary storage, email delivery, Gemini client
+│   ├── services/             # Cloudinary storage, email delivery
 │   ├── migrations/           # versioned data migrations + runner
 │   └── scripts/              # migrate, seed, create-admin
 └── tests/                    # API integration tests
@@ -73,7 +74,7 @@ Requires Node.js 22.12+ (or 20.19+) and a MongoDB database.
 ```bash
 # backend
 cd backend
-cp .env.example .env       # set MONGO_URI and JWT_SECRET; Cloudinary, SMTP and Gemini are optional
+cp .env.example .env       # set MONGO_URI and JWT_SECRET; Cloudinary and SMTP are optional
 npm install
 npm run migrate            # creates indexes (and converts data from the first version of HireStream)
 npm run seed               # optional sample data for development
@@ -132,7 +133,6 @@ All routes are under `/api/v1`. Responses look like `{ success, message?, data?,
 | Notifications | `GET /notifications`, `PATCH /notifications/:id/read`, `PATCH /notifications/read-all` |
 | Dashboard | `GET /dashboard/recruiter` |
 | Admin | `GET /admin/overview`, `GET /admin/users`, `PATCH /admin/users/:id/status`, `GET /admin/companies`, `PATCH /admin/companies/:id`, `GET /admin/jobs`, `PATCH /admin/jobs/:id/status`, `DELETE /admin/jobs/:id` |
-| Assistant | `POST /ai/chat`, `POST /ai/job-description` |
 | Health | `GET /health` |
 
 ## Development data

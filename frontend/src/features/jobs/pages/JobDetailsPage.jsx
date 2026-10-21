@@ -1,4 +1,4 @@
-import { ArrowLeft, BadgeCheck, SearchX } from "lucide-react";
+import { SearchX } from "lucide-react";
 import { Link, useParams } from "react-router-dom";
 import CompanyLogo from "@/components/common/CompanyLogo";
 import DetailSection from "@/components/common/DetailSection";
@@ -8,6 +8,9 @@ import ErrorState from "@/components/common/ErrorState";
 import { PageLoader } from "@/components/common/Spinner";
 import SourceBadge from "@/components/common/SourceBadge";
 import StatusBadge from "@/components/common/StatusBadge";
+import BackLink from "@/components/common/BackLink";
+import VerifiedMark from "@/components/common/VerifiedMark";
+import { isNotFound } from "@/lib/errors";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import ApplyCard from "@/features/applications/components/ApplyCard";
@@ -41,7 +44,7 @@ const JobDetailsPage = () => {
   if (isLoading) return <PageLoader />;
 
   if (isError) {
-    const notFound = error?.status === 404 || error?.status === 400;
+    const notFound = isNotFound(error);
     return (
       <div className="page-container py-16">
         {notFound && <NoIndex />}
@@ -68,16 +71,14 @@ const JobDetailsPage = () => {
       <JobPostingSchema job={job} />
       <section className="dark rounded-b-section bg-background text-foreground">
         <div className="page-container pt-8 pb-14 sm:pb-20">
-          <Link to="/jobs" className="type-label inline-flex items-center gap-1.5 text-muted-foreground transition-colors hover:text-foreground">
-            <ArrowLeft className="size-3.5" /> All jobs
-          </Link>
+          <BackLink to="/jobs">All jobs</BackLink>
 
           <div className="mt-12 space-y-6">
             <div className="flex flex-wrap items-center gap-3">
               <CompanyLogo company={job.company} size="sm" />
               <Link to={`/companies/${job.company?.slug}`} className="type-body-lg flex items-center gap-1.5 hover:underline">
                 {job.company?.name}
-                {job.company?.isVerified && <BadgeCheck className="size-4" aria-label="Verified company" />}
+                {job.company?.isVerified && <VerifiedMark />}
               </Link>
               <span className="type-caption text-muted-foreground">· Posted {formatRelativeTime(job.publishedAt ?? job.createdAt)}</span>
               {job.status !== "open" && <StatusBadge type="job" status={job.status} />}

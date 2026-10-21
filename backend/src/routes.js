@@ -1,7 +1,6 @@
 import express from "express";
 import { env } from "./config/env.js";
 import adminRoutes from "./modules/admin/admin.routes.js";
-import aiRoutes from "./modules/ai/ai.routes.js";
 import { applicationsRouter, jobApplicationsRouter } from "./modules/applications/applications.routes.js";
 import authRoutes from "./modules/auth/auth.routes.js";
 import companiesRoutes from "./modules/companies/companies.routes.js";
@@ -38,7 +37,6 @@ router.use("/job-alerts", jobAlertsRoutes);
 router.use("/dashboard", dashboardRoutes);
 router.use("/notifications", notificationsRoutes);
 router.use("/admin", adminRoutes);
-router.use("/ai", aiRoutes);
 router.use("/sitemap.xml", sitemapRoutes);
 
 export default router;

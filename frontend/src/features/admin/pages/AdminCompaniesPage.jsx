@@ -1,7 +1,9 @@
+import { useState } from "react";
 import { BadgeCheck, ExternalLink } from "lucide-react";
 import { Link } from "react-router-dom";
 import { toast } from "sonner";
 import CompanyLogo from "@/components/common/CompanyLogo";
+import ConfirmDialog from "@/components/common/ConfirmDialog";
 import EmptyState from "@/components/common/EmptyState";
 import ErrorState from "@/components/common/ErrorState";
 import PageHeader from "@/components/common/PageHeader";
@@ -30,7 +32,10 @@ const AdminCompaniesPage = () => {
   useDocumentTitle("Companies");
   const { filters, update, setPage, params } = useAdminFilters({ status: "", isVerified: "" });
   const { data, isLoading, isFetching, isError, error, refetch } = useGetAdminCompaniesQuery(params);
-  const [updateCompany, { isLoading: updating }] = useUpdateAdminCompanyMutation();
+  const [updateCompany, { isLoading: updating, originalArgs }] = useUpdateAdminCompanyMutation();
+  const [companyToSuspend, setCompanyToSuspend] = useState(null);
+  // only the row being changed waits for the request
+  const isUpdating = (company) => updating && originalArgs?.id === company._id;
 
   const companies = data?.companies ?? [];
 
@@ -38,6 +43,7 @@ const AdminCompaniesPage = () => {
     try {
       await updateCompany({ id: company._id, ...changes }).unwrap();
       toast.success(message);
+      setCompanyToSuspend(null);
     } catch (apiError) {
       toast.error(getErrorMessage(apiError));
     }
@@ -95,7 +101,7 @@ const AdminCompaniesPage = () => {
                     <Button
                       variant="outline"
                       size="sm"
-                      disabled={updating}
+                      disabled={isUpdating(company)}
                       onClick={() =>
                         save(
                           company,
@@ -110,13 +116,11 @@ const AdminCompaniesPage = () => {
                       variant="ghost"
                       size="sm"
                       className={company.status === "active" ? "text-destructive" : undefined}
-                      disabled={updating}
+                      disabled={isUpdating(company)}
                       onClick={() =>
-                        save(
-                          company,
-                          { status: company.status === "active" ? "suspended" : "active" },
-                          company.status === "active" ? `${company.name} was suspended` : `${company.name} was reactivated`,
-                        )
+                        company.status === "active"
+                          ? setCompanyToSuspend(company)
+                          : save(company, { status: "active" }, `${company.name} was reactivated`)
                       }
                     >
                       {company.status === "active" ? "Suspend" : "Reactivate"}
@@ -149,6 +153,17 @@ const AdminCompaniesPage = () => {
       {renderTable()}
 
       <Pagination page={filters.page} totalPages={data?.meta?.totalPages} onPageChange={setPage} />
+
+      <ConfirmDialog
+        open={Boolean(companyToSuspend)}
+        onOpenChange={(open) => !open && setCompanyToSuspend(null)}
+        title={`Suspend ${companyToSuspend?.name}?`}
+        description="Its jobs leave the job board and stop accepting applications until you reactivate the company."
+        confirmLabel="Suspend company"
+        destructive
+        loading={updating}
+        onConfirm={() => save(companyToSuspend, { status: "suspended" }, `${companyToSuspend.name} was suspended`)}
+      />
     </div>
   );
 };

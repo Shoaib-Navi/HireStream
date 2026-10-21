@@ -1,20 +1,15 @@
 import { APPLICATION_STATUS, COMPANY_STATUS, JOB_STATUS, ROLES, USER_STATUS } from "../../constants/index.js";
 import { ApiError } from "../../utils/ApiError.js";
 import { escapeRegex } from "../../utils/escapeRegex.js";
+import { countBy, sumCounts } from "../../utils/countBy.js";
 import { paginationMeta, toPagination } from "../../utils/pagination.js";
 import { Application } from "../applications/application.model.js";
 import { Company } from "../companies/company.model.js";
 import { Job } from "../jobs/job.model.js";
-import { setJobStatus } from "../jobs/jobs.service.js";
-import { SavedJob } from "../savedJobs/savedJob.model.js";
+import { removeJob, setJobStatus } from "../jobs/jobs.service.js";
 import { User } from "../users/user.model.js";
 
 const RECENT_LIMIT = 5;
-
-const countsByKey = (rows) => Object.fromEntries(rows.map((row) => [row._id, row.count]));
-
-const groupCount = (model, field, match = {}) =>
-  model.aggregate([{ $match: match }, { $group: { _id: `$${field}`, count: { $sum: 1 } } }]);
 
 // Zero-filled counts, so the dashboard shows every status even before it's used
 const withDefaults = (values, counts) =>
@@ -23,10 +18,10 @@ const withDefaults = (values, counts) =>
 export const getPlatformOverview = async () => {
   const [usersByRole, usersByStatus, jobsByStatus, applicationsByStatus, companies, unverifiedCompanies, recentUsers, recentJobs] =
     await Promise.all([
-      groupCount(User, "role"),
-      groupCount(User, "status"),
-      groupCount(Job, "status"),
-      groupCount(Application, "status"),
+      countBy(User, "role"),
+      countBy(User, "status"),
+      countBy(Job, "status"),
+      countBy(Application, "status"),
       Company.countDocuments(),
       Company.countDocuments({ isVerified: false }),
       User.find().sort({ createdAt: -1 }).limit(RECENT_LIMIT).select("fullName email role avatar createdAt").lean(),
@@ -38,22 +33,20 @@ export const getPlatformOverview = async () => {
         .lean(),
     ]);
 
-  const applicationCounts = countsByKey(applicationsByStatus);
-
   return {
     users: {
-      total: usersByRole.reduce((sum, row) => sum + row.count, 0),
-      byRole: withDefaults(Object.values(ROLES), countsByKey(usersByRole)),
-      suspended: countsByKey(usersByStatus)[USER_STATUS.SUSPENDED] ?? 0,
+      total: sumCounts(usersByRole),
+      byRole: withDefaults(Object.values(ROLES), usersByRole),
+      suspended: usersByStatus[USER_STATUS.SUSPENDED] ?? 0,
     },
     companies: { total: companies, unverified: unverifiedCompanies },
     jobs: {
-      total: jobsByStatus.reduce((sum, row) => sum + row.count, 0),
-      byStatus: withDefaults(Object.values(JOB_STATUS), countsByKey(jobsByStatus)),
+      total: sumCounts(jobsByStatus),
+      byStatus: withDefaults(Object.values(JOB_STATUS), jobsByStatus),
     },
     applications: {
-      total: applicationsByStatus.reduce((sum, row) => sum + row.count, 0),
-      byStatus: withDefaults(Object.values(APPLICATION_STATUS), applicationCounts),
+      total: sumCounts(applicationsByStatus),
+      byStatus: withDefaults(Object.values(APPLICATION_STATUS), applicationsByStatus),
     },
     recentUsers,
     recentJobs,
@@ -79,6 +72,18 @@ export const listUsers = async (query) => {
   return { users, meta: paginationMeta({ page, limit }, total) };
 };
 
+// A job is listed only while both its company and the recruiter who posted it are active,
+// so restoring one side leaves hidden the jobs whose other side is still suspended
+const setJobsListed = async (scope, listed) => {
+  let stillSuspended = {};
+  if (listed && scope.company) {
+    stillSuspended = { postedBy: { $nin: await User.distinct("_id", { status: USER_STATUS.SUSPENDED }) } };
+  } else if (listed) {
+    stillSuspended = { company: { $nin: await Company.distinct("_id", { status: COMPANY_STATUS.SUSPENDED }) } };
+  }
+  await Job.updateMany({ ...scope, ...stillSuspended }, { companyActive: listed });
+};
+
 // Suspending signs the user out everywhere by invalidating their sessions
 export const updateUserStatus = async (adminId, userId, status) => {
   if (adminId === userId) {
@@ -102,11 +107,8 @@ export const updateUserStatus = async (adminId, userId, status) => {
     { new: true },
   );
 
-  // A suspended recruiter's jobs leave the board with them, and return unless their company is suspended too
   if (user.role === ROLES.RECRUITER) {
-    const listed = status === USER_STATUS.ACTIVE;
-    const suspendedCompanies = listed ? await Company.distinct("_id", { status: COMPANY_STATUS.SUSPENDED }) : [];
-    await Job.updateMany({ postedBy: user._id, company: { $nin: suspendedCompanies } }, { companyActive: listed });
+    await setJobsListed({ postedBy: user._id }, status === USER_STATUS.ACTIVE);
   }
   return updated;
 };
@@ -129,11 +131,7 @@ export const listCompanies = async (query) => {
     Company.countDocuments(filter),
   ]);
 
-  const counts = await Job.aggregate([
-    { $match: { company: { $in: companies.map((company) => company._id) } } },
-    { $group: { _id: "$company", count: { $sum: 1 } } },
-  ]);
-  const jobCounts = countsByKey(counts);
+  const jobCounts = await countBy(Job, "company", { company: { $in: companies.map((company) => company._id) } });
 
   return {
     companies: companies.map((company) => ({ ...company, jobCount: jobCounts[company._id.toString()] ?? 0 })),
@@ -150,10 +148,7 @@ export const updateCompany = async (companyId, updates) => {
     throw ApiError.notFound("Company not found");
   }
   if (updates.status) {
-    // Restoring the company leaves hidden the jobs of recruiters who are themselves suspended
-    const listed = updates.status === COMPANY_STATUS.ACTIVE;
-    const suspendedRecruiters = listed ? await User.distinct("_id", { status: USER_STATUS.SUSPENDED }) : [];
-    await Job.updateMany({ company: company._id, postedBy: { $nin: suspendedRecruiters } }, { companyActive: listed });
+    await setJobsListed({ company: company._id }, updates.status === COMPANY_STATUS.ACTIVE);
   }
   return company;
 };
@@ -186,26 +181,15 @@ export const updateJobStatus = async (jobId, status) => {
     throw ApiError.notFound("Job not found");
   }
 
-  if (status === JOB_STATUS.DRAFT && job.applicationCount > 0) {
-    throw ApiError.badRequest("Jobs with applicants can't go back to draft. Close the job instead.");
-  }
-
   setJobStatus(job, status);
   await job.save();
   return job;
 };
 
-// Same rule as recruiters: jobs with applicants are closed, not deleted, so candidates keep their history
 export const deleteJob = async (jobId) => {
   const job = await Job.findById(jobId).select("_id");
   if (!job) {
     throw ApiError.notFound("Job not found");
   }
-
-  const hasApplications = await Application.exists({ job: job._id });
-  if (hasApplications) {
-    throw ApiError.conflict("This job has applicants, so it can't be deleted. Close it instead.");
-  }
-
-  await Promise.all([Job.deleteOne({ _id: job._id }), SavedJob.deleteMany({ job: job._id })]);
+  await removeJob(job);
 };

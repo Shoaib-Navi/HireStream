@@ -20,6 +20,10 @@ export const publicJobFilter = () => ({
   $or: [{ deadline: null }, { deadline: { $gte: new Date() } }],
 });
 
+// Drafts and the jobs of suspended companies or recruiters; expects job.company populated with its status
+export const isHiddenFromPublic = (job) =>
+  job.status === JOB_STATUS.DRAFT || job.companyActive === false || job.company?.status === COMPANY_STATUS.SUSPENDED;
+
 export const isAcceptingApplications = (job) =>
   job.status === JOB_STATUS.OPEN && (!job.deadline || new Date(job.deadline) >= new Date());
 
@@ -143,9 +147,7 @@ export const getJobDetails = async (jobId, viewer) => {
 
   const isOwner = viewer?.id === job.postedBy.toString();
   const isAdmin = viewer?.role === ROLES.ADMIN;
-  const hiddenFromPublic =
-    job.status === JOB_STATUS.DRAFT || job.companyActive === false || job.company?.status === COMPANY_STATUS.SUSPENDED;
-  if (hiddenFromPublic && !isOwner && !isAdmin) {
+  if (isHiddenFromPublic(job) && !isOwner && !isAdmin) {
     throw ApiError.notFound("Job not found");
   }
 
@@ -190,8 +192,12 @@ export const updateJob = async (recruiterId, jobId, { companyId, ...updates }) =
   return job;
 };
 
-// Only the first opening publishes a job; reopening a closed job doesn't make it new again
+// Status rules shared by recruiters and admins. Only the first opening publishes a job;
+// reopening a closed job doesn't make it new again.
 export const setJobStatus = (job, status) => {
+  if (status === JOB_STATUS.DRAFT && job.applicationCount > 0) {
+    throw ApiError.badRequest("Jobs with applicants can't go back to draft. Close the job instead.");
+  }
   if (status === JOB_STATUS.OPEN && !job.publishedAt) {
     job.publishedAt = new Date();
   }
@@ -205,9 +211,6 @@ export const updateJobStatus = async (recruiterId, jobId, status) => {
   if (status === JOB_STATUS.OPEN && job.deadline && job.deadline < new Date()) {
     throw ApiError.badRequest("The application deadline has passed. Set a new deadline before opening this job.");
   }
-  if (status === JOB_STATUS.DRAFT && job.applicationCount > 0) {
-    throw ApiError.badRequest("Jobs with applicants can't go back to draft. Close the job instead.");
-  }
   // Opening a job posts it, which a suspended company can't do
   if (status === JOB_STATUS.OPEN) {
     await assertActiveOwnedCompany(recruiterId, job.company);
@@ -219,9 +222,7 @@ export const updateJobStatus = async (recruiterId, jobId, status) => {
 };
 
 // Jobs with applicants are closed instead, so candidates keep their application history
-export const deleteJob = async (recruiterId, jobId) => {
-  const job = await findOwnedJob(recruiterId, jobId);
-
+export const removeJob = async (job) => {
   const hasApplications = await Application.exists({ job: job._id });
   if (hasApplications) {
     throw ApiError.conflict("This job has applicants, so it can't be deleted. Close it instead.");
@@ -229,6 +230,8 @@ export const deleteJob = async (recruiterId, jobId) => {
 
   await Promise.all([Job.deleteOne({ _id: job._id }), SavedJob.deleteMany({ job: job._id })]);
 };
+
+export const deleteJob = async (recruiterId, jobId) => removeJob(await findOwnedJob(recruiterId, jobId));
 
 export const listRecruiterJobs = async (recruiterId, query) => {
   const { page, limit, skip } = toPagination(query);

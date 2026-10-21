@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { ArrowLeft, BadgeCheck, Briefcase, ExternalLink, SearchX } from "lucide-react";
+import { Briefcase, ExternalLink, SearchX } from "lucide-react";
 import { Link, useParams } from "react-router-dom";
 import CompanyLogo from "@/components/common/CompanyLogo";
 import DetailSection from "@/components/common/DetailSection";
@@ -8,6 +8,9 @@ import NoIndex from "@/components/common/NoIndex";
 import ErrorState from "@/components/common/ErrorState";
 import Pagination from "@/components/common/Pagination";
 import { PageLoader } from "@/components/common/Spinner";
+import BackLink from "@/components/common/BackLink";
+import VerifiedMark from "@/components/common/VerifiedMark";
+import { isNotFound } from "@/lib/errors";
 import { Button } from "@/components/ui/button";
 import { useGetJobsQuery } from "@/features/jobs/api";
 import JobCard, { JobListSkeleton } from "@/features/jobs/components/JobCard";
@@ -36,7 +39,7 @@ const CompanyProfilePage = () => {
 
   if (isLoading) return <PageLoader />;
   if (isError) {
-    const notFound = error?.status === 404 || error?.status === 400;
+    const notFound = isNotFound(error);
     return (
       <div className="page-container py-16">
         {notFound && <NoIndex />}
@@ -69,18 +72,13 @@ const CompanyProfilePage = () => {
     <>
       <section className="dark rounded-b-section bg-background text-foreground">
         <div className="page-container pt-8 pb-14 sm:pb-20">
-          <Link
-            to="/companies"
-            className="type-label inline-flex items-center gap-1.5 text-muted-foreground transition-colors hover:text-foreground"
-          >
-            <ArrowLeft className="size-3.5" /> All companies
-          </Link>
+          <BackLink to="/companies">All companies</BackLink>
           <div className="mt-12 flex flex-col gap-6 sm:flex-row sm:items-center">
             <CompanyLogo company={company} size="lg" />
             <div className="space-y-3">
               <h1 className="type-h1 flex items-center gap-3">
                 {company.name}
-                {company.isVerified && <BadgeCheck className="size-7 shrink-0" aria-label="Verified company" />}
+                {company.isVerified && <VerifiedMark className="size-7" />}
               </h1>
               <p className="type-label text-muted-foreground">{pluralize(company.openJobCount, "open job")}</p>
             </div>

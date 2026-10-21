@@ -1,5 +1,6 @@
 import { APPLICATION_STATUS, COMPANY_STATUS, DUPLICATE_KEY_ERROR, ROLES, WITHDRAWABLE_STATUSES } from "../../constants/index.js";
 import { ApiError } from "../../utils/ApiError.js";
+import { countBy } from "../../utils/countBy.js";
 import { paginationMeta, toPagination } from "../../utils/pagination.js";
 import { Job } from "../jobs/job.model.js";
 import { isAcceptingApplications } from "../jobs/jobs.service.js";
@@ -34,6 +35,7 @@ export const applyToJob = async (candidateId, jobId, { coverLetter }) => {
   const job = await Job.findById(jobId)
     .select("title status deadline company companyActive postedBy")
     .populate({ path: "company", select: "status" });
+  // Drafts aren't hidden here: applying to one is refused below as not accepting applications
   if (!job?.company || job.companyActive === false || job.company.status === COMPANY_STATUS.SUSPENDED) {
     throw ApiError.notFound("Job not found");
   }
@@ -116,7 +118,7 @@ export const listJobApplications = async (recruiterId, jobId, query) => {
       .populate({ path: "candidate", select: CANDIDATE_CARD_FIELDS })
       .lean(),
     Application.countDocuments(filter),
-    Application.aggregate([{ $match: { job: job._id } }, { $group: { _id: "$status", count: { $sum: 1 } } }]),
+    countBy(Application, "status", { job: job._id }),
   ]);
 
   const candidateIds = applications.map((application) => application.candidate?._id).filter(Boolean);
@@ -129,7 +131,7 @@ export const listJobApplications = async (recruiterId, jobId, query) => {
       const candidateProfile = profileByUser.get(application.candidate?._id.toString()) ?? null;
       return { ...application, candidateProfile, match: calculateMatch(job, candidateProfile) };
     }),
-    statusCounts: Object.fromEntries(statusCounts.map((item) => [item._id, item.count])),
+    statusCounts,
     meta: paginationMeta({ page, limit }, total),
   };
 };

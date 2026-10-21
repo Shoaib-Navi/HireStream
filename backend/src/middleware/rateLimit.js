@@ -57,10 +57,3 @@ export const accountSecurityLimiter = createLimiter({
   skipSuccessfulRequests: true,
   message: "Too many attempts. Please try again in 15 minutes.",
 });
-
-export const aiLimiter = createLimiter({
-  store: new MongoRateLimitStore("ai"),
-  windowMs: 60 * 1000,
-  limit: 10,
-  message: "I'm getting too many requests. Please wait a moment and try again!",
-});

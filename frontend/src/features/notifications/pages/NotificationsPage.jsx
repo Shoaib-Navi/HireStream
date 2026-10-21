@@ -6,7 +6,7 @@ import LoadingButton from "@/components/common/LoadingButton";
 import PageHeader from "@/components/common/PageHeader";
 import Pagination from "@/components/common/Pagination";
 import { PageLoader } from "@/components/common/Spinner";
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useDocumentTitle } from "@/hooks/useDocumentTitle";
 import { cleanParams } from "@/lib/query";
 import { cn } from "@/lib/utils";
@@ -59,7 +59,9 @@ const NotificationsPage = () => {
 
   return (
     <div className="space-y-6">
-      <PageHeader eyebrow="Dashboard" title="Notifications"
+      <PageHeader
+        eyebrow="Dashboard"
+        title="Notifications"
         description="Updates about applications and hiring activity."
         actions={
           unreadCount > 0 && (
@@ -75,9 +77,8 @@ const NotificationsPage = () => {
           <TabsTrigger value="all">All</TabsTrigger>
           <TabsTrigger value="unread">Unread{unreadCount > 0 && ` (${unreadCount})`}</TabsTrigger>
         </TabsList>
+        <TabsContent value={filter}>{renderList()}</TabsContent>
       </Tabs>
-
-      {renderList()}
 
       <Pagination page={page} totalPages={data?.meta?.totalPages} onPageChange={setPage} />
     </div>

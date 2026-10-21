@@ -99,9 +99,9 @@ const ApplicantCard = ({ application, jobId }) => {
           </Button>
         )}
         {candidate?.email && (
-          <Button asChild variant="ghost" size="sm">
+          <Button asChild variant="ghost" size="sm" className="max-w-full">
             <a href={`mailto:${candidate.email}`}>
-              <Mail /> {candidate.email}
+              <Mail /> <span className="truncate">{candidate.email}</span>
             </a>
           </Button>
         )}

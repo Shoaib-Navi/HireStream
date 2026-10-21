@@ -21,7 +21,7 @@ const resolveUser = async (req) => {
   if (typeof payload?.sub !== "string" || !OBJECT_ID_PATTERN.test(payload.sub)) return null;
 
   const user = await User.findById(payload.sub).select("role status emailVerifiedAt +tokenVersion");
-  // tokenVersion changes when the password changes, which signs out every older session
+  // tokenVersion changes when the password changes or the account is suspended, which signs out every older session
   if (!user || user.tokenVersion !== payload.ver) return null;
   return user;
 };

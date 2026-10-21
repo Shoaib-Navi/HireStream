@@ -1,7 +1,8 @@
-import { BadgeCheck, Pencil, Plus } from "lucide-react";
+import { Pencil, Plus } from "lucide-react";
 import { Link } from "react-router-dom";
 import CompanyLogo from "@/components/common/CompanyLogo";
 import StatusBadge from "@/components/common/StatusBadge";
+import VerifiedMark from "@/components/common/VerifiedMark";
 import { Button } from "@/components/ui/button";
 import { pluralize } from "@/lib/format";
 
@@ -16,7 +17,7 @@ const CompanyCard = ({ company }) => {
         <div className="min-w-0 flex-1">
           <h3 className="type-h4 flex items-center gap-1.5 text-foreground">
             <span className="truncate">{company.name}</span>
-            {company.isVerified && <BadgeCheck className="size-4 shrink-0 text-success" aria-label="Verified company" />}
+            {company.isVerified && <VerifiedMark />}
           </h3>
           <p className="type-caption text-muted-foreground">{details || "Add details so candidates get to know you"}</p>
         </div>

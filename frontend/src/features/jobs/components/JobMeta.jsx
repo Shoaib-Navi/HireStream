@@ -11,19 +11,21 @@ const WORK_MODE_ICONS = { remote: Wifi, hybrid: Laptop, onsite: Building2 };
 const JobMeta = ({ job, className }) => {
   const hasSalary = job.salary?.min != null || job.salary?.max != null;
 
+  const workMode = labelFor(WORK_MODES, job.workMode);
   const items = [
-    { icon: Briefcase, label: labelFor(EMPLOYMENT_TYPES, job.employmentType) },
-    { icon: WORK_MODE_ICONS[job.workMode] ?? Building2, label: labelFor(WORK_MODES, job.workMode) },
-    { icon: MapPin, label: job.location },
-    { icon: BarChart3, label: formatExperience(job.experience) },
+    { key: "type", icon: Briefcase, label: labelFor(EMPLOYMENT_TYPES, job.employmentType) },
+    { key: "mode", icon: WORK_MODE_ICONS[job.workMode] ?? Building2, label: workMode },
+    // a location of just "Remote" would repeat the work mode
+    ...(job.location !== workMode ? [{ key: "location", icon: MapPin, label: job.location }] : []),
+    { key: "experience", icon: BarChart3, label: formatExperience(job.experience) },
     // A job with no published range would otherwise read "Not disclosed" as a tag
-    ...(hasSalary ? [{ icon: IndianRupee, label: formatSalary(job.salary) }] : []),
+    ...(hasSalary ? [{ key: "salary", icon: IndianRupee, label: formatSalary(job.salary) }] : []),
   ].filter((item) => item.label);
 
   return (
     <ul className={cn("flex flex-wrap gap-2", className)}>
-      {items.map(({ icon: Icon, label }) => (
-        <li key={label} className="max-w-full">
+      {items.map(({ key, icon: Icon, label }) => (
+        <li key={key} className="max-w-full">
           {/* a long label, such as a multi-city location, truncates instead of widening the row */}
           <Badge variant="neutral" className="max-w-full" title={label}>
             <Icon aria-hidden="true" />
