@@ -8,6 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
+import CreateAlertButton from "@/features/jobAlerts/components/CreateAlertButton";
 import { useDocumentTitle } from "@/hooks/useDocumentTitle";
 import { JOB_SORT_OPTIONS } from "@/lib/constants";
 import { pluralize } from "@/lib/format";
@@ -100,7 +101,7 @@ const JobsPage = () => {
             <p className="type-label text-muted-foreground" aria-live="polite">
               {isLoading ? "Searching…" : `${pluralize(meta?.total ?? 0, "job")} found`}
             </p>
-            <div className="flex items-center gap-2">
+            <div className="flex flex-wrap items-center gap-2">
               <Sheet open={filtersOpen} onOpenChange={setFiltersOpen}>
                 <SheetTrigger asChild>
                   <Button variant="outline" size="sm" className="lg:hidden">
@@ -125,6 +126,7 @@ const JobsPage = () => {
                 </SheetContent>
               </Sheet>
 
+              <CreateAlertButton filters={filters} />
               <Select value={filters.sort} onValueChange={(sort) => updateFilters({ sort })}>
                 <SelectTrigger size="sm" aria-label="Sort jobs">
                   <SelectValue />

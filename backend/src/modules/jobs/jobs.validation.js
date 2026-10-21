@@ -64,7 +64,8 @@ export const jobStatusSchema = z.object({
   status: z.enum(Object.values(JOB_STATUS), { error: "Please choose a valid status" }),
 });
 
-export const listJobsQuerySchema = z.object({
+// What a job search filters on; job alerts save the same criteria
+export const jobSearchShape = {
   q: z.string().trim().max(100).optional(),
   location: z.string().trim().max(100).optional(),
   employmentType: csvEnumList(EMPLOYMENT_TYPES),
@@ -72,6 +73,10 @@ export const listJobsQuerySchema = z.object({
   // candidate's years of experience: jobs requiring more are excluded
   experience: z.coerce.number().min(0).max(60).optional(),
   salaryMin: z.coerce.number().min(0).max(10000).optional(),
+};
+
+export const listJobsQuerySchema = z.object({
+  ...jobSearchShape,
   company: objectId.optional(),
   // relevance ranks keyword matches; without a keyword it lists the newest first
   sort: z.enum(["relevance", "newest", "salary"]).default("relevance"),

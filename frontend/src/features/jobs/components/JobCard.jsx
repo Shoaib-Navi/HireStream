@@ -23,11 +23,11 @@ const CHIP_ROW = "min-h-[1.625rem]";
 const JobCard = ({ job, className }) => (
   <article
     className={cn(
-      "group relative flex flex-col gap-5 rounded-xl border bg-card p-6 transition-colors hover:border-foreground/30",
+      "group @container relative flex min-w-0 flex-col gap-5 rounded-xl border bg-card p-6 transition-colors hover:border-foreground/30",
       className,
     )}
   >
-    <div className="flex items-start gap-3">
+    <div className="flex flex-wrap items-start gap-3">
       <CompanyLogo company={job.company} size="sm" />
       <div className="min-w-0 flex-1">
         <p className="type-caption flex items-center gap-1 text-muted-foreground">
@@ -36,9 +36,12 @@ const JobCard = ({ job, className }) => (
         </p>
         <p className="type-caption text-muted-foreground">{formatRelativeTime(job.createdAt)}</p>
       </div>
-      {job.status && job.status !== "open" && JOB_STATUS_META[job.status] && <StatusBadge type="job" status={job.status} />}
-      <MatchScore match={job.match} />
-      <SourceBadge source={job.source} />
+      {/* in a narrow card the badges get their own row, so the company name keeps its room */}
+      <div className="order-last flex basis-full flex-wrap gap-1.5 empty:hidden @lg:order-none @lg:basis-auto @lg:justify-end">
+        {job.status && job.status !== "open" && JOB_STATUS_META[job.status] && <StatusBadge type="job" status={job.status} />}
+        <MatchScore match={job.match} />
+        <SourceBadge source={job.source} />
+      </div>
       <SaveJobButton job={job} className="-mt-1 -mr-2" />
     </div>
 

@@ -23,6 +23,8 @@ export const EMPLOYMENT_TYPES = ["full-time", "part-time", "contract", "internsh
 
 export const WORK_MODES = ["onsite", "remote", "hybrid"];
 
+export const WORK_MODE_LABELS = Object.freeze({ onsite: "On-site", remote: "Remote", hybrid: "Hybrid" });
+
 export const JOB_STATUS = Object.freeze({
   DRAFT: "draft",
   OPEN: "open",
@@ -73,9 +75,18 @@ export const NOTIFICATION_TYPES = Object.freeze({
   APPLICATION_RECEIVED: "application_received",
   APPLICATION_STATUS: "application_status",
   APPLICATION_WITHDRAWN: "application_withdrawn",
+  JOB_ALERT: "job_alert",
 });
 
 export const NOTIFICATION_RETENTION_DAYS = 90;
+
+// How often a candidate hears about new jobs matching a saved search
+export const ALERT_FREQUENCIES = Object.freeze({
+  DAILY: "daily",
+  WEEKLY: "weekly",
+});
+
+export const MAX_JOB_ALERTS = 10;
 
 // Where a seeded development record came from. Records created by real users stay unmarked.
 export const DATA_SOURCES = Object.freeze({

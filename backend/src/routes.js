@@ -6,6 +6,7 @@ import { applicationsRouter, jobApplicationsRouter } from "./modules/application
 import authRoutes from "./modules/auth/auth.routes.js";
 import companiesRoutes from "./modules/companies/companies.routes.js";
 import dashboardRoutes from "./modules/dashboard/dashboard.routes.js";
+import jobAlertsRoutes from "./modules/jobAlerts/jobAlerts.routes.js";
 import jobsRoutes from "./modules/jobs/jobs.routes.js";
 import notificationsRoutes from "./modules/notifications/notifications.routes.js";
 import savedJobsRoutes from "./modules/savedJobs/savedJobs.routes.js";
@@ -33,6 +34,7 @@ router.use("/jobs/:jobId/applications", jobApplicationsRouter);
 router.use("/jobs", jobsRoutes);
 router.use("/applications", applicationsRouter);
 router.use("/saved-jobs", savedJobsRoutes);
+router.use("/job-alerts", jobAlertsRoutes);
 router.use("/dashboard", dashboardRoutes);
 router.use("/notifications", notificationsRoutes);
 router.use("/admin", adminRoutes);

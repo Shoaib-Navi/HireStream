@@ -1,4 +1,4 @@
-import { Bell, Bookmark, Briefcase, Building2, FileText, LayoutDashboard, Settings2, UserRound, Users } from "lucide-react";
+import { Bell, BellRing, Bookmark, Briefcase, Building2, FileText, LayoutDashboard, Settings2, UserRound, Users } from "lucide-react";
 import { ROLES } from "@/lib/constants";
 
 export const PUBLIC_NAV_LINKS = [
@@ -18,6 +18,7 @@ export const DASHBOARD_NAV = {
   [ROLES.CANDIDATE]: [
     { label: "Applications", to: "/dashboard/applications", icon: FileText },
     { label: "Saved jobs", to: "/dashboard/saved", icon: Bookmark },
+    { label: "Job alerts", to: "/dashboard/alerts", icon: BellRing },
     { label: "Profile", to: "/dashboard/profile", icon: UserRound },
     { label: "Notifications", to: "/dashboard/notifications", icon: Bell },
     { label: "Account", to: "/dashboard/account", icon: Settings2 },

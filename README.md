@@ -13,9 +13,10 @@ applied to hired.
 
 ## Features
 
-- **Job seekers:** ranked keyword job search with URL-based filters (work mode, job type, experience, salary), saved
-  jobs, one-click apply with resume and cover letter, application tracking with status history, a profile match score
-  on every job, and a profile with experience, education, links and preferences
+- **Job seekers:** ranked keyword job search with URL-based filters (work mode, job type, experience, salary), job
+  alerts that email and notify new matches daily or weekly, similar jobs on every job page, saved jobs, one-click apply
+  with resume and cover letter, application tracking with status history, a profile match score on every job, and a
+  profile with experience, education, links and preferences
 - **Recruiters:** companies with logos, job posts (publish, edit, close, reopen or save as draft), applicant review with
   profile summaries and match scores, private team notes, a hiring pipeline with a message to the candidate at each
   step, drafted job descriptions, and a hiring overview dashboard
@@ -102,6 +103,16 @@ Seeded accounts use the password `Password123`, for example `aarav@hirestream.de
 | frontend | `npm run lint` | ESLint |
 | frontend | `npm run build` | Production build |
 
+## Scheduled jobs
+
+Job alert emails go out once a day: `backend/vercel.json` runs `GET /api/v1/job-alerts/dispatch` at 08:00 IST, and
+Vercel Cron authorizes it with the `CRON_SECRET` environment variable. Daily alerts are sent each run and weekly alerts
+every seventh day. To send due alerts locally:
+
+```bash
+curl -H "Authorization: Bearer $CRON_SECRET" http://localhost:8010/api/v1/job-alerts/dispatch
+```
+
 ## API overview
 
 All routes are under `/api/v1`. Responses look like `{ success, message?, data?, meta? }`; errors look like
@@ -113,9 +124,10 @@ All routes are under `/api/v1`. Responses look like `{ success, message?, data?,
 | Account security | `POST /auth/verify-email`, `POST /auth/verify-email/resend`, `POST /auth/forgot-password`, `POST /auth/reset-password`, `PATCH /auth/password` |
 | Account | `PATCH /users/me`, `PUT /users/me/avatar` |
 | Candidate profile | `GET/PATCH /users/me/profile`, `PUT/DELETE /users/me/resume` |
-| Jobs | `GET /jobs` (public search), `GET /jobs/:id`, `GET /jobs/mine`, `POST /jobs`, `PATCH /jobs/:id`, `PATCH /jobs/:id/status`, `DELETE /jobs/:id` |
+| Jobs | `GET /jobs` (public search), `GET /jobs/:id`, `GET /jobs/:id/similar`, `GET /jobs/mine`, `POST /jobs`, `PATCH /jobs/:id`, `PATCH /jobs/:id/status`, `DELETE /jobs/:id` |
 | Applications | `POST/GET /jobs/:jobId/applications`, `GET /applications/mine`, `GET /applications/:id`, `PATCH /applications/:id/status`, `PATCH /applications/:id/withdraw`, `POST /applications/:id/notes` |
 | Saved jobs | `GET /saved-jobs`, `PUT /saved-jobs/:jobId`, `DELETE /saved-jobs/:jobId` |
+| Job alerts | `GET/POST /job-alerts`, `PATCH/DELETE /job-alerts/:id`, `GET /job-alerts/dispatch` (scheduler only) |
 | Companies | `GET /companies` (public directory), `GET /companies/:slug`, `GET /companies/mine`, `GET /companies/mine/:id`, `POST /companies`, `PATCH /companies/:id`, `PUT /companies/:id/logo` |
 | Notifications | `GET /notifications`, `PATCH /notifications/:id/read`, `PATCH /notifications/read-all` |
 | Dashboard | `GET /dashboard/recruiter` |

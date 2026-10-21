@@ -26,6 +26,7 @@ const NotificationsPage = lazyPage(() => import("@/features/notifications/pages/
 const MyApplicationsPage = lazyPage(() => import("@/features/applications/pages/MyApplicationsPage"));
 const ApplicationDetailPage = lazyPage(() => import("@/features/applications/pages/ApplicationDetailPage"));
 const SavedJobsPage = lazyPage(() => import("@/features/savedJobs/pages/SavedJobsPage"));
+const JobAlertsPage = lazyPage(() => import("@/features/jobAlerts/pages/JobAlertsPage"));
 const ProfilePage = lazyPage(() => import("@/features/profile/pages/ProfilePage"));
 const AccountPage = lazyPage(() => import("@/features/profile/pages/AccountPage"));
 const RecruiterJobsPage = lazyPage(() => import("@/features/jobs/pages/RecruiterJobsPage"));
@@ -77,6 +78,7 @@ export const router = createBrowserRouter([
               { path: "applications", lazy: MyApplicationsPage },
               { path: "applications/:id", lazy: ApplicationDetailPage },
               { path: "saved", lazy: SavedJobsPage },
+              { path: "alerts", lazy: JobAlertsPage },
               { path: "profile", lazy: ProfilePage },
               { path: "notifications", lazy: NotificationsPage },
               { path: "account", lazy: AccountPage },

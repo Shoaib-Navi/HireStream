@@ -23,10 +23,11 @@ const JobMeta = ({ job, className }) => {
   return (
     <ul className={cn("flex flex-wrap gap-2", className)}>
       {items.map(({ icon: Icon, label }) => (
-        <li key={label}>
-          <Badge variant="neutral">
+        <li key={label} className="max-w-full">
+          {/* a long label, such as a multi-city location, truncates instead of widening the row */}
+          <Badge variant="neutral" className="max-w-full" title={label}>
             <Icon aria-hidden="true" />
-            {label}
+            <span className="min-w-0 truncate">{label}</span>
           </Badge>
         </li>
       ))}
