@@ -22,7 +22,10 @@ const CompanyProfilePage = () => {
     { company: company?._id, page, limit: 10 },
     { skip: !company },
   );
-  useDocumentTitle(company?.name ?? "Company");
+  useDocumentTitle(
+    company?.name ?? "Company",
+    company ? (company.description || `See open jobs at ${company.name} on HireStream.`).slice(0, 155) : undefined,
+  );
 
   if (isLoading) return <PageLoader />;
   if (isError) {

@@ -29,7 +29,10 @@ const NumberedList = ({ items }) => (
 const JobDetailsPage = () => {
   const { id } = useParams();
   const { data: job, isLoading, isError, error, refetch } = useGetJobQuery(id);
-  useDocumentTitle(job ? `${job.title} at ${job.company?.name}` : "Job details");
+  useDocumentTitle(
+    job ? `${job.title} at ${job.company?.name}` : "Job details",
+    job ? `${job.title} at ${job.company?.name} in ${job.location}. ${job.description ?? ""}`.slice(0, 155) : undefined,
+  );
 
   if (isLoading) return <PageLoader />;
 

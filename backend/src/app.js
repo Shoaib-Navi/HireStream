@@ -6,6 +6,7 @@ import { connectDB } from "./config/db.js";
 import { env } from "./config/env.js";
 import { errorHandler, notFound } from "./middleware/errorHandler.js";
 import { apiLimiter } from "./middleware/rateLimit.js";
+import { requestLogger } from "./middleware/requestLogger.js";
 import apiRoutes from "./routes.js";
 
 const app = express();
@@ -21,6 +22,7 @@ app.use(express.json({ limit: "200kb" }));
 app.use(express.urlencoded({ extended: true, limit: "200kb" }));
 app.use(cookieParser());
 
+app.use("/api", requestLogger);
 app.use("/api", apiLimiter);
 
 // Ensure the (cached) database connection is ready before any route uses a model
