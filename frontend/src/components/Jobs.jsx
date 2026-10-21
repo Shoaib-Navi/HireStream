@@ -1,60 +1,36 @@
-import React, { useEffect, useState } from "react";
+import React, { useMemo, useState } from "react";
 import FilterCard from "./FilterCard";
-import Navbar from "./shared/Navbar";
 import Job from "./Job";
 import { useSelector } from "react-redux";
 import { motion, AnimatePresence } from "framer-motion";
-import Footer from "./shared/Footer";
 import PageHero from "./shared/PageHero";
 import { SlidersHorizontal, X, Search, ChevronDown, ChevronUp } from "lucide-react";
+import useGetAllJobs from "@/hooks/useGetAllJobs";
+import { matchesFilters } from "@/lib/jobFilters";
+
+const JOBS_PER_PAGE = 9;
 
 const Jobs = () => {
-  const { allJobs, searchedQuery } = useSelector((store) => store.job);
-  const [filterJobs,        setFilterJobs]        = useState(allJobs);
-  const [showMobileFilter,  setShowMobileFilter]  = useState(false);
-  const [activeFilters,     setActiveFilters]      = useState({});
-  const [showFilterPanel,   setShowFilterPanel]    = useState(true);
-  const [currentPage,       setCurrentPage]        = useState(1);
+  useGetAllJobs();
+  const { allJobs } = useSelector((store) => store.job);
+  const [showMobileFilter,  setShowMobileFilter]    = useState(false);
+  const [activeFilters,     setActiveFiltersState]  = useState({});
+  const [showFilterPanel,   setShowFilterPanel]     = useState(true);
+  const [currentPage,       setCurrentPage]         = useState(1);
 
-  const JOBS_PER_PAGE = 9; // ← Point 4: limit cards shown
+  // ── Filtering ─────────────────────────────────────────────────────────────
+  const filterJobs = useMemo(
+    () => allJobs.filter((job) => matchesFilters(job, activeFilters)),
+    [allJobs, activeFilters]
+  );
 
-  // ── Point 1 & 2: Multi-filter logic ──────────────────────────────────────
-  useEffect(() => {
-    let filtered = allJobs;
+  // Any filter change starts again from page 1
+  const setActiveFilters = (update) => {
+    setActiveFiltersState(update);
+    setCurrentPage(1);
+  };
 
-    // Apply search query
-    if (searchedQuery) {
-      filtered = filtered.filter((job) =>
-        job.title.toLowerCase().includes(searchedQuery.toLowerCase()) ||
-        job.description.toLowerCase().includes(searchedQuery.toLowerCase()) ||
-        job.location.toLowerCase().includes(searchedQuery.toLowerCase())
-      );
-    }
-
-    // Apply multiple active filters
-    if (Object.keys(activeFilters).length > 0) {
-      filtered = filtered.filter((job) => {
-        return Object.entries(activeFilters).every(([category, values]) => {
-          if (!values || values.length === 0) return true;
-          return values.some((val) => {
-            const v = val.toLowerCase();
-            return (
-              job.title?.toLowerCase().includes(v)       ||
-              job.jobType?.toLowerCase().includes(v)     ||
-              job.location?.toLowerCase().includes(v)    ||
-              job.salary?.toString().includes(v)         ||
-              job.experienceLevel?.toString().includes(v)
-            );
-          });
-        });
-      });
-    }
-
-    setFilterJobs(filtered);
-    setCurrentPage(1); // reset to page 1 on filter change
-  }, [allJobs, searchedQuery, activeFilters]);
-
-  // ── Point 4: Pagination ───────────────────────────────────────────────────
+  // ── Pagination ────────────────────────────────────────────────────────────
   const totalPages   = Math.ceil(filterJobs.length / JOBS_PER_PAGE);
   const paginatedJobs = filterJobs.slice(
     (currentPage - 1) * JOBS_PER_PAGE,
@@ -70,8 +46,6 @@ const Jobs = () => {
 
   return (
     <div>
-      <Navbar />
-
       {/* PageHero */}
       <div className="px-4 sm:px-6 pt-4 sm:pt-6 max-w-6xl mx-auto">
         <PageHero
@@ -89,16 +63,11 @@ const Jobs = () => {
         {/* ── Top bar ── */}
         <div className="flex items-center justify-between mb-5">
           <div>
-            {/* Point 1: Only show count when filters are active */}
-            {hasActiveFilters || searchedQuery ? (
-              <div>
-                <p className="text-sm font-semibold text-gray-800">
-                  <span className="text-[#6a38c2]">{filterJobs.length}</span> result{filterJobs.length !== 1 ? "s" : ""} found
-                </p>
-                {searchedQuery && (
-                  <p className="text-xs text-gray-400 mt-0.5">for "{searchedQuery}"</p>
-                )}
-              </div>
+            {/* Only show the result count when filters are active */}
+            {hasActiveFilters ? (
+              <p className="text-sm font-semibold text-gray-800">
+                <span className="text-[#6a38c2]">{filterJobs.length}</span> result{filterJobs.length !== 1 ? "s" : ""} found
+              </p>
             ) : (
               <div>
                 <p className="text-sm font-semibold text-gray-800">
@@ -112,7 +81,6 @@ const Jobs = () => {
           </div>
 
           <div className="flex items-center gap-2">
-            {/* Active filter chips — Point 2: show selected filters */}
             {hasActiveFilters && (
               <button
                 onClick={clearAllFilters}
@@ -122,7 +90,7 @@ const Jobs = () => {
               </button>
             )}
 
-            {/* Point 3: Toggle filter panel on desktop */}
+            {/* Toggle filter panel on desktop */}
             <button
               onClick={() => setShowFilterPanel(!showFilterPanel)}
               className="hidden md:flex items-center gap-2 px-4 py-2 rounded-xl border border-[#e0d4fd] bg-white text-[#6a38c2] text-sm font-semibold hover:bg-[#f3eeff] transition-colors"
@@ -162,6 +130,7 @@ const Jobs = () => {
                 >
                   {val}
                   <button
+                    aria-label={`Remove ${val} filter`}
                     onClick={() => {
                       setActiveFilters((prev) => {
                         const updated = { ...prev };
@@ -182,7 +151,7 @@ const Jobs = () => {
         {/* ── Layout ── */}
         <div className="flex gap-5 items-start">
 
-          {/* Point 3: Desktop FilterCard — toggleable */}
+          {/* Desktop FilterCard — toggleable */}
           <AnimatePresence>
             {showFilterPanel && (
               <motion.div
@@ -232,6 +201,7 @@ const Jobs = () => {
                     </div>
                     <button
                       onClick={() => setShowMobileFilter(false)}
+                      aria-label="Close filters"
                       className="h-8 w-8 rounded-lg border border-gray-100 flex items-center justify-center text-gray-500 hover:bg-gray-50"
                     >
                       <X className="h-4 w-4" />
@@ -284,7 +254,7 @@ const Jobs = () => {
           ) : (
             <div className="flex-1 min-w-0">
 
-              {/* Grid — Point 4: paginated */}
+              {/* Grid — paginated */}
               <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
                 <AnimatePresence mode="popLayout">
                   {paginatedJobs.map((job) => (
@@ -302,7 +272,7 @@ const Jobs = () => {
                 </AnimatePresence>
               </div>
 
-              {/* ── Pagination — Point 4 ── */}
+              {/* ── Pagination ── */}
               {totalPages > 1 && (
                 <div className="flex items-center justify-center gap-2 mt-10">
 
@@ -373,8 +343,6 @@ const Jobs = () => {
 
         </div>
       </div>
-
-      <Footer />
     </div>
   );
 };

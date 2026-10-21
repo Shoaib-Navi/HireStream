@@ -1,14 +1,12 @@
 import React, { useEffect, useState } from "react";
-import Navbar from "../shared/Navbar";
 import { Label } from "../ui/label";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { Link, useNavigate } from "react-router-dom";
-import axios from "axios";
-import { USER_API_END_POINT } from "@/utils/constant";
 import { toast } from "sonner";
 import { useDispatch, useSelector } from "react-redux";
 import { setLoading } from "@/redux/authSlice";
+import api, { getErrorMessage } from "@/lib/api";
 import {
   Loader2,
   Mail,
@@ -28,7 +26,7 @@ const Signup = () => {
     phoneNumber: "",
     password: "",
     role: "",
-    file: "",
+    file: null,
   });
   const { loading, user } = useSelector((store) => store.auth);
   const navigate = useNavigate();
@@ -37,7 +35,7 @@ const Signup = () => {
   const changeEventHandler = (e) =>
     setInput({ ...input, [e.target.name]: e.target.value });
   const changeFileHandler = (e) =>
-    setInput({ ...input, file: e.target.files?.[0] });
+    setInput({ ...input, file: e.target.files?.[0] ?? null });
 
   const submitHandler = async (e) => {
     e.preventDefault();
@@ -51,16 +49,11 @@ const Signup = () => {
       formData.append("role", input.role);
       if (input.file) formData.append("file", input.file);
 
-      const res = await axios.post(`${USER_API_END_POINT}/register`, formData, {
-        headers: { "content-type": "multipart/form-data" },
-        withCredentials: true,
-      });
-      if (res.data.success) {
-        navigate("/login");
-        toast.success(res.data.message);
-      }
+      const res = await api.post("/user/register", formData);
+      navigate("/login");
+      toast.success(res.data.message);
     } catch (error) {
-      toast.error(error.response.data.message);
+      toast.error(getErrorMessage(error));
     } finally {
       dispatch(setLoading(false));
     }
@@ -69,10 +62,10 @@ const Signup = () => {
   // Reset loading state on mount
   useEffect(() => {
     dispatch(setLoading(false));
-  }, []);
+  }, [dispatch]);
   useEffect(() => {
-    if (user) navigate("/");
-  }, [user]);
+    if (user) navigate("/", { replace: true });
+  }, [user, navigate]);
 
   const perks = [
     "Access 12,000+ verified job listings",
@@ -83,8 +76,6 @@ const Signup = () => {
 
   return (
     <div className="min-h-screen bg-white">
-      <Navbar />
-
       <div className="min-h-[calc(100vh-64px)] flex">
         {/* ── Left visual panel (hidden on mobile) ── */}
         <div className="hidden lg:flex lg:w-1/2 bg-gray-950 relative overflow-hidden flex-col justify-between p-12">
@@ -217,7 +208,7 @@ const Signup = () => {
                   <div className="relative">
                     <Phone className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
                     <Input
-                      type="number"
+                      type="tel"
                       name="phoneNumber"
                       value={input.phoneNumber}
                       onChange={changeEventHandler}
@@ -280,7 +271,7 @@ const Signup = () => {
                     {input.file ? input.file.name : "Click to upload photo"}
                   </span>
                   <Input
-                    accept="image/*"
+                    accept="image/jpeg,image/png,image/webp,image/gif"
                     type="file"
                     onChange={changeFileHandler}
                     className="hidden"

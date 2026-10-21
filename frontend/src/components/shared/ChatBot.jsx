@@ -1,34 +1,13 @@
 import React, { useState, useRef, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { X, Send, Bot, Minimize2, Maximize2 } from "lucide-react";
+import api, { getErrorMessage } from "@/lib/api";
 
-const SYSTEM_PROMPT = (user, jobs) => `
-You are HireStream AI, a friendly career assistant for a job portal called HireStream.
-You help job seekers find jobs, improve their profiles, and prepare for interviews.
-
-Current logged-in user info:
-- Name: ${user?.fullname || "Guest"}
-- Skills: ${user?.profile?.skills?.join(", ") || "Not specified"}
-- Bio: ${user?.profile?.bio || "Not specified"}
-- Experience: ${user?.profile?.experience || "Not specified"}
-
-Available jobs on the platform (use this to answer job-related questions):
-${jobs?.slice(0, 20).map((j) =>
-  `- ${j.title} at ${j.company?.name} | Location: ${j.location} | Salary: ${j.salary} LPA | Type: ${j.jobType}`
-).join("\n")}
-
-Rules:
-- Keep responses short, friendly, and helpful (max 3-4 lines)
-- If asked about jobs, refer to the actual jobs listed above
-- If asked to improve profile, give specific actionable advice
-- Never make up job listings not in the list above
-- Use bullet points for lists
-- Always end with a helpful follow-up question or suggestion
-`;
+const MAX_INPUT_LENGTH = 2000;
+const MAX_HISTORY = 20;
 
 const ChatBot = () => {
-  const { user }    = useSelector((store) => store.auth);
-  const { allJobs } = useSelector((store) => store.job);
+  const { user } = useSelector((store) => store.auth);
 
   const [isOpen,      setIsOpen]      = useState(false);
   const [isMinimized, setIsMinimized] = useState(false);
@@ -42,9 +21,6 @@ const ChatBot = () => {
   const [loading, setLoading] = useState(false);
   const bottomRef = useRef(null);
 
-  // Detect mobile
-  const isMobile = typeof window !== "undefined" && window.innerWidth < 640;
-
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
@@ -52,44 +28,20 @@ const ChatBot = () => {
   const sendMessage = async () => {
     if (!input.trim() || loading) return;
     const userMsg = { role: "user", content: input.trim() };
-    setMessages((prev) => [...prev, userMsg]);
+    const history = [...messages, userMsg];
+    setMessages(history);
     setInput("");
     setLoading(true);
 
     try {
-      const response = await fetch(
-        `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${import.meta.env.VITE_GEMINI_API_KEY}`,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            contents: [
-              { role: "user", parts: [{ text: SYSTEM_PROMPT(user, allJobs) }] },
-              ...messages.map((m) => ({
-                role: m.role === "assistant" ? "model" : "user",
-                parts: [{ text: m.content }],
-              })),
-              { role: "user", parts: [{ text: userMsg.content }] },
-            ],
-          }),
-        }
-      );
-
-      if (!response.ok) {
-        const err = await response.json();
-        console.error("Gemini error:", err);
-        if (response.status === 429) {
-          setMessages((prev) => [...prev, { role: "assistant", content: "I'm getting too many requests. Please wait a moment and try again!" }]);
-          return;
-        }
-        throw new Error("API failed");
-      }
-
-      const data  = await response.json();
-      const reply = data?.candidates?.[0]?.content?.parts?.[0]?.text || "Sorry, I couldn't understand that. Try again!";
-      setMessages((prev) => [...prev, { role: "assistant", content: reply }]);
-    } catch (err) {
-      setMessages((prev) => [...prev, { role: "assistant", content: "Oops! Something went wrong. Please try again." }]);
+      // The server adds job/profile context and keeps the Gemini API key private
+      const res = await api.post("/chat", { messages: history.slice(-MAX_HISTORY) });
+      setMessages((prev) => [...prev, { role: "assistant", content: res.data.reply }]);
+    } catch (error) {
+      setMessages((prev) => [
+        ...prev,
+        { role: "assistant", content: getErrorMessage(error, "Oops! Something went wrong. Please try again.") },
+      ]);
     } finally {
       setLoading(false);
     }
@@ -115,6 +67,7 @@ const ChatBot = () => {
       {!isOpen && (
         <button
           onClick={() => setIsOpen(true)}
+          aria-label="Open HireStream AI assistant"
           className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-50 h-12 w-12 sm:h-14 sm:w-14 rounded-full bg-[#6a38c2] hover:bg-[#5b2db0] text-white shadow-lg shadow-[#6a38c2]/40 flex items-center justify-center transition-all hover:scale-105"
         >
           <Bot className="h-5 w-5 sm:h-6 sm:w-6" />
@@ -128,13 +81,13 @@ const ChatBot = () => {
           className={`
             fixed z-50 bg-white border border-gray-100 shadow-2xl shadow-purple-200/50
             flex flex-col transition-all duration-300
-            
+
             /* Mobile: full screen bottom sheet */
             bottom-0 left-0 right-0 rounded-t-2xl
-            
+
             /* sm+: floating window bottom-right */
             sm:bottom-6 sm:left-auto sm:right-6 sm:rounded-2xl sm:w-[360px]
-            
+
             ${isMinimized ? "h-[60px] overflow-hidden" : "h-[85vh] sm:h-[520px]"}
           `}
         >
@@ -156,12 +109,14 @@ const ChatBot = () => {
               {/* Minimize only on desktop */}
               <button
                 onClick={() => setIsMinimized(!isMinimized)}
+                aria-label={isMinimized ? "Expand chat" : "Minimize chat"}
                 className="hidden sm:flex h-7 w-7 rounded-lg hover:bg-white/20 items-center justify-center text-white transition-colors"
               >
                 {isMinimized ? <Maximize2 className="h-3.5 w-3.5" /> : <Minimize2 className="h-3.5 w-3.5" />}
               </button>
               <button
                 onClick={() => { setIsOpen(false); setIsMinimized(false); }}
+                aria-label="Close chat"
                 className="h-7 w-7 rounded-lg hover:bg-white/20 flex items-center justify-center text-white transition-colors"
               >
                 <X className="h-3.5 w-3.5" />
@@ -238,6 +193,7 @@ const ChatBot = () => {
               <input
                 type="text"
                 value={input}
+                maxLength={MAX_INPUT_LENGTH}
                 onChange={(e) => setInput(e.target.value)}
                 onKeyDown={handleKeyDown}
                 placeholder="Ask me anything..."
@@ -246,6 +202,7 @@ const ChatBot = () => {
               <button
                 onClick={sendMessage}
                 disabled={!input.trim() || loading}
+                aria-label="Send message"
                 className="h-7 w-7 rounded-lg bg-[#6a38c2] disabled:bg-gray-200 flex items-center justify-center text-white transition-colors hover:bg-[#5b2db0] shrink-0"
               >
                 <Send className="h-3.5 w-3.5" />

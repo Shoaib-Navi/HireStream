@@ -1,25 +1,29 @@
-import { setSingleCompany } from '@/redux/companySlice'
-import { COMPANY_API_END_POINT } from '@/utils/constant'
-import axios from 'axios'
-import { useEffect } from 'react'
-import { useDispatch } from 'react-redux'
+import api from "@/lib/api";
+import { setSingleCompany } from "@/redux/companySlice";
+import { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
 
 const useGetCompanyById = (companyId) => {
-    const dispatch = useDispatch();
+  const dispatch = useDispatch();
+  const [failedId, setFailedId] = useState(null);
 
-    useEffect(()=>{
-        const fetchSingleCompany = async () => {
-            try {
-                const res = await axios.get(`${COMPANY_API_END_POINT}/get/${companyId}`,{withCredentials:true});
-                if(res.data.success){
-                    dispatch(setSingleCompany(res.data.company));
-                }
-            } catch (error) {
-                console.log(error);
-            }
-        }
-        fetchSingleCompany();
-    },[companyId, dispatch])
-}
+  useEffect(() => {
+    const controller = new AbortController();
+    const fetchSingleCompany = async () => {
+      try {
+        const res = await api.get(`/company/get/${companyId}`, { signal: controller.signal });
+        dispatch(setSingleCompany(res.data.company));
+      } catch (error) {
+        if (controller.signal.aborted) return;
+        console.error(error);
+        setFailedId(companyId);
+      }
+    };
+    fetchSingleCompany();
+    return () => controller.abort();
+  }, [companyId, dispatch]);
 
-export default useGetCompanyById
+  return { failed: failedId === companyId };
+};
+
+export default useGetCompanyById;

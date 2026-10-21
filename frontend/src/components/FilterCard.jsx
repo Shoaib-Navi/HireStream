@@ -1,59 +1,40 @@
-import React, { useEffect, useState } from 'react'
+import React, { useId } from 'react'
 import { RadioGroup, RadioGroupItem } from './ui/radio-group.jsx'
-import { Label } from '@radix-ui/react-label'
-import { useDispatch } from 'react-redux'
-import { setSearchedQuery } from '@/redux/jobSlice.js'
+import { Label } from './ui/label'
+import { JOB_FILTERS } from '@/lib/jobFilters'
 
-const filterData =[
-    {
-        filterType:"Location",
-        array:["Delhi","Noida","Gurugram","Hyderabad","Bangalore","Pune","Mumbai"]
-    },
-    {
-        filterType:"Role",
-        array:["Frontend Developer","Backend Developer","FullStack Developer"]
-    },
-    {
-        filterType:"Salary",
-        array:["0-40k","40-99k","1-5lakh"]
-    }
-]
+// Controlled by the parent (Jobs page): one selection per filter category
+const FilterCard = ({ activeFilters, setActiveFilters }) => {
+  // unique ids, because the desktop panel and the mobile drawer can both be mounted
+  const baseId = useId();
 
-const FilterCard = () => {
-    const [selectedValue, setSelectedValue] = useState('')
-    const dispatch = useDispatch();
-    const changeHandler = (value)=>{
-        setSelectedValue(value)
-    }
+  const changeHandler = (type, value) => {
+    setActiveFilters((prev) => ({ ...prev, [type]: [value] }));
+  };
 
-    useEffect(()=>{
-         dispatch(setSearchedQuery(selectedValue))      
-    },[selectedValue])
   return (
     <div className='w-full bg-white p-3 rounded-md'>
-        <h1 className='font-bold text-lg'>Filter Jobs</h1>
-        <hr className='mt-3'/>
-        <RadioGroup value={selectedValue} onValueChange={changeHandler} >
-            {
-                filterData.map((data,index)=>(
-                    <div>
-                        <h1 className='font-bold text-lg'>{data.filterType}</h1>
-                        {
-                            data.array.map((item,idx)=>{
-                                const itemId = `id${index}-${idx}`;
-                                return (
-                                    <div className='flex items-center space-x-2 my-2 '>
-                                        <RadioGroupItem value={item} id={itemId} />
-                                        <Label htmlFor={itemId} >{item}</Label>
-                                    </div>
-                                )
-                            })
-                        }
-                    </div>
-                ))
-            }
+      <h1 className='font-bold text-lg'>Filter Jobs</h1>
+      <hr className='mt-3' />
+      {JOB_FILTERS.map(({ type, options }, typeIndex) => (
+        <RadioGroup
+          key={type}
+          value={activeFilters[type]?.[0] ?? ''}
+          onValueChange={(value) => changeHandler(type, value)}
+          className='mt-3 gap-0'
+        >
+          <h2 className='font-bold text-lg'>{type}</h2>
+          {options.map((option, optionIndex) => {
+            const itemId = `${baseId}-${typeIndex}-${optionIndex}`;
+            return (
+              <div key={option} className='flex items-center space-x-2 my-2'>
+                <RadioGroupItem value={option} id={itemId} />
+                <Label htmlFor={itemId}>{option}</Label>
+              </div>
+            )
+          })}
         </RadioGroup>
-      
+      ))}
     </div>
   )
 }

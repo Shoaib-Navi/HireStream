@@ -1,102 +1,76 @@
 import { Company } from "../models/company.js";
-import getDataUri from "../utils/datauri.js";
-import cloudinary from "../utils/cloudinary.js";
+import { ApiError } from "../utils/ApiError.js";
+import { uploadToCloudinary } from "../utils/cloudinary.js";
 
-export const registerCompany = async (req,res) =>{
-    try {
-        const {companyName} = req.body;
-        if(!companyName){
-            return res.status(400).json({
-                message:"Company name is required",
-                success:false
-            })
-        }
-        let company = await Company.findOne({name:companyName});
-        if(company){
-            return res.status(400).json({
-                message:"You can't register same company",
-                success:false
-            })
-        }
-        company = await Company.create({
-            name:companyName,
-            userId:req.id
-        })
-        return res.status(201).json({
-            message:"Company registered successfully",
-            company,
-            success:true
-        })
-        
-    } catch (error) {
-        console.log(error);    
+// Other recruiters' companies also return 404, so company ids can't be probed
+const findOwnedCompany = async (companyId, userId) => {
+  const company = await Company.findById(companyId);
+  if (!company || !company.userId.equals(userId)) {
+    throw new ApiError(404, "Company not found");
+  }
+  return company;
+};
+
+export const registerCompany = async (req, res) => {
+  const { companyName } = req.body;
+
+  const companyExists = await Company.exists({ name: companyName });
+  if (companyExists) {
+    throw new ApiError(409, "You can't register same company");
+  }
+
+  const company = await Company.create({
+    name: companyName,
+    userId: req.id,
+  });
+
+  return res.status(201).json({
+    message: "Company registered successfully",
+    company,
+    success: true,
+  });
+};
+
+// Companies owned by the logged-in recruiter
+export const getCompany = async (req, res) => {
+  const companies = await Company.find({ userId: req.id }).sort({ createdAt: -1 });
+  return res.status(200).json({
+    companies,
+    success: true,
+  });
+};
+
+export const getCompanyById = async (req, res) => {
+  const company = await findOwnedCompany(req.params.id, req.id);
+  return res.status(200).json({
+    company,
+    success: true,
+  });
+};
+
+export const updateCompany = async (req, res) => {
+  const company = await findOwnedCompany(req.params.id, req.id);
+  const { name, description, website, location } = req.body;
+
+  if (name !== company.name) {
+    const nameTaken = await Company.exists({ name, _id: { $ne: company._id } });
+    if (nameTaken) {
+      throw new ApiError(409, "A company with this name already exists");
     }
-}
+  }
 
-export const getCompany = async (req,res)=>{
-    try {
-        const userId = req.id;  //logged in user id
-        const companies = await Company.find({userId});
-        if(!companies){
-            return res.status(404).json({
-                message:"Companies not found",
-                success:false
-            })
-        }  
-        return res.status(200).json({
-            companies,
-            success:true
-        })      
-    } catch (error) {
-        
-    }
-}
+  company.set({ name, description, website, location });
 
-//get company by id
-export const getCompanyById = async (req,res)=>{
-    try {
-       const companyId = req.params.id;
-       const company = await Company.findById(companyId);
-       if(!company){
-        return res.status(404).json({
-            message:"Company not found",
-            success:false
-        })
-       } 
-       return res.status(200).json({
-        company,
-        success:true
-       })
-    } catch (error) {
-        console.log(error)
-    }
-}
+  // Logo is optional on update; keep the existing one when no new file is sent
+  if (req.file) {
+    company.logo = await uploadToCloudinary(req.file);
+  }
 
-export const updateCompany = async (req,res) =>{
-    try {
-       const {name, description, website, location} = req.body;
-       
-       const file = req.file;
-       //cloudinary aayega
-       const fileUri = getDataUri(file);
-       const cloudResponse = await cloudinary.uploader.upload(fileUri.content);
-       const logo = cloudResponse.secure_url;
+  await company.save();
 
-
-       const updateData = {name, description, website, location,logo};
-       const company = await Company.findByIdAndUpdate(req.params.id, updateData, { new:true });
-
-       if(!company){
-        return res.status(404).json({
-            message:"Company not found",
-            success:false
-        })
-       }
-       return res.status(200).json({
-        message:"Company information updated",
-        success:true
-       })
-    } catch (error) {
-        console.log(error)
-    }
-}
+  return res.status(200).json({
+    message: "Company information updated",
+    company,
+    success: true,
+  });
+};

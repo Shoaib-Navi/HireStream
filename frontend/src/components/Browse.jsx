@@ -1,30 +1,20 @@
-import React, { useEffect } from "react";
-import Navbar from "./shared/Navbar";
+import React from "react";
 import Job from "./Job";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import useGetAllJobs from "@/hooks/useGetAllJobs";
-import { setSearchedQuery } from "@/redux/jobSlice";
-import Footer from "./shared/Footer";
 import PageHero from "./shared/PageHero";
 import { Search } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
 
 const Browse = () => {
-  useGetAllJobs();
+  // The search lives in the URL (/browse?keyword=react), so it can be shared and survives a refresh
+  const [searchParams, setSearchParams] = useSearchParams();
+  const keyword = searchParams.get("keyword") ?? "";
+  useGetAllJobs(keyword);
   const { allJobs } = useSelector((store) => store.job);
-  const dispatch    = useDispatch();
-  const navigate    = useNavigate();
-
-  useEffect(() => {
-    return () => {
-      dispatch(setSearchedQuery(""));
-    };
-  }, []);
 
   return (
     <div>
-      <Navbar />
-
       {/* PageHero with padding */}
       <div className="px-4 sm:px-6 pt-4 sm:pt-6 max-w-6xl mx-auto">
         <PageHero
@@ -51,7 +41,7 @@ const Browse = () => {
             </h1>
             <p className="text-xs sm:text-sm text-gray-400 mt-0.5">
               {allJobs.length > 0
-                ? `Showing ${allJobs.length} open position${allJobs.length > 1 ? "s" : ""}`
+                ? `Showing ${allJobs.length} open position${allJobs.length > 1 ? "s" : ""}${keyword ? ` for "${keyword}"` : ""}`
                 : "No results found"}
             </p>
           </div>
@@ -69,12 +59,14 @@ const Browse = () => {
             <p className="text-sm text-gray-400 max-w-xs">
               Try adjusting your search or browse all available listings.
             </p>
-            <button
-              onClick={() => { dispatch(setSearchedQuery("")); navigate("/browse"); }}
-              className="mt-5 px-5 py-2.5 rounded-xl bg-[#6a38c2] text-white text-sm font-semibold hover:bg-[#5b2db0] transition-colors"
-            >
-              Clear search
-            </button>
+            {keyword && (
+              <button
+                onClick={() => setSearchParams({})}
+                className="mt-5 px-5 py-2.5 rounded-xl bg-[#6a38c2] text-white text-sm font-semibold hover:bg-[#5b2db0] transition-colors"
+              >
+                Clear search
+              </button>
+            )}
           </div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
@@ -85,8 +77,6 @@ const Browse = () => {
         )}
 
       </div>
-
-      <Footer />
     </div>
   );
 };

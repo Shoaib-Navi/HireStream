@@ -1,8 +1,6 @@
 import React, { useState } from "react";
 import { Button } from "../ui/button";
 import { Search } from "lucide-react";
-import { useDispatch } from "react-redux";
-import { setSearchedQuery } from "@/redux/jobSlice";
 import { useNavigate } from "react-router-dom";
 
 const PopularTags = ({ onTagClick }) => {
@@ -25,12 +23,11 @@ const PopularTags = ({ onTagClick }) => {
 
 const HeroSection = () => {
   const [query, setQuery] = useState("");
-  const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const searchJobHandler = () => {
-    dispatch(setSearchedQuery(query));
-    navigate("/browse");
+    const keyword = query.trim();
+    navigate(keyword ? `/browse?keyword=${encodeURIComponent(keyword)}` : "/browse");
   };
 
   const handleKeyDown = (e) => {

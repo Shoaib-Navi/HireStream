@@ -5,8 +5,7 @@ import { Button } from "../ui/button";
 import { LogOut, User2, Menu, X } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { USER_API_END_POINT } from "@/utils/constant";
-import axios from "axios";
+import api, { getErrorMessage } from "@/lib/api";
 import { setUser } from "@/redux/authSlice";
 import { toast } from "sonner";
 
@@ -18,18 +17,15 @@ const Navbar = () => {
 
   const logoutHandler = async () => {
     try {
-      const res = await axios.get(`${USER_API_END_POINT}/logout`, {
-        withCredentials: true,
-      });
-      if (res.data.success) {
-        dispatch(setUser(null));
-        navigate("/");
-        toast.success(res.data.message);
-        setMobileOpen(false);
-      }
+      const res = await api.post("/user/logout");
+      toast.success(res.data.message);
     } catch (error) {
-      console.log(error);
-      toast.error(error.response.data.message);
+      toast.error(getErrorMessage(error));
+    } finally {
+      // clear the local session even if the request failed
+      dispatch(setUser(null));
+      setMobileOpen(false);
+      navigate("/");
     }
   };
 

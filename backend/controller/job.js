@@ -1,108 +1,98 @@
+import { Application } from "../models/application.js";
+import { Company } from "../models/company.js";
 import { Job } from "../models/job.js";
+import { ApiError } from "../utils/ApiError.js";
+import { escapeRegex } from "../utils/escapeRegex.js";
 
-//admin post krega job
-export const postJob = async(req,res)=>{
-    try {
-        const { title, description, requirements, salary, location, jobType, experience, position, companyId} = req.body;
-        const userId = req.id;
-        if(!title || !description || !requirements || !salary || !location || !jobType || !experience || !position || !companyId){
-            return res.status(400).json({
-                message:"Something is missing",
-                success:false
-            })
-        }
-        const job = await Job.create({
-            title,
-            description,
-            requirements: requirements.split(","),
-            salary:Number(salary),
-            location,
-            jobType,
-            experienceLevel:experience,
-            position,
-            company:companyId,
-            created_by:userId
-        })
-        return res.status(201).json({
-            message:"New job created successfully",
-            job,
-            success:true
-        })
-        
-    } catch (error) {
-        console.log(error)
-    }
-}
+const MAX_KEYWORD_LENGTH = 100;
 
-//student k liye
-export const getAllJobs = async(req,res)=>{
-    try {
-        const keyword = req.query.keyword ||"";
-        const query = {
-            $or:[
-                {title:{$regex: keyword, $options:"i"}},
-                {description:{$regex: keyword, $options:"i"}},
-            ]
-        }
-        const jobs = await Job.find(query).populate({
-            path:"company"
-        }).sort({createdAt:-1});
-        if(!jobs){
-            return res.status(404).json({
-                message:"Jobs not found",
-                success:false
-            })
-        }
-        return res.status(200).json({
-            jobs,
-            success:true
-        })
-    } catch (error) {
-        console.log(error);
-    }
-}
+// Public company fields shown on job cards (hides the owner's user id)
+const COMPANY_POPULATE = { path: "company", select: "name description website location logo" };
 
-//student k liye
-export const getJobById = async (req,res)=>{
-   try {
-     const jobId = req.params.id;
-    const job = await Job.findById(jobId).populate({
-        path:"applications"
-    });
-    if(!job){
-        return res.stauts(404).json({
-            message:"Job not found",
-            success:true
-        })
-    }
-    return res.status(200).json({
-        job,
-        success:true 
-    })
-   } catch (error) {
-    console.log(error);
-   }
-}
+// Recruiter posts a job for one of their own companies
+export const postJob = async (req, res) => {
+  const { title, description, requirements, salary, location, jobType, experience, position, companyId } =
+    req.body;
 
-//admin kitne job create kra h abhi tk
-export const getAdminJobs = async (req,res)=>{
-  try {
-      const adminId = req.id;
-    const jobs = await Job.find({created_by:adminId}).populate({
-        path:"company",
-        createdAt:-1 
-    });
-    if(!jobs){
-        return res.status(404).json({
-            message:"Jobs not found",
-            success:false
-        })
-    }
-    return res.status(200).json({
-        jobs,
-        success:true
-    })
-  } catch (error) {
-    console.log(error);
+  const ownsCompany = await Company.exists({ _id: companyId, userId: req.id });
+  if (!ownsCompany) {
+    throw new ApiError(404, "Company not found. Please register the company before posting a job.");
   }
-}
+
+  const job = await Job.create({
+    title,
+    description,
+    requirements,
+    salary,
+    location,
+    jobType,
+    experienceLevel: experience,
+    position,
+    company: companyId,
+    created_by: req.id,
+  });
+
+  return res.status(201).json({
+    message: "New job created successfully",
+    job,
+    success: true,
+  });
+};
+
+// Public job listing with optional keyword search
+export const getAllJobs = async (req, res) => {
+  const keyword =
+    typeof req.query.keyword === "string" ? req.query.keyword.trim().slice(0, MAX_KEYWORD_LENGTH) : "";
+
+  const filter = {};
+  if (keyword) {
+    const pattern = new RegExp(escapeRegex(keyword), "i");
+    filter.$or = [{ title: pattern }, { description: pattern }, { location: pattern }, { jobType: pattern }];
+  }
+
+  const jobs = await Job.find(filter)
+    .select("-applications")
+    .populate(COMPANY_POPULATE)
+    .sort({ createdAt: -1 });
+
+  return res.status(200).json({
+    jobs,
+    success: true,
+  });
+};
+
+// Public job details. Individual applications are never exposed, only the count
+// and whether the logged-in user has applied.
+export const getJobById = async (req, res) => {
+  const job = await Job.findById(req.params.id).select("-applications").populate(COMPANY_POPULATE);
+  if (!job) {
+    throw new ApiError(404, "Job not found");
+  }
+
+  const [applicantCount, existingApplication] = await Promise.all([
+    Application.countDocuments({ job: job._id }),
+    req.id ? Application.exists({ job: job._id, applicant: req.id }) : null,
+  ]);
+
+  return res.status(200).json({
+    job: {
+      ...job.toJSON(),
+      applicantCount,
+      hasApplied: Boolean(existingApplication),
+    },
+    success: true,
+  });
+};
+
+// Jobs posted by the logged-in recruiter
+export const getAdminJobs = async (req, res) => {
+  const jobs = await Job.find({ created_by: req.id })
+    .select("-applications")
+    .populate(COMPANY_POPULATE)
+    .sort({ createdAt: -1 });
+
+  return res.status(200).json({
+    jobs,
+    success: true,
+  });
+};

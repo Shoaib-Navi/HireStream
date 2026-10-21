@@ -3,8 +3,6 @@
 // REMOVE: Delete this entire file + its import in Home.jsx if not needed
 
 import React from "react";
-import { useDispatch } from "react-redux";
-import { setSearchedQuery } from "@/redux/jobSlice";
 import { useNavigate } from "react-router-dom";
 import {
   Code2, Paintbrush, BarChart3, HeadphonesIcon,
@@ -23,12 +21,10 @@ const categories = [
 ];
 
 const CategorySection = () => {
-  const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const handleCategoryClick = (label) => {
-    dispatch(setSearchedQuery(label));
-    navigate("/browse");
+    navigate(`/browse?keyword=${encodeURIComponent(label)}`);
   };
 
   return (

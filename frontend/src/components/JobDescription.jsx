@@ -1,14 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { Badge } from "./ui/badge";
 import { Button } from "./ui/button";
-import { useParams } from "react-router-dom";
-import axios from "axios";
+import { useNavigate, useParams } from "react-router-dom";
 import { setSingleJob } from "@/redux/jobSlice";
-import { APPLICATION_API_END_POINT, JOB_API_END_POINT } from "@/utils/constant";
+import api, { getErrorMessage } from "@/lib/api";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "sonner";
-import Navbar from "./shared/Navbar";
-import Footer from "./shared/Footer";
 import PageHero from "./shared/PageHero";
 import { MapPin, Briefcase, Clock, Banknote, Users, Calendar } from "lucide-react";
 
@@ -25,62 +22,53 @@ const DetailRow = ({ label, value, icon: Icon }) => (
 const JobDescription = () => {
   const { singleJob } = useSelector((store) => store.job);
   const { user }      = useSelector((store) => store.auth);
+  const { id: jobId } = useParams();
+  const dispatch      = useDispatch();
+  const navigate      = useNavigate();
+  const [applying, setApplying] = useState(false);
+  const [failedId, setFailedId] = useState(null);
 
-  const isInitiallyApplied = singleJob?.applications?.some(
-    (application) => application.applicant === user?._id
-  ) || false;
-
-  const [isApplied, setIsApplied] = useState(isInitiallyApplied);
-  const params   = useParams();
-  const jobId    = params.id;
-  const dispatch = useDispatch();
+  // Ignore a job left in the store from a previously viewed page
+  const job         = singleJob?._id === jobId ? singleJob : null;
+  const isApplied   = Boolean(job?.hasApplied);
+  const isRecruiter = user?.role === "recruiter";
 
   const applyJobHandler = async () => {
+    if (!user) {
+      navigate("/login", { state: { from: `/description/${jobId}` } });
+      return;
+    }
     try {
-      const res = await axios.get(
-        `${APPLICATION_API_END_POINT}/apply/${jobId}`,
-        { withCredentials: true }
-      );
-      if (res.data.success) {
-        setIsApplied(true);
-        const updatedSingleJob = {
-          ...singleJob,
-          applications: [...singleJob.applications, { applicant: user?._id }],
-        };
-        dispatch(setSingleJob(updatedSingleJob));
-        toast.success(res.data.message);
-      }
+      setApplying(true);
+      const res = await api.post(`/application/apply/${jobId}`);
+      dispatch(setSingleJob({ ...job, hasApplied: true, applicantCount: (job?.applicantCount ?? 0) + 1 }));
+      toast.success(res.data.message);
     } catch (error) {
-      const message = error.response?.data?.message || error.message || "Something went wrong";
-      toast.error(message);
+      toast.error(getErrorMessage(error));
+    } finally {
+      setApplying(false);
     }
   };
 
+  // Refetch when the user changes so "hasApplied" matches the logged-in account
   useEffect(() => {
+    const controller = new AbortController();
     const fetchSingleJob = async () => {
       try {
-        const res = await axios.get(`${JOB_API_END_POINT}/get/${jobId}`, {
-          withCredentials: true,
-        });
-        if (res.data.success) {
-          dispatch(setSingleJob(res.data.job));
-          setIsApplied(
-            res.data.job.applications.some(
-              (application) => application.applicant === user?._id
-            )
-          );
-        }
+        const res = await api.get(`/job/get/${jobId}`, { signal: controller.signal });
+        dispatch(setSingleJob(res.data.job));
       } catch (error) {
-        console.log(error);
+        if (controller.signal.aborted) return;
+        console.error(error);
+        setFailedId(jobId);
       }
     };
     fetchSingleJob();
+    return () => controller.abort();
   }, [jobId, dispatch, user?._id]);
 
   return (
     <>
-      <Navbar />
-
       {/* Page Hero */}
       <div className="px-4 sm:px-6 pt-4 sm:pt-6 max-w-6xl mx-auto">
         <PageHero
@@ -95,68 +83,75 @@ const JobDescription = () => {
 
       {/* Main Content */}
       <div className="max-w-6xl mx-auto px-4 sm:px-6 py-6 sm:py-10">
+        {!job && failedId === jobId ? (
+          <div className="bg-[#fafafa] rounded-2xl border border-gray-100 p-10 text-center">
+            <h1 className="font-bold text-lg text-gray-900">Job not found</h1>
+            <p className="text-sm text-gray-500 mt-1">This job may have been removed.</p>
+          </div>
+        ) : (
         <div className="bg-[#fafafa] rounded-2xl sm:rounded-3xl border border-gray-100 p-5 sm:p-8 md:p-10">
 
           {/* ── Header: Title + Apply button ── */}
           <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4 mb-6">
             <div className="flex-1">
               <h1 className="font-bold text-xl sm:text-2xl text-gray-900 leading-tight">
-                {singleJob?.title}
+                {job?.title}
               </h1>
               {/* Company & Location pill */}
               <p className="text-sm text-gray-500 mt-1 flex items-center gap-1.5">
                 <MapPin className="h-3.5 w-3.5 text-[#6a38c2]" />
-                {singleJob?.location}
+                {job?.location}
               </p>
               {/* Badges */}
               <div className="flex flex-wrap items-center gap-2 mt-3">
                 <Badge className="text-blue-700 font-semibold text-xs" variant="ghost">
-                  {singleJob?.position} Positions
+                  {job?.position} Positions
                 </Badge>
                 <Badge className="text-[#f83002] font-semibold text-xs" variant="ghost">
-                  {singleJob?.jobType}
+                  {job?.jobType}
                 </Badge>
                 <Badge className="text-[#7209b7] font-semibold text-xs" variant="ghost">
-                  {singleJob?.salary} LPA
+                  {job?.salary} LPA
                 </Badge>
               </div>
             </div>
 
-            {/* Apply button — full width on mobile */}
-            <Button
-              onClick={isApplied ? null : applyJobHandler}
-              disabled={isApplied}
-              className={`w-full sm:w-auto rounded-xl px-6 py-2.5 text-sm font-semibold shrink-0 ${
-                isApplied
-                  ? "bg-gray-400 cursor-not-allowed"
-                  : "bg-[#7209b7] hover:bg-[#641897]"
-              }`}
-            >
-              {isApplied ? "Already Applied" : "Apply Now"}
-            </Button>
+            {/* Apply button — full width on mobile. Recruiters can't apply. */}
+            {job && !isRecruiter && (
+              <Button
+                onClick={applyJobHandler}
+                disabled={isApplied || applying}
+                className={`w-full sm:w-auto rounded-xl px-6 py-2.5 text-sm font-semibold shrink-0 ${
+                  isApplied
+                    ? "bg-gray-400 cursor-not-allowed"
+                    : "bg-[#7209b7] hover:bg-[#641897]"
+                }`}
+              >
+                {isApplied ? "Already Applied" : applying ? "Applying..." : "Apply Now"}
+              </Button>
+            )}
           </div>
 
           {/* ── Description summary ── */}
           <div className="bg-white rounded-xl border border-gray-100 p-4 sm:p-5 mb-6">
             <p className="text-sm text-gray-600 leading-relaxed">
-              {singleJob?.description}
+              {job?.description}
             </p>
           </div>
 
           {/* ── Details grid ── */}
           <div className="bg-white rounded-xl border border-gray-100 px-4 sm:px-6 py-2">
-            <DetailRow label="Role"             value={singleJob?.title}                    icon={Briefcase} />
-            <DetailRow label="Location"         value={singleJob?.location}                 icon={MapPin}    />
-            <DetailRow label="Experience"       value={`${singleJob?.experienceLevel} years`} icon={Clock}   />
-            <DetailRow label="Salary"           value={`${singleJob?.salary} LPA`}          icon={Banknote}  />
-            <DetailRow label="Total Applicants" value={singleJob?.applications?.length}     icon={Users}     />
-            <DetailRow label="Posted Date"      value={singleJob?.createdAt?.split("T")[0]} icon={Calendar}  />
+            <DetailRow label="Role"             value={job?.title}                    icon={Briefcase} />
+            <DetailRow label="Location"         value={job?.location}                 icon={MapPin}    />
+            <DetailRow label="Experience"       value={job ? `${job.experienceLevel} years` : ""} icon={Clock} />
+            <DetailRow label="Salary"           value={job ? `${job.salary} LPA` : ""} icon={Banknote} />
+            <DetailRow label="Total Applicants" value={job?.applicantCount}           icon={Users}     />
+            <DetailRow label="Posted Date"      value={job?.createdAt?.split("T")[0]} icon={Calendar}  />
           </div>
 
         </div>
+        )}
       </div>
-
-      <Footer />
     </>
   );
 };

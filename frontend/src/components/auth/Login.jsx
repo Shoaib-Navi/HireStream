@@ -1,21 +1,23 @@
 import React, { useEffect, useState } from "react";
-import Navbar from "../shared/Navbar";
 import { Label } from "../ui/label";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
-import { Link, useNavigate } from "react-router-dom";
-import axios from "axios";
-import { USER_API_END_POINT } from "@/utils/constant";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { useDispatch, useSelector } from "react-redux";
 import { setLoading, setUser } from "@/redux/authSlice";
+import api, { getErrorMessage } from "@/lib/api";
 import { Loader2, Mail, Lock, Briefcase, ArrowRight } from "lucide-react";
 
 const Login = () => {
   const [input, setInput] = useState({ email: "", password: "", role: "" });
   const { loading, user } = useSelector((store) => store.auth);
   const navigate = useNavigate();
+  const location = useLocation();
   const dispatch = useDispatch();
+
+  // Go back to the page that required login, if there was one
+  const redirectTo = location.state?.from || "/";
 
   const changeEventHandler = (e) =>
     setInput({ ...input, [e.target.name]: e.target.value });
@@ -24,34 +26,28 @@ const Login = () => {
     e.preventDefault();
     try {
       dispatch(setLoading(true));
-      const res = await axios.post(`${USER_API_END_POINT}/login`, input, {
-        headers: { "Content-Type": "application/json" },
-        withCredentials: true,
-      });
-      if (res.data.success) {
-        dispatch(setUser(res.data.user));
-        navigate("/");
-        toast.success(res.data.message);
-      }
+      const res = await api.post("/user/login", input);
+      dispatch(setUser(res.data.user));
+      toast.success(res.data.message);
     } catch (error) {
-      toast.error(error.response.data.message);
+      toast.error(getErrorMessage(error));
     } finally {
       dispatch(setLoading(false));
     }
   };
 
   // Reset loading state on mount
-   useEffect(() => {
-     dispatch(setLoading(false));
-   }, []);
-   useEffect(() => {
-     if (user) navigate("/");
-   }, [user]);
+  useEffect(() => {
+    dispatch(setLoading(false));
+  }, [dispatch]);
+
+  // Logged-in users (including right after logging in) leave this page
+  useEffect(() => {
+    if (user) navigate(redirectTo, { replace: true });
+  }, [user, navigate, redirectTo]);
 
   return (
     <div className="min-h-screen bg-white">
-      <Navbar />
-
       <div className="min-h-[calc(100vh-64px)] flex">
 
         {/* ── Left visual panel (hidden on mobile) ── */}
@@ -156,12 +152,7 @@ const Login = () => {
 
               {/* Password */}
               <div className="flex flex-col gap-1.5">
-                <div className="flex items-center justify-between">
-                  <Label className="text-sm font-semibold text-gray-700">Password</Label>
-                  <button type="button" className="text-xs text-[#6a38c2] hover:underline font-medium">
-                    Forgot password?
-                  </button>
-                </div>
+                <Label className="text-sm font-semibold text-gray-700">Password</Label>
                 <div className="relative">
                   <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
                   <Input

@@ -4,7 +4,6 @@ import jobSlice from "./jobSlice";
 import applicationSlice from "./applicationSlice";
 import companySlice from "./companySlice";
 import {
-  persistStore,
   persistReducer,
   FLUSH,
   REHYDRATE,
@@ -15,22 +14,31 @@ import {
 } from "redux-persist";
 import storage from "redux-persist/lib/storage";
 
-const persistConfig = {
-  key: "root",
+// Only the logged-in user is persisted. Jobs, companies and applicants are always
+// fetched fresh, so stale data never survives a reload.
+const authPersistConfig = {
+  key: "auth",
   version: 1,
   storage,
+  whitelist: ["user"],
 };
 
+// Remove the old snapshot of the whole store saved by previous versions
+try {
+  localStorage.removeItem("persist:root");
+} catch {
+  // storage unavailable (e.g. private mode)
+}
+
 const rootReducer = combineReducers({
-    auth:authSlice,
-    job:jobSlice,
-    company:companySlice,
-    application:applicationSlice
-})
-const persistedReducer = persistReducer(persistConfig, rootReducer);
+  auth: persistReducer(authPersistConfig, authSlice),
+  job: jobSlice,
+  company: companySlice,
+  application: applicationSlice,
+});
 
 const store = configureStore({
-  reducer: persistedReducer,
+  reducer: rootReducer,
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
       serializableCheck: {
