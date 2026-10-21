@@ -13,6 +13,10 @@ export const applicationListQuerySchema = z.object({
   ...paginationShape,
 });
 
+export const addNoteSchema = z.object({
+  body: optionalText("Note", 2000).pipe(z.string().min(1, "Note can't be empty")),
+});
+
 export const updateStatusSchema = z.object({
   status: z.enum(RECRUITER_STATUSES, { error: "Please choose a valid status" }),
   note: optionalText("Note", 500).optional(),

@@ -5,6 +5,7 @@ import { validate } from "../../middleware/validate.js";
 import { idParams } from "../../validation/common.js";
 import * as applicationsController from "./applications.controller.js";
 import {
+  addNoteSchema,
   applicationListQuerySchema,
   applySchema,
   jobIdParams,
@@ -42,4 +43,10 @@ applicationsRouter.patch(
   recruiterOnly,
   validate({ params: idParams, body: updateStatusSchema }),
   applicationsController.updateStatus,
+);
+applicationsRouter.post(
+  "/:id/notes",
+  recruiterOnly,
+  validate({ params: idParams, body: addNoteSchema }),
+  applicationsController.addNote,
 );

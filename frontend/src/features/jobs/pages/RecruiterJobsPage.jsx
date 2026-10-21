@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Briefcase, Building2, Eye, Plus, Users } from "lucide-react";
+import { Briefcase, Building2, Plus, Users } from "lucide-react";
 import { Link } from "react-router-dom";
 import CompanyLogo from "@/components/common/CompanyLogo";
 import EmptyState from "@/components/common/EmptyState";
@@ -16,6 +16,7 @@ import { formatDate, pluralize } from "@/lib/format";
 import { cleanParams } from "@/lib/query";
 import { cn } from "@/lib/utils";
 import { useGetRecruiterJobsQuery } from "../api";
+import JobActionsMenu from "../components/JobActionsMenu";
 
 const STATUS_TABS = [
   { value: "all", label: "All" },
@@ -76,31 +77,26 @@ const RecruiterJobsPage = () => {
     return (
       <ul className={cn("divide-y overflow-hidden rounded-xl border bg-card transition-opacity", isFetching && "opacity-60")}>
         {jobs.map((job) => (
-          <li
-            key={job._id}
-            className="flex flex-col gap-4 px-5 py-4 transition-colors hover:bg-accent/50 sm:flex-row sm:items-center"
-          >
+          <li key={job._id} className="flex flex-col gap-4 px-5 py-4 transition-colors hover:bg-accent/50 sm:flex-row sm:items-center">
             <CompanyLogo company={job.company} size="sm" />
             <div className="min-w-0 flex-1 space-y-1">
               <div className="flex flex-wrap items-center gap-2">
-                <p className="type-h4 truncate text-foreground">{job.title}</p>
+                <Link to={`/recruiter/jobs/${job._id}/edit`} className="type-h4 truncate text-foreground hover:underline">
+                  {job.title}
+                </Link>
                 <StatusBadge type="job" status={job.status} />
               </div>
               <p className="type-caption text-muted-foreground">
                 {job.company?.name} · {job.location} · Posted {formatDate(job.createdAt)}
               </p>
             </div>
-            <div className="flex flex-wrap items-center gap-2">
+            <div className="flex items-center gap-2">
               <Button asChild variant="soft" size="sm">
                 <Link to={`/recruiter/jobs/${job._id}/applicants`}>
                   <Users /> {pluralize(job.applicationCount, "applicant")}
                 </Link>
               </Button>
-              <Button asChild variant="ghost" size="sm">
-                <Link to={`/jobs/${job._id}`}>
-                  <Eye /> View
-                </Link>
-              </Button>
+              <JobActionsMenu job={job} />
             </div>
           </li>
         ))}

@@ -13,6 +13,8 @@ import { EMPLOYMENT_TYPES, WORK_MODES } from "@/lib/constants";
 import { getErrorMessage } from "@/lib/errors";
 import { EMPTY_JOB_FORM, toJobFormError, toJobPayload } from "../utils/jobForm";
 
+const EDIT = "edit";
+
 const todayInputValue = () => new Date().toISOString().slice(0, 10);
 
 const SelectField = ({ id, label, value, options, onChange, error, placeholder }) => (
@@ -32,23 +34,25 @@ const SelectField = ({ id, label, value, options, onChange, error, placeholder }
   </FormField>
 );
 
-// onSubmit(payload) should return a promise that rejects with the API error
-const JobForm = ({ companies, initialValues, onSubmit }) => {
+// Used to post a new job (publish or save as draft) and to edit an existing one.
+// onSubmit(payload) should return a promise that rejects with the API error.
+const JobForm = ({ companies, initialValues, isEditing = false, onSubmit }) => {
   const { values, errors, handleChange, setField, setServerErrors } = useFormState({
     ...EMPTY_JOB_FORM,
     ...initialValues,
   });
-  const [submittingStatus, setSubmittingStatus] = useState(null);
+  const [submitting, setSubmitting] = useState(null);
 
-  const submit = async (status) => {
-    setSubmittingStatus(status);
+  // action is "open" or "draft" for new jobs, "edit" when saving changes
+  const submit = async (action) => {
+    setSubmitting(action);
     try {
-      await onSubmit(toJobPayload(values, status));
+      await onSubmit(toJobPayload(values, action === EDIT ? undefined : action));
     } catch (error) {
       setServerErrors(toJobFormError(error));
       toast.error(getErrorMessage(error));
     } finally {
-      setSubmittingStatus(null);
+      setSubmitting(null);
     }
   };
 
@@ -64,7 +68,7 @@ const JobForm = ({ companies, initialValues, onSubmit }) => {
       noValidate
       onSubmit={(event) => {
         event.preventDefault();
-        submit("open");
+        submit(isEditing ? EDIT : "open");
       }}
     >
       <SectionCard title="Basics" description="Where and how the person will work.">
@@ -168,18 +172,26 @@ const JobForm = ({ companies, initialValues, onSubmit }) => {
       </SectionCard>
 
       <div className="flex flex-col-reverse gap-2 sm:flex-row sm:justify-end">
-        <LoadingButton
-          type="button"
-          variant="outline"
-          loading={submittingStatus === "draft"}
-          disabled={Boolean(submittingStatus)}
-          onClick={() => submit("draft")}
-        >
-          Save as draft
-        </LoadingButton>
-        <LoadingButton type="submit" loading={submittingStatus === "open"} disabled={Boolean(submittingStatus)}>
-          Publish job
-        </LoadingButton>
+        {isEditing ? (
+          <LoadingButton type="submit" loading={submitting === EDIT}>
+            Save changes
+          </LoadingButton>
+        ) : (
+          <>
+            <LoadingButton
+              type="button"
+              variant="outline"
+              loading={submitting === "draft"}
+              disabled={Boolean(submitting)}
+              onClick={() => submit("draft")}
+            >
+              Save as draft
+            </LoadingButton>
+            <LoadingButton type="submit" loading={submitting === "open"} disabled={Boolean(submitting)}>
+              Publish job
+            </LoadingButton>
+          </>
+        )}
       </div>
     </form>
   );

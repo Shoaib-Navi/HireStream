@@ -58,6 +58,9 @@ const LoginPage = () => {
             aria-invalid={Boolean(errors.password)}
           />
         </FormField>
+        <Link to="/forgot-password" className="type-caption -mt-2 block text-right text-muted-foreground hover:text-foreground">
+          Forgot your password?
+        </Link>
         <LoadingButton type="submit" size="lg" className="w-full" loading={isLoading}>
           Log in
         </LoadingButton>

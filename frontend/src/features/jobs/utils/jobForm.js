@@ -20,6 +20,28 @@ export const EMPTY_JOB_FORM = {
 
 const toNumberOrNull = (value) => (value === "" || value === null || value === undefined ? null : Number(value));
 
+const toInputNumber = (value) => (value === null || value === undefined ? "" : String(value));
+
+// Existing job -> form values (used when editing)
+export const toJobFormValues = (job) => ({
+  companyId: job.company?._id ?? job.company ?? "",
+  title: job.title ?? "",
+  employmentType: job.employmentType ?? EMPTY_JOB_FORM.employmentType,
+  workMode: job.workMode ?? EMPTY_JOB_FORM.workMode,
+  location: job.location ?? "",
+  openings: toInputNumber(job.openings ?? 1),
+  deadline: job.deadline ? String(job.deadline).slice(0, 10) : "",
+  experienceMin: toInputNumber(job.experience?.min ?? 0),
+  experienceMax: toInputNumber(job.experience?.max),
+  salaryMin: toInputNumber(job.salary?.min),
+  salaryMax: toInputNumber(job.salary?.max),
+  description: job.description ?? "",
+  responsibilities: job.responsibilities ?? [],
+  requirements: job.requirements ?? [],
+  skills: job.skills ?? [],
+});
+
+// Form values -> API payload. `status` is only sent when creating a job.
 export const toJobPayload = (values, status) => ({
   companyId: values.companyId,
   title: values.title,
@@ -34,7 +56,7 @@ export const toJobPayload = (values, status) => ({
   responsibilities: values.responsibilities,
   requirements: values.requirements,
   skills: values.skills,
-  status,
+  ...(status && { status }),
 });
 
 // API validation paths -> form field names

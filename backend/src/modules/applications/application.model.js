@@ -15,6 +15,12 @@ const statusChangeSchema = new mongoose.Schema(
   { _id: false },
 );
 
+const noteSchema = new mongoose.Schema({
+  author: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
+  body: { type: String, required: true, trim: true },
+  createdAt: { type: Date, default: Date.now },
+});
+
 const applicationSchema = new mongoose.Schema(
   {
     job: {
@@ -44,6 +50,11 @@ const applicationSchema = new mongoose.Schema(
     resume: {
       url: { type: String },
       originalName: { type: String },
+    },
+    // Private to the recruiting team, never sent to the candidate
+    notes: {
+      type: [noteSchema],
+      select: false,
     },
   },
   { timestamps: true },

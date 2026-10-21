@@ -20,6 +20,25 @@ const savedJobIdsFor = async (viewer, jobIds) => {
   return new Set(saved.map((item) => item.job.toString()));
 };
 
+// Other recruiters' jobs also return 404, so job ids can't be probed
+const findOwnedJob = async (recruiterId, jobId) => {
+  const job = await Job.findById(jobId);
+  if (!job || !job.postedBy.equals(recruiterId)) {
+    throw ApiError.notFound("Job not found");
+  }
+  return job;
+};
+
+const assertActiveOwnedCompany = async (recruiterId, companyId) => {
+  const company = await Company.findOne({ _id: companyId, owner: recruiterId }).select("status");
+  if (!company) {
+    throw ApiError.notFound("Company not found. Please register the company before posting a job.");
+  }
+  if (company.status === COMPANY_STATUS.SUSPENDED) {
+    throw ApiError.forbidden("This company is suspended and can't post jobs");
+  }
+};
+
 export const listPublicJobs = async (query, viewer) => {
   const { q, location, employmentType, workMode, experience, salaryMin, company, sort } = query;
   const { page, limit, skip } = toPagination(query);
@@ -95,14 +114,51 @@ export const getJobDetails = async (jobId, viewer) => {
 };
 
 export const createJob = async (recruiterId, { companyId, ...fields }) => {
-  const company = await Company.findOne({ _id: companyId, owner: recruiterId }).select("status");
-  if (!company) {
-    throw ApiError.notFound("Company not found. Please register the company before posting a job.");
-  }
-  if (company.status === COMPANY_STATUS.SUSPENDED) {
-    throw ApiError.forbidden("This company is suspended and can't post jobs");
-  }
+  await assertActiveOwnedCompany(recruiterId, companyId);
   return Job.create({ ...fields, company: companyId, postedBy: recruiterId });
+};
+
+export const updateJob = async (recruiterId, jobId, { companyId, ...updates }) => {
+  const job = await findOwnedJob(recruiterId, jobId);
+
+  if (companyId && !job.company.equals(companyId)) {
+    await assertActiveOwnedCompany(recruiterId, companyId);
+    job.company = companyId;
+    // applications keep a copy of the company for recruiter queries
+    await Application.updateMany({ job: job._id }, { company: companyId });
+  }
+
+  job.set(updates);
+  await job.save();
+  return job;
+};
+
+export const updateJobStatus = async (recruiterId, jobId, status) => {
+  const job = await findOwnedJob(recruiterId, jobId);
+
+  if (status === JOB_STATUS.OPEN && job.deadline && job.deadline < new Date()) {
+    throw ApiError.badRequest("The application deadline has passed. Set a new deadline before opening this job.");
+  }
+  if (status === JOB_STATUS.DRAFT && job.applicationCount > 0) {
+    throw ApiError.badRequest("Jobs with applicants can't go back to draft. Close the job instead.");
+  }
+
+  job.status = status;
+  job.closedAt = status === JOB_STATUS.CLOSED ? new Date() : undefined;
+  await job.save();
+  return job;
+};
+
+// Jobs with applicants are closed instead, so candidates keep their application history
+export const deleteJob = async (recruiterId, jobId) => {
+  const job = await findOwnedJob(recruiterId, jobId);
+
+  const hasApplications = await Application.exists({ job: job._id });
+  if (hasApplications) {
+    throw ApiError.conflict("This job has applicants, so it can't be deleted. Close it instead.");
+  }
+
+  await Promise.all([Job.deleteOne({ _id: job._id }), SavedJob.deleteMany({ job: job._id })]);
 };
 
 export const listRecruiterJobs = async (recruiterId, query) => {

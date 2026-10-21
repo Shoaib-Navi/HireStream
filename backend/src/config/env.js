@@ -45,6 +45,17 @@ export const env = {
     apiSecret: process.env.API_SECRET,
     folder: process.env.CLOUDINARY_FOLDER || "hirestream",
   },
+  // Without SMTP_HOST, emails are printed to the console in development and skipped in production
+  email: {
+    from: process.env.EMAIL_FROM || "HireStream <no-reply@hirestream.dev>",
+    smtp: {
+      host: process.env.SMTP_HOST,
+      port: Number(process.env.SMTP_PORT) || 587,
+      secure: toBoolean(process.env.SMTP_SECURE),
+      user: process.env.SMTP_USER,
+      pass: process.env.SMTP_PASS,
+    },
+  },
   gemini: {
     apiKey: process.env.GEMINI_API_KEY,
     model: process.env.GEMINI_MODEL || "gemini-2.5-flash",

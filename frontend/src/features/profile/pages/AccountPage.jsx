@@ -5,7 +5,10 @@ import LoadingButton from "@/components/common/LoadingButton";
 import PageHeader from "@/components/common/PageHeader";
 import SectionCard from "@/components/common/SectionCard";
 import UserAvatar from "@/components/common/UserAvatar";
+import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
+import ChangePasswordForm from "@/features/auth/components/ChangePasswordForm";
+import EmailVerificationNotice from "@/features/auth/components/EmailVerificationNotice";
 import { useAuth } from "@/features/auth/hooks/useAuth";
 import { useDocumentTitle } from "@/hooks/useDocumentTitle";
 import { useFormState } from "@/hooks/useFormState";
@@ -45,7 +48,9 @@ const AccountPage = () => {
 
   return (
     <div className="space-y-6">
-      <PageHeader title="Account" description="Your personal details and profile photo." />
+      <PageHeader title="Account" description="Your personal details, password and profile photo." />
+
+      <EmailVerificationNotice />
 
       <SectionCard title="Profile photo" description="A clear photo helps recruiters and candidates recognize you.">
         <div className="flex flex-wrap items-center gap-5">
@@ -76,12 +81,26 @@ const AccountPage = () => {
             <FormField label="Phone" htmlFor="phone" error={errors.phone}>
               <Input id="phone" name="phone" type="tel" autoComplete="tel" value={values.phone} onChange={handleChange} aria-invalid={Boolean(errors.phone)} />
             </FormField>
-            <FormField label="Email" htmlFor="email" hint="Your email is used to sign in and can't be changed here." className="sm:col-span-2">
+            <FormField
+              label={
+                <span className="flex items-center gap-2">
+                  Email
+                  <Badge variant={user.isEmailVerified ? "success" : "warning"}>
+                    {user.isEmailVerified ? "Verified" : "Not verified"}
+                  </Badge>
+                </span>
+              }
+              htmlFor="email"
+              hint="Your email is used to sign in and can't be changed here."
+              className="sm:col-span-2"
+            >
               <Input id="email" value={user.email} disabled />
             </FormField>
           </div>
         </SectionCard>
       </form>
+
+      <ChangePasswordForm />
     </div>
   );
 };
