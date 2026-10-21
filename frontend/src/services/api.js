@@ -53,6 +53,7 @@ export const baseApi = createApi({
     "MyApplications",
     "JobApplications",
     "Application",
+    "SavedJobs",
   ],
   endpoints: () => ({}),
 });

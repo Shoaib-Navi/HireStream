@@ -4,6 +4,7 @@ import { applicationsRouter, jobApplicationsRouter } from "./modules/application
 import authRoutes from "./modules/auth/auth.routes.js";
 import companiesRoutes from "./modules/companies/companies.routes.js";
 import jobsRoutes from "./modules/jobs/jobs.routes.js";
+import savedJobsRoutes from "./modules/savedJobs/savedJobs.routes.js";
 import usersRoutes from "./modules/users/users.routes.js";
 import { sendSuccess } from "./utils/response.js";
 
@@ -18,6 +19,7 @@ router.use("/companies", companiesRoutes);
 router.use("/jobs/:jobId/applications", jobApplicationsRouter);
 router.use("/jobs", jobsRoutes);
 router.use("/applications", applicationsRouter);
+router.use("/saved-jobs", savedJobsRoutes);
 router.use("/ai", aiRoutes);
 
 export default router;

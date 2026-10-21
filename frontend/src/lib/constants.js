@@ -65,6 +65,9 @@ export const APPLICATION_STATUS_META = {
 // Statuses a recruiter can move an application to, in pipeline order
 export const RECRUITER_STATUSES = ["shortlisted", "interview", "offered", "hired", "rejected"];
 
+// A candidate can withdraw while the application is still in progress
+export const WITHDRAWABLE_STATUSES = ["applied", "shortlisted", "interview", "offered"];
+
 export const MAX_UPLOAD_MB = 5;
 
 export const labelFor = (options, value) => options.find((option) => option.value === value)?.label ?? value;

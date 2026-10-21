@@ -1,4 +1,5 @@
 import { BadgeCheck, Building2, ExternalLink, MapPin, Users } from "lucide-react";
+import { Link } from "react-router-dom";
 import CompanyLogo from "@/components/common/CompanyLogo";
 
 // Company summary shown next to a job post
@@ -31,6 +32,11 @@ const CompanyAboutCard = ({ company }) => {
         </ul>
       )}
       {company.description && <p className="type-body mt-4 line-clamp-5 text-muted-foreground">{company.description}</p>}
+      {company.slug && (
+        <Link to={`/companies/${company.slug}`} className="type-label mt-5 block text-foreground hover:underline">
+          View company profile
+        </Link>
+      )}
       {company.website && (
         <a
           href={company.website}

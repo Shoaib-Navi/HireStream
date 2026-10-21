@@ -4,6 +4,7 @@ import { Link, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/features/auth/hooks/useAuth";
 import { formatDate, formatExperience, formatNumber, formatSalary } from "@/lib/format";
+import SaveJobButton from "@/features/savedJobs/components/SaveJobButton";
 import ApplyDialog from "./ApplyDialog";
 
 // Key facts of a job and the right call to action for the current visitor
@@ -72,7 +73,10 @@ const ApplyCard = ({ job }) => {
           </div>
         ))}
       </dl>
-      <div className="mt-6 space-y-1">{renderAction()}</div>
+      <div className="mt-6 space-y-2">
+        {renderAction()}
+        {!job.isOwner && <SaveJobButton job={job} variant="full" />}
+      </div>
       {isCandidate && <ApplyDialog job={job} open={dialogOpen} onOpenChange={setDialogOpen} />}
     </div>
   );

@@ -12,6 +12,16 @@ export const applicationsApi = baseApi.injectEndpoints({
       transformResponse: unwrapWithMeta,
       providesTags: ["MyApplications"],
     }),
+    getApplication: build.query({
+      query: (id) => ({ url: `/applications/${id}` }),
+      transformResponse: (response) => response.data.application,
+      providesTags: (result, error, id) => [{ type: "Application", id }],
+    }),
+    withdrawApplication: build.mutation({
+      query: (id) => ({ url: `/applications/${id}/withdraw`, method: "PATCH" }),
+      transformResponse: (response) => response.data.application,
+      invalidatesTags: (result, error, id) => ["MyApplications", { type: "Application", id }],
+    }),
     getJobApplications: build.query({
       query: ({ jobId, ...params }) => ({ url: `/jobs/${jobId}/applications`, params }),
       transformResponse: unwrapWithMeta,
@@ -31,6 +41,8 @@ export const applicationsApi = baseApi.injectEndpoints({
 export const {
   useApplyToJobMutation,
   useGetMyApplicationsQuery,
+  useGetApplicationQuery,
+  useWithdrawApplicationMutation,
   useGetJobApplicationsQuery,
   useUpdateApplicationStatusMutation,
 } = applicationsApi;

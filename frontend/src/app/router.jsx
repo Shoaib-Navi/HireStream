@@ -15,9 +15,13 @@ const lazyPage = (load) => async () => ({ Component: (await load()).default });
 
 const JobsPage = lazyPage(() => import("@/features/jobs/pages/JobsPage"));
 const JobDetailsPage = lazyPage(() => import("@/features/jobs/pages/JobDetailsPage"));
+const CompaniesDirectoryPage = lazyPage(() => import("@/features/companies/pages/CompaniesDirectoryPage"));
+const CompanyProfilePage = lazyPage(() => import("@/features/companies/pages/CompanyProfilePage"));
 const LoginPage = lazyPage(() => import("@/features/auth/pages/LoginPage"));
 const RegisterPage = lazyPage(() => import("@/features/auth/pages/RegisterPage"));
 const MyApplicationsPage = lazyPage(() => import("@/features/applications/pages/MyApplicationsPage"));
+const ApplicationDetailPage = lazyPage(() => import("@/features/applications/pages/ApplicationDetailPage"));
+const SavedJobsPage = lazyPage(() => import("@/features/savedJobs/pages/SavedJobsPage"));
 const ProfilePage = lazyPage(() => import("@/features/profile/pages/ProfilePage"));
 const AccountPage = lazyPage(() => import("@/features/profile/pages/AccountPage"));
 const RecruiterJobsPage = lazyPage(() => import("@/features/jobs/pages/RecruiterJobsPage"));
@@ -37,6 +41,8 @@ export const router = createBrowserRouter([
           { path: "/", element: <HomePage /> },
           { path: "/jobs", lazy: JobsPage },
           { path: "/jobs/:id", lazy: JobDetailsPage },
+          { path: "/companies", lazy: CompaniesDirectoryPage },
+          { path: "/companies/:slug", lazy: CompanyProfilePage },
         ],
       },
       {
@@ -55,6 +61,8 @@ export const router = createBrowserRouter([
             children: [
               { index: true, element: <Navigate to="applications" replace /> },
               { path: "applications", lazy: MyApplicationsPage },
+              { path: "applications/:id", lazy: ApplicationDetailPage },
+              { path: "saved", lazy: SavedJobsPage },
               { path: "profile", lazy: ProfilePage },
               { path: "account", lazy: AccountPage },
             ],

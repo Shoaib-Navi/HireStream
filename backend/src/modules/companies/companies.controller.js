@@ -1,6 +1,16 @@
 import { sendSuccess } from "../../utils/response.js";
 import * as companiesService from "./companies.service.js";
 
+export const listPublic = async (req, res) => {
+  const { companies, meta } = await companiesService.listPublicCompanies(req.query);
+  sendSuccess(res, { data: { companies }, meta });
+};
+
+export const getPublic = async (req, res) => {
+  const company = await companiesService.getPublicCompany(req.params.slug);
+  sendSuccess(res, { data: { company } });
+};
+
 export const listMine = async (req, res) => {
   const companies = await companiesService.listOwnedCompanies(req.user.id);
   sendSuccess(res, { data: { companies } });

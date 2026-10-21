@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { COMPANY_SIZES } from "../../constants/index.js";
-import { httpUrl, optionalText, requiredText } from "../../validation/common.js";
+import { httpUrl, optionalText, paginationShape, requiredText } from "../../validation/common.js";
 
 const companyFields = z.object({
   name: requiredText("Company name", { min: 2, max: 100 }),
@@ -18,6 +18,15 @@ const companyFields = z.object({
 });
 
 export const createCompanySchema = companyFields.partial().required({ name: true });
+
+export const listCompaniesQuerySchema = z.object({
+  q: z.string().trim().max(100).optional(),
+  ...paginationShape,
+});
+
+export const slugParams = z.object({
+  slug: z.string().trim().toLowerCase().regex(/^[a-z0-9-]{1,80}$/, "Invalid company"),
+});
 
 export const updateCompanySchema = companyFields
   .partial()
