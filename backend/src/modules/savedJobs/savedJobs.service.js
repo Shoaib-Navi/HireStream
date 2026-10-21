@@ -1,11 +1,9 @@
-import { JOB_STATUS } from "../../constants/index.js";
+import { DUPLICATE_KEY_ERROR, JOB_STATUS } from "../../constants/index.js";
 import { ApiError } from "../../utils/ApiError.js";
 import { paginationMeta, toPagination } from "../../utils/pagination.js";
 import { CARD_COMPANY_FIELDS, toJobCard } from "../jobs/job.presenter.js";
 import { Job } from "../jobs/job.model.js";
 import { SavedJob } from "./savedJob.model.js";
-
-const DUPLICATE_KEY_ERROR = 11000;
 
 export const listSavedJobs = async (userId, query) => {
   const { page, limit, skip } = toPagination(query);

@@ -45,7 +45,7 @@ const SavedJobsPage = () => {
 
   return (
     <div className="space-y-6">
-      <PageHeader title="Saved jobs" description="Jobs you've bookmarked to come back to." />
+      <PageHeader eyebrow="Dashboard" title="Saved jobs" description="Jobs you've bookmarked to come back to." />
       {renderJobs()}
       <Pagination page={page} totalPages={data?.meta?.totalPages} onPageChange={setPage} />
     </div>

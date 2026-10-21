@@ -39,7 +39,7 @@ const ResumeCard = ({ profile }) => {
       {resume?.url ? (
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
           <div className="flex min-w-0 flex-1 items-center gap-3">
-            <div className="flex size-10 shrink-0 items-center justify-center rounded-lg bg-primary-soft text-primary">
+            <div className="flex size-10 shrink-0 items-center justify-center rounded-md border bg-surface text-foreground">
               <FileText className="size-5" aria-hidden="true" />
             </div>
             <div className="min-w-0">

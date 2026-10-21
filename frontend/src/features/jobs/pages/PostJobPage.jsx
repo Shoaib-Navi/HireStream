@@ -48,7 +48,7 @@ const PostJobPage = () => {
 
   return (
     <div className="space-y-6">
-      <PageHeader title="Post a job" description="Publish now, or save a draft and publish later." />
+      <PageHeader eyebrow="Hiring" title="Post a job" description="Publish now, or save a draft and publish later." />
       {renderContent()}
     </div>
   );

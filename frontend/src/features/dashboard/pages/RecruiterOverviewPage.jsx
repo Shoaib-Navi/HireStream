@@ -52,7 +52,7 @@ const RecruiterOverviewPage = () => {
   if (overview.companyCount === 0) {
     return (
       <div className="space-y-6">
-        <PageHeader title="Overview" description="How your hiring is going." />
+        <PageHeader eyebrow="Hiring" title="Overview" description="How your hiring is going." />
         <EmptyState
           icon={Building2}
           title="Welcome! Start by registering your company"
@@ -75,9 +75,9 @@ const RecruiterOverviewPage = () => {
 
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
         <StatCard label="Open jobs" value={formatNumber(jobs.open)} icon={Briefcase} hint={`${jobs.draft} drafts · ${jobs.closed} closed`} />
-        <StatCard label="Applicants" value={formatNumber(applications.total)} icon={Users} tone="info" />
-        <StatCard label="In interview" value={formatNumber(applications.byStatus.interview ?? 0)} icon={CalendarClock} tone="warning" />
-        <StatCard label="Hired" value={formatNumber(applications.byStatus.hired ?? 0)} icon={CheckCircle2} tone="success" />
+        <StatCard label="Applicants" value={formatNumber(applications.total)} icon={Users} />
+        <StatCard label="In interview" value={formatNumber(applications.byStatus.interview ?? 0)} icon={CalendarClock} />
+        <StatCard label="Hired" value={formatNumber(applications.byStatus.hired ?? 0)} icon={CheckCircle2} />
       </div>
 
       <div className="grid gap-6 lg:grid-cols-2">

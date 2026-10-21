@@ -82,3 +82,6 @@ export const DATA_SOURCES = Object.freeze({
   PUBLIC_SOURCE: "PUBLIC_SOURCE",
   SYNTHETIC: "SYNTHETIC",
 });
+
+// MongoDB reports a unique-index violation with this code
+export const DUPLICATE_KEY_ERROR = 11000;

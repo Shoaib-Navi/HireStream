@@ -62,7 +62,3 @@ export const getInitials = (name = "") =>
     .map((part) => part[0].toUpperCase())
     .join("");
 
-export const formatFileSize = (bytes) => {
-  if (bytes < 1024 * 1024) return `${Math.round(bytes / 1024)} KB`;
-  return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
-};

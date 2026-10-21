@@ -3,12 +3,11 @@ import { z } from "zod";
 import { ROLES } from "../../constants/index.js";
 import { authenticate, requireRole } from "../../middleware/auth.js";
 import { validate } from "../../middleware/validate.js";
-import { objectId, paginationShape } from "../../validation/common.js";
+import { paginationShape } from "../../validation/common.js";
+import { jobIdParams } from "../applications/applications.validation.js";
 import * as savedJobsController from "./savedJobs.controller.js";
 
 const router = express.Router();
-
-const jobIdParams = z.object({ jobId: objectId });
 
 router.use(authenticate, requireRole(ROLES.CANDIDATE));
 

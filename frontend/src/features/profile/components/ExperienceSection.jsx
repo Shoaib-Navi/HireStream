@@ -1,3 +1,4 @@
+import DatePicker from "@/components/common/DatePicker";
 import FormField, { FIELD_LABEL } from "@/components/common/FormField";
 import LoadingButton from "@/components/common/LoadingButton";
 import { Button } from "@/components/ui/button";
@@ -42,10 +43,23 @@ const ExperienceForm = ({ initialValues, errors, saving, onSubmit, onCancel }) =
           <Input variant="underline" id="exp-location" name="location" maxLength={100} value={values.location} onChange={handleChange} />
         </FormField>
         <FormField labelClassName={FIELD_LABEL} label="Start date" htmlFor="exp-start" error={errors.startDate} required>
-          <Input variant="underline" id="exp-start" name="startDate" type="date" value={values.startDate} onChange={handleChange} aria-invalid={Boolean(errors.startDate)} />
+          <DatePicker
+            id="exp-start"
+            value={values.startDate}
+            onChange={(next) => setField("startDate", next)}
+            placeholder="Start date"
+            invalid={Boolean(errors.startDate)}
+          />
         </FormField>
         <FormField labelClassName={FIELD_LABEL} label="End date" htmlFor="exp-end" error={errors.endDate}>
-          <Input variant="underline" id="exp-end" name="endDate" type="date" value={values.endDate} onChange={handleChange} disabled={values.isCurrent} aria-invalid={Boolean(errors.endDate)} />
+          <DatePicker
+            id="exp-end"
+            value={values.endDate}
+            onChange={(next) => setField("endDate", next)}
+            placeholder={values.isCurrent ? "Present" : "End date"}
+            disabled={values.isCurrent}
+            invalid={Boolean(errors.endDate)}
+          />
         </FormField>
         <div className="flex items-center gap-2 sm:col-span-2">
           <Checkbox id="exp-current" checked={values.isCurrent} onCheckedChange={(checked) => setField("isCurrent", checked === true)} />

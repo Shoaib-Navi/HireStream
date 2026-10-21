@@ -99,7 +99,7 @@ const JobsPage = () => {
                 <SheetTrigger asChild>
                   <Button variant="outline" size="sm" className="lg:hidden">
                     <SlidersHorizontal /> Filters
-                    {activeFilterCount > 0 && <Badge variant="brand">{activeFilterCount}</Badge>}
+                    {activeFilterCount > 0 && <Badge variant="neutral">{activeFilterCount}</Badge>}
                   </Button>
                 </SheetTrigger>
                 <SheetContent side="left" className="overflow-y-auto">

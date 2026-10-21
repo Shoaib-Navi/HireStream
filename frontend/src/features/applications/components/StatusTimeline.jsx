@@ -11,7 +11,7 @@ const StatusTimeline = ({ history = [] }) => (
           aria-hidden="true"
           className={cn(
             "absolute top-1 -left-[1.9rem] size-3 rounded-full border-2 border-card",
-            index === 0 ? "bg-highlight" : "bg-muted-foreground/40",
+            index === 0 ? "bg-foreground" : "bg-muted-foreground/40",
           )}
         />
         <div className="flex flex-wrap items-center gap-2">

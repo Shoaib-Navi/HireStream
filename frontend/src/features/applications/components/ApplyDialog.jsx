@@ -2,6 +2,7 @@ import { useState } from "react";
 import { FileText } from "lucide-react";
 import { Link } from "react-router-dom";
 import { toast } from "sonner";
+import ErrorState from "@/components/common/ErrorState";
 import FormField, { FIELD_LABEL } from "@/components/common/FormField";
 import LoadingButton from "@/components/common/LoadingButton";
 import { PageLoader } from "@/components/common/Spinner";
@@ -20,7 +21,13 @@ import { getErrorMessage } from "@/lib/errors";
 import { useApplyToJobMutation } from "../api";
 
 const ApplyDialog = ({ job, open, onOpenChange }) => {
-  const { data: profile, isLoading: profileLoading } = useGetMyProfileQuery(undefined, { skip: !open });
+  const {
+    data: profile,
+    isLoading: profileLoading,
+    isError: profileFailed,
+    error: profileError,
+    refetch,
+  } = useGetMyProfileQuery(undefined, { skip: !open });
   const [applyToJob, { isLoading }] = useApplyToJobMutation();
   const [coverLetter, setCoverLetter] = useState("");
 
@@ -37,11 +44,14 @@ const ApplyDialog = ({ job, open, onOpenChange }) => {
 
   const renderBody = () => {
     if (profileLoading) return <PageLoader className="min-h-40" />;
+    if (profileFailed) {
+      return <ErrorState title="Couldn't load your profile" error={profileError} onRetry={refetch} className="py-10" />;
+    }
 
     if (!profile?.resume?.url) {
       return (
         <div className="rounded-xl border border-dashed p-6 text-center">
-          <FileText className="mx-auto size-8 text-primary" aria-hidden="true" />
+          <FileText className="mx-auto size-8 text-muted-foreground" aria-hidden="true" />
           <p className="type-h4 mt-3 text-foreground">Upload your resume first</p>
           <p className="type-body mt-1 text-muted-foreground">Your resume is attached to every application you send.</p>
           <Button asChild className="mt-4">
@@ -54,7 +64,7 @@ const ApplyDialog = ({ job, open, onOpenChange }) => {
     return (
       <form onSubmit={handleSubmit} className="space-y-4">
         <div className="flex items-center gap-3 rounded-lg border bg-surface p-3">
-          <FileText className="size-5 shrink-0 text-primary" aria-hidden="true" />
+          <FileText className="size-5 shrink-0 text-muted-foreground" aria-hidden="true" />
           <div className="min-w-0">
             <p className="type-body truncate font-medium text-foreground">{profile.resume.originalName}</p>
             <p className="type-caption text-muted-foreground">Attached resume</p>

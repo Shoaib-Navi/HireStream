@@ -25,7 +25,7 @@ const ProfileCompletion = ({ profile }) => {
               : "Complete profiles get more attention from recruiters."}
           </p>
         </div>
-        <span className="type-h2 text-primary">{percent}%</span>
+        <span className="type-h2 text-foreground">{percent}%</span>
       </div>
       <Progress value={percent} className="mt-4" aria-label="Profile completion" />
       {missing.length > 0 && (

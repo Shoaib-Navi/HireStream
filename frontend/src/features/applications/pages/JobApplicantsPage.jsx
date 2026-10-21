@@ -110,7 +110,7 @@ const JobApplicantsPage = () => {
               onClick={() => changeStatus(filter.value)}
             >
               {filter.label}
-              <span className={cn("rounded-full px-1.5 text-xs", active ? "bg-primary-foreground/20" : "bg-muted")}>
+              <span className={cn("type-caption rounded-full px-1.5", active ? "bg-primary-foreground/20" : "bg-muted")}>
                 {filter.count}
               </span>
             </Button>

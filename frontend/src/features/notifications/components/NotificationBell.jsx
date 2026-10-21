@@ -37,7 +37,7 @@ const NotificationBell = () => {
         >
           <Bell />
           {unreadCount > 0 && (
-            <span className="absolute top-1.5 right-1.5 flex min-w-4 items-center justify-center rounded-full bg-primary px-1 text-[0.625rem] leading-4 font-semibold text-primary-foreground">
+            <span className="absolute top-1.5 right-1.5 flex min-w-4 items-center justify-center rounded-full bg-primary px-1 text-xs leading-4 font-semibold text-primary-foreground">
               {unreadCount > 9 ? "9+" : unreadCount}
             </span>
           )}

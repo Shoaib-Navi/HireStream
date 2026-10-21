@@ -6,7 +6,7 @@ const CompanyLogo = ({ company, size = "md", className }) => (
     src={company?.logo?.url}
     name={company?.name}
     size={size}
-    className={cn("border bg-card text-primary", className)}
+    className={cn("border bg-card text-muted-foreground", className)}
     imageClassName="object-contain p-1"
   />
 );

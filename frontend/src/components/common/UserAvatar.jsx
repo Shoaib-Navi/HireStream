@@ -7,7 +7,7 @@ const UserAvatar = ({ user, size = "sm", className }) => (
     name={user?.fullName}
     size={size}
     shape="circle"
-    className={cn("bg-primary-soft text-primary", className)}
+    className={cn("bg-muted text-muted-foreground", className)}
   />
 );
 

@@ -122,7 +122,7 @@ const AdminJobsPage = () => {
 
   return (
     <div className="space-y-6">
-      <PageHeader title="Jobs" description="Every job posted on the platform." />
+      <PageHeader eyebrow="Admin" title="Jobs" description="Every job posted on the platform." />
 
       <div className="flex flex-col gap-3 sm:flex-row">
         <AdminSearch value={filters.q} onChange={(q) => update({ q })} placeholder="Search job titles" />
