@@ -12,6 +12,7 @@ const BACKDATE = { timestamps: false, overwriteImmutable: true };
 
 let app;
 let stop;
+let Company;
 let Job;
 let JobAlert;
 let User;
@@ -28,6 +29,7 @@ const postJob = async (overrides) =>
 before(async () => {
   process.env.CRON_SECRET = CRON_SECRET;
   ({ app, stop } = await startTestServer());
+  ({ Company } = await import("../src/modules/companies/company.model.js"));
   ({ Job } = await import("../src/modules/jobs/job.model.js"));
   ({ JobAlert } = await import("../src/modules/jobAlerts/jobAlert.model.js"));
   ({ User } = await import("../src/modules/users/user.model.js"));
@@ -191,6 +193,32 @@ describe("sending job alerts", () => {
     assert.deepEqual((await Job.findById(draft._id).lean()).publishedAt, publishedAt);
   });
 
+  test("a suspended company can't publish its drafts", async () => {
+    const owner = await signUp(app, { role: "recruiter" });
+    const company = (await owner.agent.post(`${API}/companies`).send({ name: "Paused Labs" })).body.data.company;
+    const draft = (await owner.agent.post(`${API}/jobs`).send(validJob(company._id, { status: "draft" }))).body.data.job;
+    await Company.updateOne({ _id: company._id }, { status: "suspended" });
+
+    const opened = await owner.agent.patch(`${API}/jobs/${draft._id}/status`).send({ status: "open" });
+    assert.equal(opened.status, 403);
+    const job = await Job.findById(draft._id).lean();
+    assert.equal(job.status, "draft");
+    assert.equal(job.publishedAt, undefined);
+  });
+
+  test("runs that overlap send each alert once", async () => {
+    await JobAlert.deleteMany({});
+    const candidate = await signUp(app);
+    await candidate.agent.post(`${API}/job-alerts`).send({ criteria: { q: "ocaml" } });
+    await postJob({ title: "OCaml Engineer", skills: ["OCaml"] });
+    await JobAlert.updateMany({}, { lastCheckedAt: ago(2 * DAY) });
+
+    testOutbox.length = 0;
+    const runs = await Promise.all([dispatch(), dispatch()]);
+    assert.equal(runs.reduce((sent, run) => sent + run.body.data.sent, 0), 1);
+    assert.equal(testOutbox.length, 1);
+  });
+
   test("jobs saved before publication dates existed fall back to when they were created", async () => {
     await JobAlert.deleteMany({});
     const candidate = await signUp(app);
@@ -262,5 +290,13 @@ describe("similar jobs", () => {
     assert.ok(res.body.data.jobs[0].summary);
 
     assert.equal((await request(app).get(`${API}/jobs/${draft._id}/similar`)).status, 404);
+  });
+
+  test("quotes and minus signs in a title don't narrow the match", async () => {
+    const source = await postJob({ title: '"Lead" Clojure Engineer -Contract', skills: ["Clojure"] });
+    const other = await postJob({ title: "Clojure Developer", skills: ["Clojure"] });
+
+    const res = await request(app).get(`${API}/jobs/${source._id}/similar`);
+    assert.ok(res.body.data.jobs.some((job) => job._id === other._id));
   });
 });

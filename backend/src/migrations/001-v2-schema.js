@@ -1,4 +1,5 @@
-
+// Converts the original HireStream schema (v1) to the v2 schema.
+// Safe to run again: every step only touches documents that still have v1 fields.
 import { slugify } from "../utils/slugify.js";
 
 export const name = "001-v2-schema";
@@ -32,7 +33,7 @@ const toWorkMode = (...texts) => {
 const collectionExists = async (db, collectionName) =>
   db.listCollections({ name: collectionName }, { nameOnly: true }).hasNext();
 
-
+// Full copy of each v1 collection, made once before anything changes
 const backupCollections = async (db, log) => {
   for (const collectionName of LEGACY_COLLECTIONS) {
     const backupName = `backup_001_${collectionName}`;
@@ -46,6 +47,7 @@ const migrateUsers = async (db, log) => {
   const users = db.collection("users");
   const profiles = db.collection("candidate_profiles");
 
+  // Emails become case-insensitive in v2, so accounts that differ only by letter case must be resolved first
   const duplicates = await users
     .aggregate([
       { $group: { _id: { $toLower: { $trim: { input: "$email" } } }, count: { $sum: 1 }, emails: { $push: "$email" } } },
@@ -66,6 +68,7 @@ const migrateUsers = async (db, log) => {
       role,
       status: "active",
       tokenVersion: 0,
+      // existing accounts are treated as verified so they aren't asked to verify again
       emailVerifiedAt: user.createdAt ?? new Date(),
     };
     if (user.phoneNumber !== undefined && user.phoneNumber !== null) set.phone = String(user.phoneNumber);
@@ -238,6 +241,7 @@ export const up = async (db, log) => {
   await backupCollections(db, log);
   await migrateUsers(db, log);
   await migrateCompanies(db, log);
+  // applications first: jobs count their applications after duplicates and orphans are removed
   await migrateApplications(db, log);
   await migrateJobs(db, log);
 };

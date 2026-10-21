@@ -119,7 +119,16 @@ export const deleteAlert = async (userId, alertId) => {
 // Emails and notifies the candidate about jobs posted since the last check. Never throws,
 // so one failing alert can't stop the others in the run.
 const runAlert = async (alert, now) => {
+  let claimed = false;
   try {
+    // Claim the alert by moving its check forward first, so a run started at the same time skips it
+    const { modifiedCount } = await JobAlert.updateOne(
+      { _id: alert._id, lastCheckedAt: alert.lastCheckedAt },
+      { lastCheckedAt: now },
+    );
+    if (modifiedCount === 0) return false;
+    claimed = true;
+
     const { $and: conditions } = jobSearchFilter(alert.criteria ?? {});
     // New means published since the last check; older jobs without publishedAt use createdAt
     const period = { $gt: alert.lastCheckedAt, $lte: now };
@@ -144,11 +153,13 @@ const runAlert = async (alert, now) => {
         sendEmail(jobAlertEmail({ user: alert.user, title, jobs, total, link })),
       ]);
     }
-
-    await JobAlert.updateOne({ _id: alert._id }, { lastCheckedAt: now });
     return total > 0;
   } catch (error) {
     console.error(`Job alert ${alert._id} failed:`, error.message);
+    // Hand the period back so the next run tries again, unless the candidate changed the alert meanwhile
+    if (claimed) {
+      await JobAlert.updateOne({ _id: alert._id, lastCheckedAt: now }, { lastCheckedAt: alert.lastCheckedAt }).catch(() => {});
+    }
     return false;
   }
 };
