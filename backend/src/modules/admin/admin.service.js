@@ -5,6 +5,7 @@ import { paginationMeta, toPagination } from "../../utils/pagination.js";
 import { Application } from "../applications/application.model.js";
 import { Company } from "../companies/company.model.js";
 import { Job } from "../jobs/job.model.js";
+import { setJobStatus } from "../jobs/jobs.service.js";
 import { SavedJob } from "../savedJobs/savedJob.model.js";
 import { User } from "../users/user.model.js";
 
@@ -92,7 +93,7 @@ export const updateUserStatus = async (adminId, userId, status) => {
     throw ApiError.forbidden("Admin accounts can't be suspended from the panel");
   }
 
-  return User.findByIdAndUpdate(
+  const updated = await User.findByIdAndUpdate(
     userId,
     {
       $set: { status },
@@ -100,6 +101,14 @@ export const updateUserStatus = async (adminId, userId, status) => {
     },
     { new: true },
   );
+
+  // A suspended recruiter's jobs leave the board with them, and return unless their company is suspended too
+  if (user.role === ROLES.RECRUITER) {
+    const listed = status === USER_STATUS.ACTIVE;
+    const suspendedCompanies = listed ? await Company.distinct("_id", { status: COMPANY_STATUS.SUSPENDED }) : [];
+    await Job.updateMany({ postedBy: user._id, company: { $nin: suspendedCompanies } }, { companyActive: listed });
+  }
+  return updated;
 };
 
 export const listCompanies = async (query) => {
@@ -141,7 +150,10 @@ export const updateCompany = async (companyId, updates) => {
     throw ApiError.notFound("Company not found");
   }
   if (updates.status) {
-    await Job.updateMany({ company: company._id }, { companyActive: updates.status === COMPANY_STATUS.ACTIVE });
+    // Restoring the company leaves hidden the jobs of recruiters who are themselves suspended
+    const listed = updates.status === COMPANY_STATUS.ACTIVE;
+    const suspendedRecruiters = listed ? await User.distinct("_id", { status: USER_STATUS.SUSPENDED }) : [];
+    await Job.updateMany({ company: company._id, postedBy: { $nin: suspendedRecruiters } }, { companyActive: listed });
   }
   return company;
 };
@@ -174,8 +186,11 @@ export const updateJobStatus = async (jobId, status) => {
     throw ApiError.notFound("Job not found");
   }
 
-  job.status = status;
-  job.closedAt = status === JOB_STATUS.CLOSED ? new Date() : undefined;
+  if (status === JOB_STATUS.DRAFT && job.applicationCount > 0) {
+    throw ApiError.badRequest("Jobs with applicants can't go back to draft. Close the job instead.");
+  }
+
+  setJobStatus(job, status);
   await job.save();
   return job;
 };

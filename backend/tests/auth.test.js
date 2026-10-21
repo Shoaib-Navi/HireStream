@@ -135,3 +135,23 @@ describe("auth", () => {
     assert.equal(malformed.status, 400);
   });
 });
+
+describe("cross-site requests", () => {
+  test("only the app's own pages can change data with the session cookie", async () => {
+    const { agent } = await signUp(app);
+
+    const forged = await agent.patch(`${API}/users/me`).set("Origin", "https://attacker.test").send({ fullName: "Changed" });
+    assert.equal(forged.status, 403);
+
+    const fromApp = await agent.patch(`${API}/users/me`).set("Origin", "http://localhost:5173").send({ fullName: "Changed" });
+    assert.equal(fromApp.status, 200);
+
+    // reading is still open to any origin CORS allows
+    const read = await agent.get(`${API}/auth/me`).set("Origin", "https://attacker.test");
+    assert.equal(read.status, 200);
+
+    // form posts aren't parsed, so a forged form can't fill in the body
+    const form = await agent.post(`${API}/auth/login`).type("form").send({ email: "a@test.com", password: "Password123" });
+    assert.equal(form.status, 400);
+  });
+});

@@ -17,8 +17,9 @@ const AuthLayout = () => {
   const { user } = useAuth();
   const location = useLocation();
 
-  // Signed-in users (including right after logging in) go back where they came from, or to their dashboard
-  if (user) {
+  // Signed-in users (including right after logging in) go back where they came from, or to their dashboard.
+  // A reset link opened in a signed-in browser still shows its form.
+  if (user && location.pathname !== "/reset-password") {
     return <Navigate to={location.state?.from || getDashboardHome(user.role)} replace />;
   }
 

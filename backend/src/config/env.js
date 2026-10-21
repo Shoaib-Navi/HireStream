@@ -32,10 +32,11 @@ export const env = {
   // CLIENT_URL may hold extra allowed frontend origins, comma-separated
   clientUrls: [
     appUrl,
-    "http://localhost:5173",
+    !isProduction && "http://localhost:5173",
     "https://hirestream-frontend-liard.vercel.app",
     ...(process.env.CLIENT_URL ?? "").split(","),
   ]
+    .filter(Boolean)
     .map((url) => url.trim())
     .filter(Boolean),
   requireEmailVerification: toBoolean(process.env.REQUIRE_EMAIL_VERIFICATION),

@@ -48,7 +48,7 @@ export const chatWithAssistant = async ({ userId, messages }) => {
     Job.find(publicJobFilter())
       .select("title location salary employmentType workMode company")
       .populate({ path: "company", select: "name" })
-      .sort({ createdAt: -1 })
+      .sort({ publishedAt: -1 })
       .limit(MAX_CONTEXT_JOBS)
       .lean(),
   ]);

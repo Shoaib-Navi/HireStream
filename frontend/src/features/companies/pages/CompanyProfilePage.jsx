@@ -19,7 +19,13 @@ const CompanyProfilePage = () => {
   const { slug } = useParams();
   const [page, setPage] = useState(1);
   const { data: company, isLoading, isError, error, refetch } = useGetCompanyBySlugQuery(slug);
-  const { data: jobsData, isLoading: jobsLoading } = useGetJobsQuery(
+  const {
+    data: jobsData,
+    isLoading: jobsLoading,
+    isError: jobsFailed,
+    error: jobsError,
+    refetch: refetchJobs,
+  } = useGetJobsQuery(
     { company: company?._id, page, limit: 10 },
     { skip: !company },
   );
@@ -92,6 +98,8 @@ const CompanyProfilePage = () => {
           <DetailSection title="Open positions">
             {jobsLoading ? (
               <JobListSkeleton count={2} />
+            ) : jobsFailed ? (
+              <ErrorState title="Couldn't load the open positions" error={jobsError} onRetry={refetchJobs} />
             ) : jobs.length === 0 ? (
               <EmptyState icon={Briefcase} title="No open positions right now" description="Check back soon." />
             ) : (

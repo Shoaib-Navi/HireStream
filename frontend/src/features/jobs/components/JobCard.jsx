@@ -34,7 +34,7 @@ const JobCard = ({ job, className }) => (
           <span className="truncate">{job.company?.name}</span>
           {job.company?.isVerified && <BadgeCheck className="size-3.5 shrink-0 text-foreground" aria-label="Verified company" />}
         </p>
-        <p className="type-caption text-muted-foreground">{formatRelativeTime(job.createdAt)}</p>
+        <p className="type-caption text-muted-foreground">{formatRelativeTime(job.publishedAt ?? job.createdAt)}</p>
       </div>
       {/* in a narrow card the badges get their own row, so the company name keeps its room */}
       <div className="order-last flex basis-full flex-wrap gap-1.5 empty:hidden @lg:order-none @lg:basis-auto @lg:justify-end">

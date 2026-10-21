@@ -7,7 +7,8 @@ let transporter = null;
 // instead of holding the request open (nodemailer's own defaults run to minutes)
 const SMTP_TIMEOUTS = { connectionTimeout: 10_000, greetingTimeout: 10_000, socketTimeout: 15_000 };
 
-// Emails "sent" while running tests, so tests can read links and tokens
+// Emails "sent" while running tests, so tests can read links and tokens.
+// Setting testOutbox.failing makes sends fail as if the mail server were down.
 export const testOutbox = [];
 
 export const isEmailEnabled = () => Boolean(env.email.smtp.host);
@@ -25,17 +26,19 @@ const getTransporter = () => {
 };
 
 // Never throws: a failed email must not fail the request that triggered it.
-// Returns whether the email was handed to the mail server.
+// Returns true once the mail server accepts it, false when sending failed,
+// and null when email isn't configured.
 export const sendEmail = async ({ to, subject, text, html }) => {
   const message = { from: env.email.from, to, subject, text, html };
 
   if (env.isTest) {
+    if (testOutbox.failing) return false;
     testOutbox.push(message);
     return true;
   }
   if (!isEmailEnabled()) {
     if (!env.isProduction) console.info(`[email] To: ${to}\nSubject: ${subject}\n\n${text}\n`);
-    return false;
+    return null;
   }
 
   try {

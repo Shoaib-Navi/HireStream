@@ -92,7 +92,7 @@ export const listPublicJobs = async (query, viewer) => {
   const sortBy = {
     ...(rankByRelevance && { relevance: { $meta: "textScore" } }),
     ...(sort === "salary" && { "salary.max": -1 }),
-    createdAt: -1,
+    publishedAt: -1,
   };
 
   const [jobs, total] = await Promise.all([
@@ -127,7 +127,7 @@ export const listSimilarJobs = async (jobId, viewer) => {
     { relevance },
   )
     .select("-requirements -responsibilities")
-    .sort({ relevance, createdAt: -1 })
+    .sort({ relevance, publishedAt: -1 })
     .limit(SIMILAR_JOBS_LIMIT)
     .populate({ path: "company", select: CARD_COMPANY_FIELDS })
     .lean();
@@ -143,7 +143,8 @@ export const getJobDetails = async (jobId, viewer) => {
 
   const isOwner = viewer?.id === job.postedBy.toString();
   const isAdmin = viewer?.role === ROLES.ADMIN;
-  const hiddenFromPublic = job.status === JOB_STATUS.DRAFT || job.company?.status === COMPANY_STATUS.SUSPENDED;
+  const hiddenFromPublic =
+    job.status === JOB_STATUS.DRAFT || job.companyActive === false || job.company?.status === COMPANY_STATUS.SUSPENDED;
   if (hiddenFromPublic && !isOwner && !isAdmin) {
     throw ApiError.notFound("Job not found");
   }
@@ -189,6 +190,15 @@ export const updateJob = async (recruiterId, jobId, { companyId, ...updates }) =
   return job;
 };
 
+// Only the first opening publishes a job; reopening a closed job doesn't make it new again
+export const setJobStatus = (job, status) => {
+  if (status === JOB_STATUS.OPEN && !job.publishedAt) {
+    job.publishedAt = new Date();
+  }
+  job.status = status;
+  job.closedAt = status === JOB_STATUS.CLOSED ? new Date() : undefined;
+};
+
 export const updateJobStatus = async (recruiterId, jobId, status) => {
   const job = await findOwnedJob(recruiterId, jobId);
 
@@ -203,12 +213,7 @@ export const updateJobStatus = async (recruiterId, jobId, status) => {
     await assertActiveOwnedCompany(recruiterId, job.company);
   }
 
-  // Only a draft's first publication counts; reopening a closed job doesn't make it new again
-  if (status === JOB_STATUS.OPEN && job.status === JOB_STATUS.DRAFT && !job.publishedAt) {
-    job.publishedAt = new Date();
-  }
-  job.status = status;
-  job.closedAt = status === JOB_STATUS.CLOSED ? new Date() : undefined;
+  setJobStatus(job, status);
   await job.save();
   return job;
 };

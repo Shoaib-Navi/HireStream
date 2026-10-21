@@ -20,7 +20,7 @@ export const buildSitemap = async () => {
   const [jobs, companies] = await Promise.all([
     Job.find({ ...publicJobFilter(), source: { $exists: false } })
       .select("updatedAt")
-      .sort({ createdAt: -1 })
+      .sort({ publishedAt: -1 })
       .limit(MAX_URLS)
       .lean(),
     Company.find({ status: COMPANY_STATUS.ACTIVE, source: { $exists: false } })

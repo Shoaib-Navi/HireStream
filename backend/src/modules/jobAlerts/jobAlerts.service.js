@@ -17,6 +17,9 @@ const DUE_AFTER = {
 // Alerts handled per run, oldest first; any left over go out on the next run
 const MAX_ALERTS_PER_RUN = 200;
 const BATCH_SIZE = 10;
+// No new batch starts after this, so the run ends before Vercel's 10-second function limit
+// cuts off alerts it has already claimed; the rest stay due for the next run
+const RUN_TIME_BUDGET = 7_000;
 const JOBS_PER_EMAIL = 10;
 
 const capitalize = (value) => value.charAt(0).toUpperCase() + value.slice(1);
@@ -148,10 +151,13 @@ const runAlert = async (alert, now) => {
       const summary = describeCriteria(alert.criteria ?? {});
       const link = criteriaLink(alert.criteria ?? {});
       const title = `${total} new ${total === 1 ? "job" : "jobs"} for ${summary}`;
-      await Promise.all([
-        createNotification({ user: alert.user._id, type: NOTIFICATION_TYPES.JOB_ALERT, title, link }),
-        sendEmail(jobAlertEmail({ user: alert.user, title, jobs, total, link })),
-      ]);
+      // Unverified addresses only get the notification, so nobody can sign a stranger up for daily emails.
+      // A failed email hands the period back below, so the next run retries it instead of losing it.
+      if (alert.user.emailVerifiedAt) {
+        const emailed = await sendEmail(jobAlertEmail({ user: alert.user, title, jobs, total, link }));
+        if (emailed === false) throw new Error("the email could not be sent");
+      }
+      await createNotification({ user: alert.user._id, type: NOTIFICATION_TYPES.JOB_ALERT, title, link });
     }
     return total > 0;
   } catch (error) {
@@ -174,17 +180,21 @@ export const dispatchDueAlerts = async (now = new Date()) => {
   const alerts = await JobAlert.find({ isActive: true, $or: due })
     .sort({ lastCheckedAt: 1 })
     .limit(MAX_ALERTS_PER_RUN)
-    .populate({ path: "user", select: "fullName email status" })
+    .populate({ path: "user", select: "fullName email emailVerifiedAt status" })
     .lean();
 
   // Suspended or deleted accounts get nothing; their alerts simply wait
   const deliverable = alerts.filter((alert) => alert.user?.status === USER_STATUS.ACTIVE);
 
+  const startedAt = Date.now();
+  let checked = 0;
   let sent = 0;
-  for (let index = 0; index < deliverable.length; index += BATCH_SIZE) {
-    const results = await Promise.all(deliverable.slice(index, index + BATCH_SIZE).map((alert) => runAlert(alert, now)));
+  while (checked < deliverable.length && Date.now() - startedAt < RUN_TIME_BUDGET) {
+    const batch = deliverable.slice(checked, checked + BATCH_SIZE);
+    const results = await Promise.all(batch.map((alert) => runAlert(alert, now)));
+    checked += batch.length;
     sent += results.filter(Boolean).length;
   }
 
-  return { checked: deliverable.length, sent };
+  return { checked, sent };
 };

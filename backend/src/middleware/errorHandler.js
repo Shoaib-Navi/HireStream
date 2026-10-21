@@ -31,6 +31,10 @@ export const errorHandler = (err, req, res, next) => {
   } else if (err instanceof mongoose.Error.CastError) {
     status = 400;
     message = `Invalid value for ${err.path}`;
+  } else if (err instanceof mongoose.Error.DocumentNotFoundError || err instanceof mongoose.Error.VersionError) {
+    // a conditional save found the record changed by someone else in the meantime
+    status = 409;
+    message = "This was just changed by someone else. Please reload and try again.";
   } else if (err instanceof mongoose.Error.ValidationError) {
     status = 400;
     message = Object.values(err.errors).map((e) => e.message).join(", ");

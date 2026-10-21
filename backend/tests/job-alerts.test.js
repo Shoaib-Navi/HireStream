@@ -23,6 +23,13 @@ let companyId;
 const dispatch = (secret = CRON_SECRET) =>
   request(app).get(`${API}/job-alerts/dispatch`).set("Authorization", `Bearer ${secret}`);
 
+// Alert emails only go to verified addresses
+const verifiedCandidate = async () => {
+  const candidate = await signUp(app);
+  await User.updateOne({ _id: candidate.user._id }, { emailVerifiedAt: new Date() });
+  return candidate;
+};
+
 const postJob = async (overrides) =>
   (await recruiter.agent.post(`${API}/jobs`).send(validJob(companyId, overrides))).body.data.job;
 
@@ -45,7 +52,7 @@ after(async () => {
 
 describe("managing job alerts", () => {
   test("a candidate saves a search once, with a summary and a link back to it", async () => {
-    const candidate = await signUp(app);
+    const candidate = await verifiedCandidate();
     const criteria = { q: "React", location: "Pune", workMode: ["remote", "hybrid"], salaryMin: 6 };
 
     const created = await candidate.agent.post(`${API}/job-alerts`).send({ criteria });
@@ -73,7 +80,7 @@ describe("managing job alerts", () => {
     assert.equal((await request(app).get(`${API}/job-alerts`)).status, 401);
     assert.equal((await recruiter.agent.post(`${API}/job-alerts`).send({})).status, 403);
 
-    const candidate = await signUp(app);
+    const candidate = await verifiedCandidate();
     for (let years = 0; years < 10; years += 1) {
       const res = await candidate.agent.post(`${API}/job-alerts`).send({ criteria: { experience: years } });
       assert.equal(res.status, 201);
@@ -83,7 +90,7 @@ describe("managing job alerts", () => {
   });
 
   test("pausing, resuming, changing frequency and deleting", async () => {
-    const candidate = await signUp(app);
+    const candidate = await verifiedCandidate();
     const other = await signUp(app);
     const { alert } = (await candidate.agent.post(`${API}/job-alerts`).send({ criteria: { q: "design" } })).body.data;
 
@@ -116,7 +123,7 @@ describe("sending job alerts", () => {
 
   test("emails and notifies new matching jobs once, and skips suspended accounts", async () => {
     await JobAlert.deleteMany({});
-    const candidate = await signUp(app);
+    const candidate = await verifiedCandidate();
     const suspended = await signUp(app);
     const criteria = { q: "kotlin", workMode: ["remote"] };
 
@@ -157,7 +164,7 @@ describe("sending job alerts", () => {
 
   test("a due alert with no new jobs is checked without an email", async () => {
     await JobAlert.deleteMany({});
-    const candidate = await signUp(app);
+    const candidate = await verifiedCandidate();
     await candidate.agent.post(`${API}/job-alerts`).send({ criteria: { q: "haskell" }, frequency: "weekly" });
 
     // weekly alerts aren't due after two days
@@ -172,7 +179,7 @@ describe("sending job alerts", () => {
 
   test("a draft counts as new when it's published, not when it was written", async () => {
     await JobAlert.deleteMany({});
-    const candidate = await signUp(app);
+    const candidate = await verifiedCandidate();
     await candidate.agent.post(`${API}/job-alerts`).send({ criteria: { q: "elixir" } });
 
     // written well before the alert's last check, published after it
@@ -208,7 +215,7 @@ describe("sending job alerts", () => {
 
   test("runs that overlap send each alert once", async () => {
     await JobAlert.deleteMany({});
-    const candidate = await signUp(app);
+    const candidate = await verifiedCandidate();
     await candidate.agent.post(`${API}/job-alerts`).send({ criteria: { q: "ocaml" } });
     await postJob({ title: "OCaml Engineer", skills: ["OCaml"] });
     await JobAlert.updateMany({}, { lastCheckedAt: ago(2 * DAY) });
@@ -221,7 +228,7 @@ describe("sending job alerts", () => {
 
   test("jobs saved before publication dates existed fall back to when they were created", async () => {
     await JobAlert.deleteMany({});
-    const candidate = await signUp(app);
+    const candidate = await verifiedCandidate();
     await candidate.agent.post(`${API}/job-alerts`).send({ criteria: { q: "fortran" } });
 
     const recent = await postJob({ title: "Fortran Developer", skills: ["Fortran"] });
@@ -238,7 +245,7 @@ describe("sending job alerts", () => {
 
   test("a job published exactly at the last check was covered by that check", async () => {
     await JobAlert.deleteMany({});
-    const candidate = await signUp(app);
+    const candidate = await verifiedCandidate();
     const { alert } = (await candidate.agent.post(`${API}/job-alerts`).send({ criteria: { q: "erlang" } })).body.data;
 
     const lastCheckedAt = ago(2 * DAY);
@@ -254,9 +261,61 @@ describe("sending job alerts", () => {
     assert.ok(testOutbox[0].text.includes("Erlang Developer"));
   });
 
-  test("alerts fall due a little under a day or a week after the last check", async () => {
+  test("a failed email is retried on the next run without a second notification", async () => {
+    await JobAlert.deleteMany({});
+    const candidate = await verifiedCandidate();
+    const { alert } = (await candidate.agent.post(`${API}/job-alerts`).send({ criteria: { q: "cobol" } })).body.data;
+    await postJob({ title: "COBOL Engineer", skills: ["COBOL"] });
+    const lastCheckedAt = ago(2 * DAY);
+    await JobAlert.updateOne({ _id: alert._id }, { lastCheckedAt });
+
+    testOutbox.length = 0;
+    testOutbox.failing = true;
+    try {
+      assert.deepEqual((await dispatch()).body.data, { checked: 1, sent: 0 });
+    } finally {
+      testOutbox.failing = false;
+    }
+    assert.deepEqual((await JobAlert.findById(alert._id)).lastCheckedAt, lastCheckedAt);
+    assert.equal((await candidate.agent.get(`${API}/notifications`)).body.data.notifications.length, 0);
+
+    assert.deepEqual((await dispatch()).body.data, { checked: 1, sent: 1 });
+    assert.ok(testOutbox[0].text.includes("COBOL Engineer"));
+    assert.equal((await candidate.agent.get(`${API}/notifications`)).body.data.notifications.length, 1);
+  });
+
+  test("an unverified address gets the notification but no email", async () => {
     await JobAlert.deleteMany({});
     const candidate = await signUp(app);
+    await candidate.agent.post(`${API}/job-alerts`).send({ criteria: { q: "modula" } });
+    await postJob({ title: "Modula Engineer", skills: ["Modula"] });
+    await JobAlert.updateMany({}, { lastCheckedAt: ago(2 * DAY) });
+
+    testOutbox.length = 0;
+    assert.deepEqual((await dispatch()).body.data, { checked: 1, sent: 1 });
+    assert.equal(testOutbox.length, 0);
+    const notifications = (await candidate.agent.get(`${API}/notifications`)).body.data.notifications;
+    assert.equal(notifications[0].type, "job_alert");
+  });
+
+  test("a job closed before the run isn't sent", async () => {
+    await JobAlert.deleteMany({});
+    const candidate = await verifiedCandidate();
+    await candidate.agent.post(`${API}/job-alerts`).send({ criteria: { q: "clojure" } });
+    const closed = await postJob({ title: "Clojure Engineer", skills: ["Clojure"] });
+    await postJob({ title: "Clojure Developer", skills: ["Clojure"] });
+    await recruiter.agent.patch(`${API}/jobs/${closed._id}/status`).send({ status: "closed" });
+    await JobAlert.updateMany({}, { lastCheckedAt: ago(2 * DAY) });
+
+    testOutbox.length = 0;
+    assert.deepEqual((await dispatch()).body.data, { checked: 1, sent: 1 });
+    assert.ok(testOutbox[0].text.includes("Clojure Developer"));
+    assert.ok(!testOutbox[0].text.includes("Clojure Engineer"));
+  });
+
+  test("alerts fall due a little under a day or a week after the last check", async () => {
+    await JobAlert.deleteMany({});
+    const candidate = await verifiedCandidate();
     const create = async (criteria, frequency) =>
       (await candidate.agent.post(`${API}/job-alerts`).send({ criteria, frequency })).body.data.alert._id;
     const daily = await create({ q: "ada" }, "daily");

@@ -72,8 +72,8 @@ const jobSchema = new mongoose.Schema(
       min: 0,
     },
     closedAt: { type: Date },
-    // Copied from the company and kept in sync when an admin suspends or restores it,
-    // so public listings can hide a suspended company's jobs without a lookup
+    // False while the company or the recruiter who posted the job is suspended, kept in sync
+    // by the admin actions, so public listings can hide those jobs without a lookup
     companyActive: {
       type: Boolean,
       default: true,
@@ -91,13 +91,13 @@ const jobSchema = new mongoose.Schema(
     // When the posting went live at its source; app-posted jobs use createdAt instead
     postedAt: { type: Date },
     // When the job first went live here, so a draft published later counts as new from then.
-    // Jobs saved before this field existed have none and fall back to createdAt.
+    // Drafts have none until they are published.
     publishedAt: { type: Date },
   },
   { timestamps: true },
 );
 
-jobSchema.index({ status: 1, createdAt: -1 });
+jobSchema.index({ status: 1, publishedAt: -1 });
 jobSchema.index({ company: 1, status: 1 });
 jobSchema.index({ postedBy: 1, createdAt: -1 });
 // Keyword search, ranked so a match in the title counts most and one in the description least

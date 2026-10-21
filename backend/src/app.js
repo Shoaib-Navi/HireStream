@@ -6,6 +6,7 @@ import { connectDB } from "./config/db.js";
 import { env } from "./config/env.js";
 import { errorHandler, notFound } from "./middleware/errorHandler.js";
 import { apiLimiter } from "./middleware/rateLimit.js";
+import { sameOriginWrites } from "./middleware/sameOrigin.js";
 import { requestLogger } from "./middleware/requestLogger.js";
 import apiRoutes from "./routes.js";
 
@@ -19,8 +20,9 @@ if (env.isVercel) {
 app.use(helmet());
 app.use(cors({ origin: env.clientUrls, credentials: true }));
 app.use(express.json({ limit: "200kb" }));
-app.use(express.urlencoded({ extended: true, limit: "200kb" }));
 app.use(cookieParser());
+// The session cookie is sent on cross-site requests too, so changes must come from the app's own pages
+app.use("/api", sameOriginWrites);
 
 app.use("/api", requestLogger);
 app.use("/api", apiLimiter);

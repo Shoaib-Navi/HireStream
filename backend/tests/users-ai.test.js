@@ -78,6 +78,13 @@ describe("users", () => {
     assert.equal(wrongType.status, 400);
     assert.match(wrongType.body.message, /PDF/);
 
+    // a file merely labelled as a PDF is refused too
+    const disguised = await candidate.agent
+      .put(`${API}/users/me/resume`)
+      .attach("file", Buffer.from("<html>not a pdf</html>"), { filename: "resume.pdf", contentType: "application/pdf" });
+    assert.equal(disguised.status, 400);
+    assert.match(disguised.body.message, /PDF/);
+
     const noFile = await candidate.agent.put(`${API}/users/me/avatar`);
     assert.equal(noFile.status, 400);
 

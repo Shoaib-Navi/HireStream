@@ -140,6 +140,7 @@ describe("migration 001 (v1 -> v2)", () => {
     assert.equal(job.applicationCount, 1);
     assert.deepEqual(job.requirements, ["React", "Redux"]);
     assert.ok(job.postedBy.equals(recruiterId));
+    assert.deepEqual(job.publishedAt, createdAt);
     assert.ok(!("created_by" in job) && !("jobType" in job) && !("applications" in job));
 
     const applications = await db.collection("applications").find().toArray();
@@ -206,5 +207,30 @@ describe("migration 002 (company suspension on jobs)", () => {
       (await db.collection("jobs").find().toArray()).map((job) => [job.title, job.companyActive]),
     );
     assert.deepEqual(flags, { Visible: true, Hidden: false });
+  });
+});
+
+describe("migration 003 (publication dates)", () => {
+  test("dates published jobs from their creation and leaves drafts and dated jobs alone", async () => {
+    await db.dropDatabase();
+    await db
+      .collection("migrations")
+      .insertMany(["001-v2-schema", "002-job-company-active"].map((name) => ({ name, appliedAt: new Date() })));
+
+    const createdAt = new Date("2025-03-01");
+    const publishedAt = new Date("2025-03-05");
+    await db.collection("jobs").insertMany([
+      { title: "Open", status: "open", createdAt },
+      { title: "Closed", status: "closed", createdAt },
+      { title: "Draft", status: "draft", createdAt },
+      { title: "Dated", status: "open", createdAt, publishedAt },
+    ]);
+
+    await runMigrations({ log: () => {} });
+
+    const dates = Object.fromEntries(
+      (await db.collection("jobs").find().toArray()).map((job) => [job.title, job.publishedAt]),
+    );
+    assert.deepEqual(dates, { Open: createdAt, Closed: createdAt, Draft: undefined, Dated: publishedAt });
   });
 });

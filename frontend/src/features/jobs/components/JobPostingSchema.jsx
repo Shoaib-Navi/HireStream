@@ -60,7 +60,7 @@ const toJobPosting = (job) => ({
   description: toDescriptionHtml(job),
   identifier: { "@type": "PropertyValue", name: job.company.name, value: job._id },
   url: window.location.origin + window.location.pathname,
-  datePosted: job.createdAt,
+  datePosted: job.publishedAt ?? job.createdAt,
   ...(job.deadline && { validThrough: job.deadline }),
   employmentType: EMPLOYMENT_TYPES[job.employmentType] ?? "OTHER",
   hiringOrganization: {
