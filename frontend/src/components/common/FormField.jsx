@@ -2,10 +2,10 @@ import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
 
 // Label + control + error or hint text. Pass aria-invalid to the control yourself.
-const FormField = ({ label, htmlFor, error, hint, required, className, children }) => (
+const FormField = ({ label, htmlFor, error, hint, required, className, labelClassName, children }) => (
   <div className={cn("grid gap-1.5", className)}>
     {label && (
-      <Label htmlFor={htmlFor}>
+      <Label htmlFor={htmlFor} className={labelClassName}>
         {label}
         {required && (
           <span className="text-destructive" aria-hidden="true">
