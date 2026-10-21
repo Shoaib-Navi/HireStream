@@ -5,6 +5,7 @@ import DetailSection from "@/components/common/DetailSection";
 import EmptyState from "@/components/common/EmptyState";
 import ErrorState from "@/components/common/ErrorState";
 import { PageLoader } from "@/components/common/Spinner";
+import SourceBadge from "@/components/common/SourceBadge";
 import StatusBadge from "@/components/common/StatusBadge";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -74,6 +75,17 @@ const JobDetailsPage = () => {
               </Link>
               <span className="type-caption text-muted-foreground">· Posted {formatRelativeTime(job.createdAt)}</span>
               {job.status !== "open" && <StatusBadge type="job" status={job.status} />}
+              <SourceBadge source={job.source} />
+              {job.sourceUrl && (
+                <a
+                  href={job.sourceUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="type-label text-muted-foreground underline underline-offset-4 transition-colors hover:text-foreground"
+                >
+                  Original posting
+                </a>
+              )}
             </div>
             <h1 className="type-h1 max-w-4xl">{job.title}</h1>
             <JobMeta job={job} />

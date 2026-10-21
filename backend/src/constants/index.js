@@ -76,3 +76,9 @@ export const NOTIFICATION_TYPES = Object.freeze({
 });
 
 export const NOTIFICATION_RETENTION_DAYS = 90;
+
+// Where a seeded development record came from. Records created by real users stay unmarked.
+export const DATA_SOURCES = Object.freeze({
+  PUBLIC_SOURCE: "PUBLIC_SOURCE",
+  SYNTHETIC: "SYNTHETIC",
+});

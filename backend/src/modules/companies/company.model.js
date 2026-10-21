@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import { COMPANY_SIZES, COMPANY_STATUS } from "../../constants/index.js";
+import { COMPANY_SIZES, COMPANY_STATUS, DATA_SOURCES } from "../../constants/index.js";
 
 const companySchema = new mongoose.Schema(
   {
@@ -41,6 +41,14 @@ const companySchema = new mongoose.Schema(
       default: COMPANY_STATUS.ACTIVE,
       index: true,
     },
+    // Marks seeded development records; companies registered through the app stay unmarked
+    source: {
+      type: String,
+      enum: Object.values(DATA_SOURCES),
+      index: true,
+    },
+    sourceUrl: { type: String, trim: true },
+    externalId: { type: String, trim: true },
   },
   { timestamps: true },
 );

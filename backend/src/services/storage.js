@@ -1,6 +1,7 @@
 import { v2 as cloudinary } from "cloudinary";
 import { env } from "../config/env.js";
 import { ApiError } from "../utils/ApiError.js";
+import { slugify } from "../utils/slugify.js";
 
 const isConfigured = Boolean(env.cloudinary.cloudName && env.cloudinary.apiKey && env.cloudinary.apiSecret);
 
@@ -11,6 +12,9 @@ if (isConfigured) {
     api_secret: env.cloudinary.apiSecret,
   });
 }
+
+// "Aarav Sharma CV.pdf" -> "aarav-sharma-cv-m1x2y3", readable in the Cloudinary console
+const toPublicId = (filename = "resume") => `${slugify(filename.replace(/\.[^.]+$/, ""))}-${Date.now().toString(36)}`;
 
 // Uploads a multer in-memory file and returns { url, publicId }.
 // Resumes use the "raw" resource type so PDFs are always deliverable.
@@ -23,7 +27,9 @@ export const uploadFile = (file, { folder, resourceType = "image" }) => {
       {
         folder: `${env.cloudinary.folder}/${folder}`,
         resource_type: resourceType,
-        ...(resourceType === "raw" && { use_filename: true, unique_filename: true }),
+        // upload_stream has no filename, so use_filename has nothing to work from and every
+        // resume would land as "file_<random>". Build a readable id from the uploaded name.
+        ...(resourceType === "raw" && { public_id: toPublicId(file.originalname) }),
       },
       (error, result) => {
         if (error) {

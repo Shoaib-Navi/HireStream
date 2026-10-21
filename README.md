@@ -92,7 +92,9 @@ Seeded accounts use the password `Password123`, for example `aarav@hirestream.de
 |---|---|---|
 | backend | `npm test` | API integration tests against an in-memory MongoDB |
 | backend | `npm run migrate` | Runs pending migrations and syncs indexes (back up production data first) |
-| backend | `npm run seed -- --reset` | Replaces development data with sample data (refuses to run in production) |
+| backend | `npm run seed` | Creates or refreshes local development data; safe to run repeatedly |
+| backend | `npm run seed -- --reset` | Empties every collection first (local databases only) |
+| backend | `npm run fetch:jobs` | Refreshes `src/data/public-jobs.json` from public company job boards |
 | backend | `npm run create-admin -- "Name" email password` | Creates an admin account, or promotes an existing user |
 | frontend | `npm run lint` | ESLint |
 | frontend | `npm run build` | Production build |
@@ -117,6 +119,29 @@ All routes are under `/api/v1`. Responses look like `{ success, message?, data?,
 | Admin | `GET /admin/overview`, `GET /admin/users`, `PATCH /admin/users/:id/status`, `GET /admin/companies`, `PATCH /admin/companies/:id`, `GET /admin/jobs`, `PATCH /admin/jobs/:id/status`, `DELETE /admin/jobs/:id` |
 | Assistant | `POST /ai/chat`, `POST /ai/job-description` |
 | Health | `GET /health` |
+
+## Development data
+
+`npm run seed` fills a local database with enough jobs, companies and applications to make the
+board feel real. Every seeded row records where it came from, and the two kinds never mix:
+
+| Marker | What it is |
+|---|---|
+| `PUBLIC_SOURCE` | Postings fetched from companies' public Greenhouse job boards by `npm run fetch:jobs`. Each keeps the board's own id, URL and publish date, so any row can be traced back to the posting it came from. |
+| `SYNTHETIC` | Companies, recruiters, candidates and job posts written for demos, in `src/data/synthetic-jobs.js`. They describe no real employer or vacancy, and use `example.com` domains. |
+
+Jobs posted through the app are left unmarked — the field only ever labels seeded data, and the
+API ignores it if a client tries to send it.
+
+Two things to know about the fetched postings. Greenhouse publishes no structured work mode,
+employment type, experience or skills, so those are **derived** from the title and location and
+are approximations rather than statements from the employer. It also exposes no pay range, so
+those jobs carry no salary; the salary filters exercise the synthetic Indian-market jobs, which
+are priced in LPA.
+
+The seed is idempotent: it matches on natural keys (user email, company slug, job source plus
+external id) and updates in place, so running it twice leaves the same rows. It also refuses to
+run against anything other than a local database, which keeps production out of reach.
 
 ## Testing and CI
 

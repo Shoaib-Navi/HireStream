@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import { ROLES, USER_STATUS } from "../../constants/index.js";
+import { DATA_SOURCES, ROLES, USER_STATUS } from "../../constants/index.js";
 
 const userSchema = new mongoose.Schema(
   {
@@ -42,6 +42,11 @@ const userSchema = new mongoose.Schema(
       enum: Object.values(USER_STATUS),
       default: USER_STATUS.ACTIVE,
       index: true,
+    },
+    // Marks seeded demo accounts; people who sign up are never marked
+    source: {
+      type: String,
+      enum: Object.values(DATA_SOURCES),
     },
     emailVerifiedAt: { type: Date },
     lastLoginAt: { type: Date },
