@@ -4,6 +4,7 @@ import { Link, useParams } from "react-router-dom";
 import CompanyLogo from "@/components/common/CompanyLogo";
 import DetailSection from "@/components/common/DetailSection";
 import EmptyState from "@/components/common/EmptyState";
+import NoIndex from "@/components/common/NoIndex";
 import ErrorState from "@/components/common/ErrorState";
 import Pagination from "@/components/common/Pagination";
 import { PageLoader } from "@/components/common/Spinner";
@@ -29,9 +30,11 @@ const CompanyProfilePage = () => {
 
   if (isLoading) return <PageLoader />;
   if (isError) {
+    const notFound = error?.status === 404 || error?.status === 400;
     return (
       <div className="page-container py-16">
-        {error?.status === 404 || error?.status === 400 ? (
+        {notFound && <NoIndex />}
+        {notFound ? (
           <EmptyState
             icon={SearchX}
             title="Company not found"

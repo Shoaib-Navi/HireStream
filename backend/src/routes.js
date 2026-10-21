@@ -9,6 +9,7 @@ import dashboardRoutes from "./modules/dashboard/dashboard.routes.js";
 import jobsRoutes from "./modules/jobs/jobs.routes.js";
 import notificationsRoutes from "./modules/notifications/notifications.routes.js";
 import savedJobsRoutes from "./modules/savedJobs/savedJobs.routes.js";
+import sitemapRoutes from "./modules/sitemap/sitemap.routes.js";
 import usersRoutes from "./modules/users/users.routes.js";
 import { sendSuccess } from "./utils/response.js";
 
@@ -36,5 +37,6 @@ router.use("/dashboard", dashboardRoutes);
 router.use("/notifications", notificationsRoutes);
 router.use("/admin", adminRoutes);
 router.use("/ai", aiRoutes);
+router.use("/sitemap.xml", sitemapRoutes);
 
 export default router;

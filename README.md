@@ -22,6 +22,8 @@ applied to hired.
 - **Admins:** platform overview, user suspension, company verification and job moderation
 - **Everyone:** email verification, password reset and change, in-app notifications with email updates, light and dark
   themes, responsive layouts, and a career assistant
+- **Search engines:** open jobs carry schema.org `JobPosting` data for Google for Jobs, a sitemap of public jobs and
+  companies is served at `/sitemap.xml`, and "not found" pages are marked `noindex`
 
 ## Security
 
