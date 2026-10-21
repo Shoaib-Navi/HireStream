@@ -1,5 +1,5 @@
 import { toast } from "sonner";
-import FormField from "@/components/common/FormField";
+import FormField, { FIELD_LABEL } from "@/components/common/FormField";
 import LoadingButton from "@/components/common/LoadingButton";
 import SectionCard from "@/components/common/SectionCard";
 import TagInput from "@/components/common/TagInput";
@@ -49,22 +49,24 @@ const ProfileBasicsForm = ({ profile }) => {
       >
         <div className="grid gap-5 sm:grid-cols-2">
           <FormField
+            labelClassName={FIELD_LABEL}
             label="Headline"
             htmlFor="headline"
             error={errors.headline}
             hint="e.g. Frontend developer · React & Node.js"
             className="sm:col-span-2"
           >
-            <Input id="headline" name="headline" maxLength={120} value={values.headline} onChange={handleChange} aria-invalid={Boolean(errors.headline)} />
+            <Input variant="underline" id="headline" name="headline" maxLength={120} value={values.headline} onChange={handleChange} aria-invalid={Boolean(errors.headline)} />
           </FormField>
-          <FormField label="Location" htmlFor="location" error={errors.location}>
-            <Input id="location" name="location" maxLength={100} placeholder="e.g. Bangalore" value={values.location} onChange={handleChange} />
+          <FormField labelClassName={FIELD_LABEL} label="Location" htmlFor="location" error={errors.location}>
+            <Input variant="underline" id="location" name="location" maxLength={100} placeholder="e.g. Bangalore" value={values.location} onChange={handleChange} />
           </FormField>
-          <FormField label="Years of experience" htmlFor="experienceYears" error={errors.experienceYears}>
-            <Input id="experienceYears" name="experienceYears" type="number" min={0} max={60} value={values.experienceYears} onChange={handleChange} />
+          <FormField labelClassName={FIELD_LABEL} label="Years of experience" htmlFor="experienceYears" error={errors.experienceYears}>
+            <Input variant="underline" id="experienceYears" name="experienceYears" type="number" min={0} max={60} value={values.experienceYears} onChange={handleChange} />
           </FormField>
-          <FormField label="Bio" htmlFor="bio" error={errors.bio} className="sm:col-span-2">
+          <FormField labelClassName={FIELD_LABEL} label="Bio" htmlFor="bio" error={errors.bio} className="sm:col-span-2">
             <Textarea
+              variant="underline"
               id="bio"
               name="bio"
               rows={5}
@@ -74,8 +76,8 @@ const ProfileBasicsForm = ({ profile }) => {
               onChange={handleChange}
             />
           </FormField>
-          <FormField label="Skills" htmlFor="skills" error={errors.skills} hint="Press Enter or comma after each skill." className="sm:col-span-2">
-            <TagInput id="skills" value={values.skills} onChange={(skills) => setField("skills", skills)} maxItems={50} placeholder="e.g. React" />
+          <FormField labelClassName={FIELD_LABEL} label="Skills" htmlFor="skills" error={errors.skills} hint="Press Enter or comma after each skill." className="sm:col-span-2">
+            <TagInput variant="underline" id="skills" value={values.skills} onChange={(skills) => setField("skills", skills)} maxItems={50} placeholder="e.g. React" />
           </FormField>
           <div className="flex items-center justify-between gap-4 rounded-lg border p-4 sm:col-span-2">
             <div>

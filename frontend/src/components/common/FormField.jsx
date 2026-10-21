@@ -1,6 +1,9 @@
 import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
 
+// Label style that goes with the underline field variants
+export const FIELD_LABEL = "type-label text-muted-foreground";
+
 // Label + control + error or hint text. Pass aria-invalid to the control yourself.
 const FormField = ({ label, htmlFor, error, hint, required, className, labelClassName, children }) => (
   <div className={cn("grid gap-1.5", className)}>

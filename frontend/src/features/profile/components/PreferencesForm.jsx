@@ -1,6 +1,6 @@
 import { toast } from "sonner";
 import CheckboxGroup from "@/components/common/CheckboxGroup";
-import FormField from "@/components/common/FormField";
+import FormField, { FIELD_LABEL } from "@/components/common/FormField";
 import LoadingButton from "@/components/common/LoadingButton";
 import SectionCard from "@/components/common/SectionCard";
 import TagInput from "@/components/common/TagInput";
@@ -62,8 +62,9 @@ const PreferencesForm = ({ profile }) => {
             onChange={(workModes) => setField("workModes", workModes)}
             idPrefix="pref-mode"
           />
-          <FormField label="Preferred locations" htmlFor="pref-locations" hint="Press Enter after each city.">
+          <FormField labelClassName={FIELD_LABEL} label="Preferred locations" htmlFor="pref-locations" hint="Press Enter after each city.">
             <TagInput
+              variant="underline"
               id="pref-locations"
               value={values.locations}
               onChange={(locations) => setField("locations", locations)}
@@ -71,8 +72,9 @@ const PreferencesForm = ({ profile }) => {
               placeholder="e.g. Pune"
             />
           </FormField>
-          <FormField label="Expected salary (LPA)" htmlFor="pref-salary">
+          <FormField labelClassName={FIELD_LABEL} label="Expected salary (LPA)" htmlFor="pref-salary">
             <Input
+              variant="underline"
               id="pref-salary"
               type="number"
               min={0}

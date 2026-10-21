@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { toast } from "sonner";
-import FormField from "@/components/common/FormField";
+import FormField, { FIELD_LABEL } from "@/components/common/FormField";
 import LoadingButton from "@/components/common/LoadingButton";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
@@ -32,9 +32,9 @@ const StatusUpdateForm = ({ application }) => {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
-      <FormField label="Status" htmlFor="application-status">
+      <FormField labelClassName={FIELD_LABEL} label="Status" htmlFor="application-status">
         <Select value={status} onValueChange={setStatus}>
-          <SelectTrigger id="application-status" className="w-full">
+          <SelectTrigger variant="underline" id="application-status" className="w-full">
             <SelectValue placeholder="Choose a status" />
           </SelectTrigger>
           <SelectContent>
@@ -46,8 +46,8 @@ const StatusUpdateForm = ({ application }) => {
           </SelectContent>
         </Select>
       </FormField>
-      <FormField label="Message to the candidate" htmlFor="status-note" hint="Optional. Shown in their application timeline.">
-        <Textarea id="status-note" rows={3} maxLength={500} value={note} onChange={(event) => setNote(event.target.value)} />
+      <FormField labelClassName={FIELD_LABEL} label="Message to the candidate" htmlFor="status-note" hint="Optional. Shown in their application timeline.">
+        <Textarea variant="underline" id="status-note" rows={3} maxLength={500} value={note} onChange={(event) => setNote(event.target.value)} />
       </FormField>
       <LoadingButton type="submit" className="w-full" loading={isLoading} disabled={!status || (status === application.status && !note.trim())}>
         Update status

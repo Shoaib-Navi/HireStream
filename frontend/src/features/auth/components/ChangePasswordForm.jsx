@@ -1,5 +1,5 @@
 import { toast } from "sonner";
-import FormField from "@/components/common/FormField";
+import FormField, { FIELD_LABEL } from "@/components/common/FormField";
 import LoadingButton from "@/components/common/LoadingButton";
 import PasswordInput from "@/components/common/PasswordInput";
 import SectionCard from "@/components/common/SectionCard";
@@ -33,8 +33,9 @@ const ChangePasswordForm = () => {
   };
 
   const passwordField = (name, label, autoComplete, hint) => (
-    <FormField label={label} htmlFor={name} error={errors[name]} hint={hint}>
+    <FormField labelClassName={FIELD_LABEL} label={label} htmlFor={name} error={errors[name]} hint={hint}>
       <PasswordInput
+        variant="underline"
         id={name}
         name={name}
         autoComplete={autoComplete}

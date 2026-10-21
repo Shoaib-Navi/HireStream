@@ -2,7 +2,7 @@ import { useState } from "react";
 import { FileText } from "lucide-react";
 import { Link } from "react-router-dom";
 import { toast } from "sonner";
-import FormField from "@/components/common/FormField";
+import FormField, { FIELD_LABEL } from "@/components/common/FormField";
 import LoadingButton from "@/components/common/LoadingButton";
 import { PageLoader } from "@/components/common/Spinner";
 import { Button } from "@/components/ui/button";
@@ -60,8 +60,9 @@ const ApplyDialog = ({ job, open, onOpenChange }) => {
             <p className="type-caption text-muted-foreground">Attached resume</p>
           </div>
         </div>
-        <FormField label="Cover letter" htmlFor="coverLetter" hint="Optional. Tell the recruiter why you're a great fit.">
+        <FormField labelClassName={FIELD_LABEL} label="Cover letter" htmlFor="coverLetter" hint="Optional. Tell the recruiter why you're a great fit.">
           <Textarea
+            variant="underline"
             id="coverLetter"
             rows={6}
             maxLength={5000}

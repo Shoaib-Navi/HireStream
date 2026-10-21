@@ -1,7 +1,7 @@
 import { ArrowRight } from "lucide-react";
 import { Link, useLocation, useSearchParams } from "react-router-dom";
 import { toast } from "sonner";
-import FormField from "@/components/common/FormField";
+import FormField, { FIELD_LABEL } from "@/components/common/FormField";
 import LoadingButton from "@/components/common/LoadingButton";
 import PasswordInput from "@/components/common/PasswordInput";
 import ScrambleText from "@/components/common/ScrambleText";
@@ -12,8 +12,6 @@ import { ROLES } from "@/lib/constants";
 import { getErrorMessage } from "@/lib/errors";
 import { cn } from "@/lib/utils";
 import { useRegisterMutation } from "../api";
-
-const FIELD_LABEL = "type-label text-muted-foreground";
 
 const ROLE_OPTIONS = [
   { value: ROLES.CANDIDATE, label: "I'm looking for a job" },

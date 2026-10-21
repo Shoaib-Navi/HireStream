@@ -47,6 +47,7 @@ const PrivateNotes = ({ applicationId, notes = [] }) => {
           New note
         </label>
         <Textarea
+          variant="underline"
           id="private-note"
           rows={3}
           maxLength={2000}

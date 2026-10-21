@@ -1,7 +1,7 @@
 import { ArrowRight } from "lucide-react";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { toast } from "sonner";
-import FormField from "@/components/common/FormField";
+import FormField, { FIELD_LABEL } from "@/components/common/FormField";
 import LoadingButton from "@/components/common/LoadingButton";
 import PasswordInput from "@/components/common/PasswordInput";
 import ScrambleText from "@/components/common/ScrambleText";
@@ -9,8 +9,6 @@ import { useDocumentTitle } from "@/hooks/useDocumentTitle";
 import { useFormState } from "@/hooks/useFormState";
 import { getErrorMessage } from "@/lib/errors";
 import { useResetPasswordMutation } from "../api";
-
-const FIELD_LABEL = "type-label text-muted-foreground";
 
 const ResetPasswordPage = () => {
   useDocumentTitle("Reset password");

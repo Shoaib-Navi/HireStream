@@ -62,7 +62,7 @@ const AdminUsersPage = () => {
           </TableHeader>
           <TableBody>
             {users.map((user) => {
-              const isSelf = user._id === currentUser?.id || user._id === currentUser?._id;
+              const isSelf = user._id === currentUser?._id;
               const isAdmin = user.role === "admin";
               return (
                 <TableRow key={user._id}>

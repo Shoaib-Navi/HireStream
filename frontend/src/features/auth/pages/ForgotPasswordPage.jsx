@@ -1,7 +1,7 @@
 import { ArrowLeft, ArrowRight, MailCheck } from "lucide-react";
 import { Link } from "react-router-dom";
 import { toast } from "sonner";
-import FormField from "@/components/common/FormField";
+import FormField, { FIELD_LABEL } from "@/components/common/FormField";
 import LoadingButton from "@/components/common/LoadingButton";
 import ScrambleText from "@/components/common/ScrambleText";
 import { Input } from "@/components/ui/input";
@@ -9,8 +9,6 @@ import { useDocumentTitle } from "@/hooks/useDocumentTitle";
 import { useFormState } from "@/hooks/useFormState";
 import { getErrorMessage } from "@/lib/errors";
 import { useForgotPasswordMutation } from "../api";
-
-const FIELD_LABEL = "type-label text-muted-foreground";
 
 const ForgotPasswordPage = () => {
   useDocumentTitle("Forgot password");
