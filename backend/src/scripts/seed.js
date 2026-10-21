@@ -47,6 +47,10 @@ const PUBLIC_JOBS_FILE = path.join(path.dirname(fileURLToPath(import.meta.url)),
 const RESUME_URL = "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf";
 const DAY = 24 * 60 * 60 * 1000;
 
+// Seeded companies use logos shipped with the frontend (frontend/public/logos), named after the
+// company slug or board token, so no image upload is needed
+const seedLogo = (name) => ({ url: `/logos/${name}.svg` });
+
 // The public boards have no recruiter behind them, but the schema needs an owner, so one
 // clearly synthetic account holds them. Its jobs stay marked PUBLIC_SOURCE.
 const BOARD_DESK = { fullName: "Job Board Desk", email: "boarddesk@hirestream.dev", phone: "+91 90000 00000" };
@@ -169,6 +173,7 @@ const run = async () => {
       await upsertCompany({
         ...company,
         slug: slugify(company.name),
+        logo: seedLogo(slugify(company.name)),
         owner: recruiters[index % recruiters.length]._id,
         isVerified: index % 2 === 0,
         source: DATA_SOURCES.SYNTHETIC,
@@ -219,6 +224,7 @@ const run = async () => {
       // Still empty: the board publishes neither, and both would be a specific claim
       website: "",
       location: "",
+      logo: seedLogo(company.boardToken),
       owner: boardDesk._id,
       isVerified: false,
       source: DATA_SOURCES.PUBLIC_SOURCE,
